@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 /**
  * Handles requests for the application home page.
@@ -30,8 +32,8 @@ public class HomeController {
 	}
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
-    public String login(@RequestParam String error) {
-        logger.info("requesting login " + error);
+    public String login(HttpServletRequest request) {
+        logger.info("requesting login " + request.getParameter("error"));
         return "admin/login";
     }
 
