@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security.xsd">
+    
+    <security:http pattern="/login" security="none"/>
+    <security:http pattern="/resources/**" security="none" />
+
+       
+	<!-- Configure Spring Security -->
+	<!-- use-expressions and hasRole only needed if jsp tags are used. 
+		If not using jsp tags you can omit the use-expressions property and set access="ROLE_USER" on the intercept-url tags -->
+	<security:http auto-config="true" use-expressions="true">
+
+	    <security:anonymous />
+
+        <security:form-login login-page="/login" default-target-url="/" authentication-failure-url="/login"/>
+
+        <security:logout />
+
+		<!--  Uncomment this section to enable security -->
+
+		<!-- 
+	    <security:intercept-url pattern="/**" access="isAuthenticated()" />
+		 -->
+        <security:intercept-url pattern="/**" access="ROLE_USER" />
+	    <!-- sets this as the authentication filter over the default -->
+
+        <security:session-management>
+            <security:concurrency-control max-sessions="1" />
+        </security:session-management>
+	</security:http>
+
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:password-encoder hash="sha-256"/>
+            <security:user-service>
+                <security:user name="admin" authorities="ROLE_USER" password="8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92" />
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+</beans>
