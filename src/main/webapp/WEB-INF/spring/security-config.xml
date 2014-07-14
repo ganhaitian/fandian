@@ -27,7 +27,7 @@
 		<!-- 
 	    <security:intercept-url pattern="/**" access="isAuthenticated()" />
 		 -->
-        <security:intercept-url pattern="/**" access="ROLE_USER" />
+        <security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
 	    <!-- sets this as the authentication filter over the default -->
 
         <security:session-management>
