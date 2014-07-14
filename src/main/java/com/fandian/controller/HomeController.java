@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 /**
@@ -30,8 +30,8 @@ public class HomeController {
 	}
 
     @RequestMapping(value="/login", method=RequestMethod.GET)
-    public String login() {
-        logger.info("requesting home");
+    public String login(@RequestParam String error) {
+        logger.info("requesting login " + error);
         return "admin/login";
     }
 

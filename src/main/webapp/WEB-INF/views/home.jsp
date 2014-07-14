@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
-  User: zhijieliu
-  Date: 2014/7/14
-  Time: 19:09
+  User: meajhlp
+  Date: 14-7-14
+  Time: 下午11:22
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -25,19 +25,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <form action="/j_spring_security_check" method="post">
-                <div class="form-group">
-                    <label for="">USERNAME</label>
-                    <input type="text" class="form-control" name="j_username"/>
-                </div>
-                <div class="form-group">
-                    <label for="">PASSWORD</label>
-                    <input type="password" class="form-control" name="j_password"/>
-                </div>
-                <button class="btn btn-default" type="submit">SUBMIT</button>
-            </form>
-        </div>
+        <h4>Home Page</h4>
     </div>
 </div>
 </body>
