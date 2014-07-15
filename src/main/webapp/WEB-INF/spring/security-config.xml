@@ -10,6 +10,7 @@
     <security:http pattern="/login" security="none"/>
     <security:http pattern="/testEcho" security="none"/>
     <security:http pattern="/oauth/**" security="none" />
+    <security:http pattern="/menu/**" security="none" />
 
     <security:http pattern="/resources/**" security="none" />
 
