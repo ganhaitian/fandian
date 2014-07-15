@@ -149,7 +149,6 @@
 			<version>${org.aspectj-version}</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
@@ -168,9 +167,20 @@
 			<version>2.2</version>
 			<scope>runtime</scope>
 		</dependency>
-	</dependencies>
 
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.18</version>
+        </dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.0.7</version>
+        </dependency>
+
+    </dependencies>
 
 	<build>
 

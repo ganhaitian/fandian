@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class WebchartController {
 
-    @RequestMapping(value="/testEcho",method= RequestMethod.GET)
+    @RequestMapping(value = "/testEcho", method = RequestMethod.GET)
     @ResponseBody
-    public String testEcho(@RequestParam String signature,@RequestParam String timestamp,@RequestParam String nonce,@RequestParam String echostr){
+    public String testEcho(@RequestParam String signature, @RequestParam String timestamp, @RequestParam String nonce, @RequestParam String echostr) {
         return echostr;
     }
-
 
 
 }
