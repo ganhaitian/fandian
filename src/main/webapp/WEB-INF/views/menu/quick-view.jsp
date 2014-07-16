@@ -46,7 +46,7 @@
             position: relative;
         }
 
-        .item-list > li label{
+        .item-list > li label.inline{
             font-size:18px;
             font-weight: 500;
         }
@@ -62,61 +62,6 @@
             padding-bottom: 4px;
             padding-top: 4px;
             padding-left: 12px;
-        }
-
-        .infobox {
-            -moz-border-bottom-colors: none;
-            -moz-border-left-colors: none;
-            -moz-border-right-colors: none;
-            -moz-border-top-colors: none;
-            background-color: #fff;
-            border-color: #d8d8d8 !important;
-            border-image: none;
-            border-radius: 0;
-            border-style: dotted;
-            border-width: 1px;
-            box-shadow: none;
-            color: #555;
-            display: inline-block;
-            height: 46px;
-            margin: -1px 0 0 -1px;
-            padding: 8px 3px 6px 9px;
-            position: relative;
-            text-align: left;
-            vertical-align: middle;
-            width: 100%;
-        }
-
-        .infobox-dark {
-            border-color: transparent !important;
-            border-width: 0;
-            color: #fff;
-            margin: 1px 1px 0 0;
-            padding: 4px;
-        }
-
-        .infobox-grey {
-            border-color: #999;
-            color: #999;
-        }
-
-        .footer{
-            position:absolute;
-            bottom:0;
-            left:0;
-            right:0;
-        }
-
-        .infobox-grey.infobox-dark {
-            background-color: #2F373E;
-            border-color: #2F373E;
-        }
-
-        .infobox-content {
-            color: #fff;
-            width:200px;
-            float:left;
-            font-size:18px;
         }
 
         .menu-content{
@@ -178,7 +123,76 @@
             z-index: 2;
         }
 
+        .rating {
+            direction: rtl;
+            font-size: 30px;
+            unicode-bidi: bidi-override;
+        }
+
+
+        .rating span.star:before {
+            color: #999999;
+            content: "";
+            padding-right: 5px;
+        }
+
+        .rating span.star {
+            display: inline-block;
+            font-family: FontAwesome;
+            font-style: normal;
+            font-weight: normal;
+        }
+
+        .rating {
+            direction: rtl;
+            font-size: 10px;
+        }
+
+        .menu-entry{
+            height:50px;
+            vertical-align: middle;
+            padding-top: 1px;
+        }
+
+        label.sales-data{
+            font-size:9px;
+            font-weight:400;
+            color:#7E7E7E;
+        }
+
+        div.price-container{
+            margin-top:5px;
+        }
+
     </style>
+    <script>
+
+        String.prototype.trim = function() {
+            return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+        }
+
+        var bill = {
+          totalPrice:0,
+          dishes:[]
+        };
+
+        $(document).ready(function(){
+            $("button.btn-price").bind("click",function(){
+                var priceStr = $(this).html().trim();
+                var menuEntry = $(this).parents("div.menu-entry")[0];
+                var price = Number(priceStr.substr(1));
+                bill.totalPrice = bill.totalPrice + price;
+                bill.dishes.push({
+                    "name":$("label.inline span",menuEntry).html().trim(),
+                    "price":price,
+                    "amount":1
+                });
+                $("nav.footbar .navbar-text").html('<i class="fa fa-cutlery"></i> '+
+                    bill.dishes.length+'品 <i class="fa fa-rmb"></i>'+ bill.totalPrice);
+            });
+        });
+
+    </script>
 </head>
 <body>
 <div class="container-fluid">
@@ -209,7 +223,7 @@
                 <div class="col-xs-12">
                     <div class="pull-left">
                         <p class="navbar-text">
-                            <i class="fa fa-cutlery"></i> 3品 <i class="fa fa-rmb"></i>145
+                            <i class="fa fa-cutlery"></i> <%--3品 <i class="fa fa-rmb"></i>145--%>
                         </p>
 
                     </div>
@@ -226,104 +240,264 @@
             <ul class="item-list">
                 <li class="header"> 烹羊世家</li>
                 <li class="item-orange">
-                    <label class="inline">
-                        <span class="lbl"> 五香扣羊</span>
-                    </label>
-                    <div class="pull-right">
-                        <button class="btn btn-price">
-                            ¥25
-                        </button>
+                    <div class="menu-entry" >
+                        <div class="pull-left">
+                            <div>
+                                <label class="inline">
+                                    <span class="lbl"> 五香扣羊</span>
+                                </label>
+                            </div>
+                            <div>
+                                <span class="rating">
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                </span>
+                                <label class="sales-data">月售845份</label>
+                            </div>
+                        </div>
+                        <div class="inline pull-right position-relative dropdown-hover price-container">
+                            <button class="btn btn-price">
+                                ¥125
+                            </button>
+                        </div>
                     </div>
                 </li>
                 <li class="item-orange">
-                    <label class="inline">
-                        <span class="lbl"> 羊肉串</span>
-                    </label>
-                    <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-price">
-                            ¥25
-                        </button>
+                    <div class="menu-entry" >
+                        <div class="pull-left">
+                            <div>
+                                <label class="inline">
+                                    <span class="lbl"> 羊肉串</span>
+                                </label>
+                            </div>
+                            <div>
+                                <span class="rating">
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                </span>
+                                <label class="sales-data">月售1023份</label>
+                            </div>
+                        </div>
+                        <div class="inline pull-right position-relative dropdown-hover price-container">
+                            <button class="btn btn-price">
+                                ¥25
+                            </button>
+                        </div>
                     </div>
                 </li>
                 <li class="item-orange">
-                    <label class="inline">
-                        <span class="lbl"> 椰子饭</span>
-                    </label>
-                    <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-price">
-                            ¥50
-                        </button>
+                    <div class="menu-entry" >
+                        <div class="pull-left">
+                            <div>
+                                <label class="inline">
+                                    <span class="lbl"> 椰子饭</span>
+                                </label>
+                            </div>
+                            <div>
+                                <span class="rating">
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                </span>
+                                <label class="sales-data">月售23份</label>
+                            </div>
+                        </div>
+                        <div class="inline pull-right position-relative dropdown-hover price-container">
+                            <button class="btn btn-price">
+                                ¥26
+                            </button>
+                        </div>
                     </div>
                 </li>
                 <li class="item-orange">
-                    <label class="inline">
-                        <span class="lbl"> 干煸羊</span>
-                    </label>
-                    <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-price">
-                            ¥100
-                        </button>
+                    <div class="menu-entry" >
+                        <div class="pull-left">
+                            <div>
+                                <label class="inline">
+                                    <span class="lbl"> 干煸羊</span>
+                                </label>
+                            </div>
+                            <div>
+                                <span class="rating">
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                </span>
+                                <label class="sales-data">月售171份</label>
+                            </div>
+                        </div>
+                        <div class="inline pull-right position-relative dropdown-hover price-container">
+                            <button class="btn btn-price">
+                                ¥100
+                            </button>
+                        </div>
                     </div>
                 </li>
                 <li class="item-orange">
-                    <label class="inline">
-                        <span class="lbl"> 炸羊排</span>
-                    </label>
-                    <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-price">
-                            ¥75
-                        </button>
+                    <div class="menu-entry" >
+                        <div class="pull-left">
+                            <div>
+                                <label class="inline">
+                                    <span class="lbl"> 炸羊排</span>
+                                </label>
+                            </div>
+                            <div>
+                                <span class="rating">
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                </span>
+                                <label class="sales-data">月售1份</label>
+                            </div>
+                        </div>
+                        <div class="inline pull-right position-relative dropdown-hover price-container">
+                            <button class="btn btn-price">
+                                ¥198
+                            </button>
+                        </div>
                     </div>
                 </li>
                 <li class="item-orange">
-                    <label class="inline">
-                        <span class="lbl"> 姜葱爆羊肚</span>
-                    </label>
-                    <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-price">
-                            ¥58
-                        </button>
+                    <div class="menu-entry" >
+                        <div class="pull-left">
+                            <div>
+                                <label class="inline">
+                                    <span class="lbl"> 葱姜爆羊肚</span>
+                                </label>
+                            </div>
+                            <div>
+                                <span class="rating">
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                </span>
+                                <label class="sales-data">月售16份</label>
+                            </div>
+                        </div>
+                        <div class="inline pull-right position-relative dropdown-hover price-container">
+                            <button class="btn btn-price">
+                                ¥58
+                            </button>
+                        </div>
                     </div>
                 </li>
                 <li class="header"> 卤味叉烧</li>
                 <li class="item-orange">
-                    <label class="inline">
-                        <span class="lbl"> 白切文昌鸡</span>
-                    </label>
-                    <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-price">
-                            ¥53
-                        </button>
+                    <div class="menu-entry" >
+                        <div class="pull-left">
+                            <div>
+                                <label class="inline">
+                                    <span class="lbl"> 白切文昌鸡</span>
+                                </label>
+                            </div>
+                            <div>
+                                <span class="rating">
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                </span>
+                                <label class="sales-data">月售784份</label>
+                            </div>
+                        </div>
+                        <div class="inline pull-right position-relative dropdown-hover price-container">
+                            <button class="btn btn-price">
+                                ¥53
+                            </button>
+                        </div>
                     </div>
                 </li>
                 <li class="item-orange">
-                    <label class="inline">
-                        <span class="lbl"> 脆皮乳猪</span>
-                    </label>
-                    <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-price">
-                            ¥68
-                        </button>
+                    <div class="menu-entry" >
+                        <div class="pull-left">
+                            <div>
+                                <label class="inline">
+                                    <span class="lbl"> 脆皮乳猪</span>
+                                </label>
+                            </div>
+                            <div>
+                                <span class="rating">
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                </span>
+                                <label class="sales-data">月售91份</label>
+                            </div>
+                        </div>
+                        <div class="inline pull-right position-relative dropdown-hover price-container">
+                            <button class="btn btn-price">
+                                ¥68
+                            </button>
+                        </div>
                     </div>
                 </li>
                 <li class="item-orange">
-                    <label class="inline">
-                        <span class="lbl"> 蜜汁叉烧</span>
-                    </label>
-                    <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-price">
-                            ¥48
-                        </button>
+                    <div class="menu-entry" >
+                        <div class="pull-left">
+                            <div>
+                                <label class="inline">
+                                    <span class="lbl"> 蜜汁叉烧</span>
+                                </label>
+                            </div>
+                            <div>
+                                <span class="rating">
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                </span>
+                                <label class="sales-data">月售34份</label>
+                            </div>
+                        </div>
+                        <div class="inline pull-right position-relative dropdown-hover price-container">
+                            <button class="btn btn-price">
+                                ¥35
+                            </button>
+                        </div>
                     </div>
                 </li>
                 <li class="item-orange">
-                    <label class="inline">
-                        <span class="lbl"> 卤水拼盘</span>
-                    </label>
-                    <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-price">
-                            ¥48
-                        </button>
+                    <div class="menu-entry" >
+                        <div class="pull-left">
+                            <div>
+                                <label class="inline">
+                                    <span class="lbl"> 卤水拼盘</span>
+                                </label>
+                            </div>
+                            <div>
+                                <span class="rating">
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                    <span class="star"></span>
+                                </span>
+                                <label class="sales-data">月售200份</label>
+                            </div>
+                        </div>
+                        <div class="inline pull-right position-relative dropdown-hover price-container">
+                            <button class="btn btn-price">
+                                ¥48
+                            </button>
+                        </div>
                     </div>
                 </li>
             </ul>
