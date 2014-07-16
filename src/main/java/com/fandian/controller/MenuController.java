@@ -15,5 +15,8 @@ public class MenuController {
         return "menu/quick-view";
     }
 
-
+    @RequestMapping("/customer")
+    public String getCustomerView(){
+        return "menu/customer-view";
+    }
 }

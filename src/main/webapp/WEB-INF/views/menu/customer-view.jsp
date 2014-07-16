@@ -27,109 +27,350 @@
 <body style="padding-bottom: 70px; padding-top:5px;">
 
 <div class="container">
-    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
-        <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-7">
-                    <span class="sr-only">私家小厨</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">分类</a>
-            </div>
 
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-7">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#favorite">精品推荐</a></li>
-                    <li><a href="#type1">分类1</a></li>
-                    <li><a href="#type2">分类2</a></li>
+    <div class="row" style="background-color: whitesmoke;">
+        <div class="col-xs-3">
+            <div class="affix affix-top">
+                <ul class="nav nav-pills nav-stacked" id="myTab">
+                    <li class="active"><a href="#favorite">推荐</a></li>
+                    <li><a href="#hot">凉菜</a></li>
+                    <li><a href="#cold">热菜</a></li>
+                    <li><a href="#soup">汤</a></li>
+                    <li><a href="#staple">主食</a></li>
+                    <li><a href="#drink">酒水</a></li>
                 </ul>
-            </div><!-- /.navbar-collapse -->
+            </div>
         </div>
-    </nav>
+        <div class="col-xs-9"  style="background-color: white;">
+            <div class="tab-content">
+                <div class="tab-pane active" id="favorite">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-    <div class="panel panel-default" id="favorite">
-        <div class="panel-heading">
-            精品推荐
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-6 col-md-4">
-                    <div class="thumbnail">
-                        <img data-src="holder.js/350x350/basic" alt="...">
-                        <div class="caption">
-                            <h3>菜名</h3>
-                            <p>菜品介绍。。。。</p>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="text-center">
-                                        <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                    </div>
+                </div>
+                <div class="tab-pane" id="hot">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="tab-pane" id="cold">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="tab-pane" id="soup">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="tab-pane" id="staple">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="tab-pane" id="drink">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p><span class="info_summary">介绍摘要</span><span class="info_dots">...</span><a href="#" class="info_more_trigger">更多</a> </p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="thumbnail">
+                                <img data-src="holder.js/350x350/basic" alt="...">
+                                <div class="caption">
+                                    <h3>菜名</h3>
+                                    <p>菜品介绍。。。。</p>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="text-center">
+                                                <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 
-    <div class="panel panel-default" id="type1">
-        <div class="panel-heading">
-            分类1
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-6 col-md-4">
-                    <div class="thumbnail">
-                        <img data-src="holder.js/350x350/basic" alt="...">
-                        <div class="caption">
-                            <h3>菜名</h3>
-                            <p>菜品介绍。。。。</p>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="text-center">
-                                        <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-            </div>
-        </div>
-    </div>
-
-    <div class="panel panel-default" id="type2">
-        <div class="panel-heading">
-            分类2
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-sm-6 col-md-4">
-                    <div class="thumbnail">
-                        <img data-src="holder.js/350x350/basic" alt="...">
-                        <div class="caption">
-                            <h3>菜名</h3>
-                            <p>菜品介绍。。。。</p>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="text-center">
-                                        <button class="btn btn-primary"><span class="glyphicon glyphicon-fire"></span> 我要点</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
 </div>
+<script type="application/javascript">
+    $('#myTab a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
+</script>
 </body>
 </html>
