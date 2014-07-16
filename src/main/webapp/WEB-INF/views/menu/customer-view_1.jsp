@@ -20,20 +20,70 @@
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
-    <script src="/resources/js/holder.js"></script>
 
     <style type="text/css">
         body {padding-bottom: 70px;}
         .type-header {margin-top:70px;}
     </style>
+
+    <script type="text/html" id="dishInfoTemplate">
+        <div class="col-xs-12 col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <a href="#" class="thumbnail">
+                                <img data-template-bind='[{"attribute":"data-src","value":"img_url"}]' alt="...">
+                            </a>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="row">
+
+                                <h3 data-content="name"></h3>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="pull-right">
+                                <span class="badge" data-content="sub_num" data-id="sub_number_id"></span>
+                                &nbsp;&nbsp;
+                                <button class="btn btn-default btn-add-to-cart" title="点击加入餐车" data-id="id">
+                                    <i class="fa fa-rmb"></i>
+                                    <span data-content="price"></span>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </script>
+
+    <script type="text/html" id="dishListTemplate">
+        <div class="row" data-id="typeid">
+            <div class="well well-sm type-header" data-content="name"></div>
+
+            <div class="dish-list"></div>
+        </div>
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="/resources/js/jquery.loadTemplate-1.4.4.min.js"></script>
+    <script src="/resources/js/holder.js"></script>
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="mainContainer">
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
 
@@ -72,19 +122,20 @@
         </div>
     </nav>
 
-    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
         <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="pull-left">
                         <p class="navbar-text">
-                            <i class="fa fa-cutlery"></i> 3品 <i class="fa fa-rmb"></i> 145
+                            <i class="fa fa-cutlery"></i> <span id="summary_info_number"></span>品
+                            <i class="fa fa-rmb"></i> <span id="summary_info_fee"></span>
                         </p>
 
                     </div>
                     <div class="pull-right">
-                        <button class="btn btn-primary navbar-btn">去下单</button>
+                        <button class="btn btn-danger navbar-btn">去下单</button>
                     </div>
                 </div>
 
@@ -92,674 +143,46 @@
         </div>
     </nav>
 
-    <div class="row" id="favorite">
-        <div class="well well-sm type-header">精品推荐</div>
+    <div id="dishListContainer">
 
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-                                <br/>
-                                <a href="#" class="info-detail-trigger">详细介绍</a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
     </div>
 
-    <div class="row" id="hot">
-        <div class="well well-sm type-header">养生热菜</div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="row" id="hot">
-        <div class="well well-sm type-header">养生热菜</div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div><div class="row" id="cold">
-        <div class="well well-sm type-header">爽口凉菜</div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="row" id="drink">
-        <div class="well well-sm type-header">酒水饮料</div>
-
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="col-xs-12 col-md-4">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <a href="#" class="thumbnail">
-                                <img data-src="holder.js/100%x139/basic" alt="...">
-                            </a>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="row">
-
-                                <h3>菜名</h3>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="pull-right">
-                                <span class="badge">1</span>
-                                &nbsp;&nbsp;
-                                <button class="btn btn-default" title="点击加入餐车">
-                                    <i class="fa fa-rmb"></i>
-                                    15
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
 </div>
 <script type="application/javascript">
+    var type = [{typeid:"favorite",name:"精品推荐",info:[
+        {id:"test1",name:"Test1",img_url:"holder.js/100%*100/basic",price:15,sub_number_id:"sub_number_test1"},
+        {id:"test2",name:"Test2",img_url:"holder.js/100%*100/basic",price:25,sub_number_id:"sub_number_test2"},
+        {id:"test3",name:"Test3",img_url:"holder.js/100%*100/basic",price:35,sub_number_id:"sub_number_test3"}
+    ]},{typeid:"hot",name:"养生热菜"}];
 
+    var summary_info = {"count":0,"fee":0,"detail":{}};
+
+    function updateSummaryInfo(count,fee){
+        $('#summary_info_number').text(summary_info.count);
+        $('#summary_info_fee').text(summary_info.fee);
+    }
+
+    $(function(){
+
+        $('#dishListContainer').loadTemplate($("#dishListTemplate"),type);
+        $.each(type,function(index,value){
+            $('#'+value.typeid+" .dish-list").loadTemplate($('#dishInfoTemplate'),value.info);
+        });
+
+        $('.btn-add-to-cart').click(function(){
+            var id = $(this).attr('id');
+            var price = $(this).children('span').first().text();
+            if (!summary_info.detail[id]) {
+                summary_info.detail[id] = {fee:parseInt(price),count:0};
+            }
+            summary_info.detail[id]["count"] = summary_info.detail[id]["count"]++;
+            summary_info.count = summary_info.count++;
+            summary_info.fee = summary_info.fee + summary_info.detail.id.fee;
+
+            $('#sub_number_' + id).text(summary_info.detail[id]["count"]);
+            updateSummaryInfo();
+        });
+    });
 
     $('.info_more_trigger').click(function(e){
         e.preventDefault();
