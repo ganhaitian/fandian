@@ -122,23 +122,32 @@
 
         }
 
+        .top-header {
+            background-color: #3993CF;
+        }
+
+        .footbar{
+            background-color: #2F373E;
+            color: #fff;
+        }
+
     </style>
 </head>
 <body>
-<div class="container">
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<div class="container-fluid">
+    <nav class="navbar navbar-fixed-top top-header" role="navigation">
         <div class="container">
             <div class="row">
-                <div class="col-xs-8 col-md-8">
+                <div class="col-xs-12 col-md-8">
                     <div style="margin-top: 8px;">
-                        <input type="text" class="form-control" placeholder="点点儿什么？"/>
+                        <input type="text" class="form-control" placeholder="快搜..."/>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
 
-    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <nav class="navbar footbar navbar-fixed-bottom" role="navigation">
         <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
         <div class="container">
             <div class="row">
@@ -150,14 +159,14 @@
 
                     </div>
                     <div class="pull-right">
-                        <button class="btn btn-primary navbar-btn">去下单</button>
+                        <button class="btn btn-danger navbar-btn">去下单</button>
                     </div>
                 </div>
 
             </div>
         </div>
     </nav>
-    
+
     <div class="row menu-content">
         <div class="col-xs-12">
             <ul class="item-list">
