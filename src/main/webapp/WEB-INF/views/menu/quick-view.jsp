@@ -19,9 +19,12 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
     <style type="text/css">
+
+        body {padding-bottom: 70px;}
+
         .item-list {
             list-style: none outside none;
-            margin: 0;
+            margin-top: 70px;
             padding: 0;
         }
 
@@ -45,6 +48,19 @@
         .item-list > li label{
             font-size:18px;
             font-weight: 800;
+        }
+
+        .item-list button{
+            width:70px;
+        }
+
+        .item-list .header{
+            background-color: #DDDDDD;
+            font-size: 14px;
+            color:#7E7E7E;
+            padding-bottom: 4px;
+            padding-top: 4px;
+            padding-left: 12px;
         }
 
         .infobox {
@@ -91,29 +107,68 @@
         }
 
         .infobox-grey.infobox-dark {
-            background-color: #999;
-            border-color: #999;
+            background-color: #2F373E;
+            border-color: #2F373E;
         }
 
         .infobox-content {
             color: #fff;
-            width:60px;
+            width:200px;
             float:left;
+            font-size:18px;
+        }
+
+        .menu-content{
+
         }
 
     </style>
 </head>
 <body>
-    <div class="row">
+<div class="container">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-8 col-md-8">
+                    <div style="margin-top: 8px;">
+                        <input type="text" class="form-control" placeholder="点点儿什么？"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+        <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="pull-left">
+                        <p class="navbar-text">
+                            <i class="fa fa-cutlery"></i> 3品 <i class="fa fa-rmb"></i> 145
+                        </p>
+
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-primary navbar-btn">去下单</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+    
+    <div class="row menu-content">
         <div class="col-xs-12">
             <ul class="item-list">
+                <li class="header"> 烹羊世家</li>
                 <li class="item-orange">
                     <label class="inline">
                         <span class="lbl"> 五香扣羊</span>
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
                         <button class="btn btn-primary">
-                            <i class="">¥25</i>
+                            ¥25
                         </button>
                     </div>
                 </li>
@@ -123,7 +178,7 @@
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
                         <button class="btn btn-primary">
-                            <i class="icon-only bigger-120">¥25</i>
+                            ¥25
                         </button>
                     </div>
                 </li>
@@ -133,7 +188,7 @@
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
                         <button class="btn btn-primary">
-                            <i class="icon-only bigger-120">¥50</i>
+                            ¥50
                         </button>
                     </div>
                 </li>
@@ -143,7 +198,7 @@
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
                         <button class="btn btn-primary">
-                            <i class="icon-only bigger-120">¥100</i>
+                            ¥100
                         </button>
                     </div>
                 </li>
@@ -153,24 +208,64 @@
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
                         <button class="btn btn-primary">
-                            <i class="icon-only bigger-120">¥75</i>
+                            ¥75
+                        </button>
+                    </div>
+                </li>
+                <li class="item-orange">
+                    <label class="inline">
+                        <span class="lbl"> 姜葱爆羊肚</span>
+                    </label>
+                    <div class="inline pull-right position-relative dropdown-hover">
+                        <button class="btn btn-primary">
+                            ¥58
+                        </button>
+                    </div>
+                </li>
+                <li class="header"> 卤味叉烧</li>
+                <li class="item-orange">
+                    <label class="inline">
+                        <span class="lbl"> 白切文昌鸡</span>
+                    </label>
+                    <div class="inline pull-right position-relative dropdown-hover">
+                        <button class="btn btn-primary">
+                            ¥53
+                        </button>
+                    </div>
+                </li>
+                <li class="item-orange">
+                    <label class="inline">
+                        <span class="lbl"> 脆皮乳猪</span>
+                    </label>
+                    <div class="inline pull-right position-relative dropdown-hover">
+                        <button class="btn btn-primary">
+                            ¥68
+                        </button>
+                    </div>
+                </li>
+                <li class="item-orange">
+                    <label class="inline">
+                        <span class="lbl"> 蜜汁叉烧</span>
+                    </label>
+                    <div class="inline pull-right position-relative dropdown-hover">
+                        <button class="btn btn-primary">
+                            ¥48
+                        </button>
+                    </div>
+                </li>
+                <li class="item-orange">
+                    <label class="inline">
+                        <span class="lbl"> 卤水拼盘</span>
+                    </label>
+                    <div class="inline pull-right position-relative dropdown-hover">
+                        <button class="btn btn-primary">
+                            ¥48
                         </button>
                     </div>
                 </li>
             </ul>
         </div>
     </div>
-    <footer class="footer">
-        <div class="col-xs-12 infobox infobox-dark infobox-grey">
-            <div class="infobox-dark infobox-content">
-                4份105
-            </div>
-            <div class="inline pull-right position-relative dropdown-hover">
-                <button class="btn btn-danger">
-                    <i class="icon-only bigger-120">去结算</i>
-                </button>
-            </div>
-        </div>
-    </footer>
+    </div>
 </body>
 </html>
