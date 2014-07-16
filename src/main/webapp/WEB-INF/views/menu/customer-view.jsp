@@ -156,6 +156,7 @@
                                 <div class="caption">
                                     <h3>菜名</h3>
                                     <p><span class="info_summary">介绍摘要</span><span class="info_dots">...</span><a href="#" class="info_more_trigger">更多</a> </p>
+                                    <p class="hide">详细说明在这里详细说明在这里详细说明在这里详细说明在这里详细说明在这里详细说明在这里详细说明在这里详细说明在这里详细说明在这里</p>
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="text-center">
@@ -370,7 +371,12 @@
     $('#myTab a').click(function (e) {
         e.preventDefault()
         $(this).tab('show')
-    })
+    });
+
+    $('.info_more_trigger').click(function(e){
+        e.preventDefault();
+        $(this).parent("p").hide().next('p').removeClass('hide');
+    });
 </script>
 </body>
 </html>
