@@ -15,6 +15,7 @@
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
@@ -24,7 +25,7 @@
 
         .item-list {
             list-style: none outside none;
-            margin-top: 70px;
+            margin-top: 50px;
             padding: 0;
         }
 
@@ -47,7 +48,7 @@
 
         .item-list > li label{
             font-size:18px;
-            font-weight: 800;
+            font-weight: 500;
         }
 
         .item-list button{
@@ -129,6 +130,52 @@
         .footbar{
             background-color: #2F373E;
             color: #fff;
+            font-size: 18px;
+        }
+
+        .btn-price{
+            background-color: #3993CF;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .nav-search {
+            line-height: 24px;
+        }
+
+        span.input-icon {
+            display: inline-block;
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon > input {
+            padding-left: 24px;
+            padding-right: 6px;
+        }
+
+        .nav-search .nav-search-icon {
+            background-color: transparent;
+            color: #6fb3e0 !important;
+            font-size: 14px !important;
+            line-height: 24px !important;
+        }
+
+        .nav-search-icon {
+            border: medium none;
+            border-radius: 0;
+            bottom: 1px;
+            color: #909090;
+            display: inline-block;
+            font-size: 16px;
+            left: 3px;
+            line-height: 28px;
+            padding: 0 3px;
+            position: absolute;
+            top: 2px;
+            z-index: 2;
         }
 
     </style>
@@ -139,9 +186,17 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-md-8">
-                    <div style="margin-top: 8px;">
-                        <input type="text" class="form-control" placeholder="快搜..."/>
+                    <div class="input-group margin-bottom-sm" style="margin-top: 8px;width:100%" >
+                        <%--<span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>--%>
+                        <input type="text" class="form-control" style="padding-left: 24px;" placeholder="快点..."/>
+                        <i class="ace-icon fa fa-search fa-2x nav-search-icon"></i>
                     </div>
+                     <%--<div id="nav-search" class="nav-search" style="margin-top: 8px;" >
+						<span class="input-icon">
+							<input type="text" autocomplete="off" id="nav-search-input" class="form-control nav-search-input" placeholder="快点 ...">
+							<i class="ace-icon fa fa-search fa-2x nav-search-icon"></i>
+					    </span>
+                     </div>--%>
                 </div>
             </div>
         </div>
@@ -154,7 +209,7 @@
                 <div class="col-xs-12">
                     <div class="pull-left">
                         <p class="navbar-text">
-                            <i class="fa fa-cutlery"></i> 3品 <i class="fa fa-rmb"></i> 145
+                            <i class="fa fa-cutlery"></i> 3品 <i class="fa fa-rmb"></i>145
                         </p>
 
                     </div>
@@ -168,15 +223,14 @@
     </nav>
 
     <div class="row menu-content">
-        <div class="col-xs-12">
             <ul class="item-list">
                 <li class="header"> 烹羊世家</li>
                 <li class="item-orange">
                     <label class="inline">
                         <span class="lbl"> 五香扣羊</span>
                     </label>
-                    <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-primary">
+                    <div class="pull-right">
+                        <button class="btn btn-price">
                             ¥25
                         </button>
                     </div>
@@ -186,7 +240,7 @@
                         <span class="lbl"> 羊肉串</span>
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-price">
                             ¥25
                         </button>
                     </div>
@@ -196,7 +250,7 @@
                         <span class="lbl"> 椰子饭</span>
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-price">
                             ¥50
                         </button>
                     </div>
@@ -206,7 +260,7 @@
                         <span class="lbl"> 干煸羊</span>
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-price">
                             ¥100
                         </button>
                     </div>
@@ -216,7 +270,7 @@
                         <span class="lbl"> 炸羊排</span>
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-price">
                             ¥75
                         </button>
                     </div>
@@ -226,7 +280,7 @@
                         <span class="lbl"> 姜葱爆羊肚</span>
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-price">
                             ¥58
                         </button>
                     </div>
@@ -237,7 +291,7 @@
                         <span class="lbl"> 白切文昌鸡</span>
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-price">
                             ¥53
                         </button>
                     </div>
@@ -247,7 +301,7 @@
                         <span class="lbl"> 脆皮乳猪</span>
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-price">
                             ¥68
                         </button>
                     </div>
@@ -257,7 +311,7 @@
                         <span class="lbl"> 蜜汁叉烧</span>
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-price">
                             ¥48
                         </button>
                     </div>
@@ -267,13 +321,12 @@
                         <span class="lbl"> 卤水拼盘</span>
                     </label>
                     <div class="inline pull-right position-relative dropdown-hover">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-price">
                             ¥48
                         </button>
                     </div>
                 </li>
             </ul>
-        </div>
     </div>
     </div>
 </body>
