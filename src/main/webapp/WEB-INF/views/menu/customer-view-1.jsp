@@ -54,9 +54,9 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="pull-right">
-                                <span class="badge" data-content="sub_num" data-id="sub_number_id"></span>
+                                <span class="badge text-primary" data-content="sub_num" data-id="sub_number_id"></span>
                                 &nbsp;&nbsp;
-                                <button class="btn btn-default btn-add-to-cart" title="点击加入餐车" data-id="id">
+                                <button class="btn btn-default btn-add-to-cart" title="点击加入餐车" data-id="id"  data-template-bind='[{"attribute":"data-name","value":"name"},{"attribute":"data-price","value":"price"}]'>
                                     <i class="fa fa-rmb"></i>
                                     <span data-content="price"></span>
                                 </button>
@@ -133,9 +133,9 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="pull-left">
-                        <p class="navbar-text">
-                            <i class="fa fa-cutlery"></i> <span id="summary_info_number"></span>品
-                            <i class="fa fa-rmb"></i> <span id="summary_info_fee"></span>
+                        <p class="navbar-text" id="billSummaryTrigger" data-html="true" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+                            <i class="fa fa-cutlery"></i>&nbsp;&nbsp;<strong id="summary_info_number"></strong>&nbsp;&nbsp;品&nbsp;&nbsp;
+                            <i class="fa fa-rmb"></i>&nbsp;&nbsp;<strong id="summary_info_fee"></strong>
                         </p>
 
                     </div>
@@ -175,12 +175,19 @@
 
     var summary_info = {count:0,fee:0,detail:{}};
 
-    function updateSummaryInfo(count,fee){
+    function updateSummaryInfo(){
         $('#summary_info_number').text(summary_info.count);
         $('#summary_info_fee').text(summary_info.fee);
+
+        var popoverHtml = "";
+        $.each(summary_info.detail,function(i,v){
+            popoverHtml += "<li class=\"list-group-item\"><span class=\"badge\">"+ v.count +"</span>"+ v.name+"</li>";
+
+        });
+        $('#billSummaryTrigger').attr("data-content","<ul class=\"list-group\">"+popoverHtml+"</ul>");
+
+        $('#billSummaryTrigger').popover();
     }
-
-
 
 
     $(function(){
@@ -211,9 +218,10 @@
 
         $('.btn-add-to-cart').click(function(){
             var id = $(this).attr('id');
-            var price = parseInt($(this).children('span').first().text());
+            var price = parseInt($(this).attr('data-price'));
+            var name = $(this).attr('data-name');
             if (!summary_info.detail[id]) {
-                summary_info.detail[id] = {fee:price,count:0};
+                summary_info.detail[id] = {fee:price,count:0,name:name};
             }
             summary_info.detail[id]["count"] = summary_info.detail[id]["count"]+1;
             summary_info['count'] = summary_info['count']+1;
@@ -221,16 +229,17 @@
 
             $('#sub_number_' + id).text(summary_info.detail[id]["count"]);
 
+
+
             updateSummaryInfo();
 
             console.log(summary_info);
         });
+
+
     });
 
-    $('.info_more_trigger').click(function(e){
-        e.preventDefault();
-        $(this).parent("p").hide().next('p').removeClass('hide');
-    });
+
 </script>
 </body>
 </html>

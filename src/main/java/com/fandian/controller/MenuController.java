@@ -22,6 +22,6 @@ public class MenuController {
 
     @RequestMapping("/customer/top")
     public String getCustomerViewTop(){
-        return "menu/customer-view_1";
+        return "menu/customer-view-1";
     }
 }

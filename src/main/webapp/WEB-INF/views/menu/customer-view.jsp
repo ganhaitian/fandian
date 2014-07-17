@@ -17,16 +17,67 @@
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+
+
+
+    <style type="text/css">
+        body {padding-bottom: 70px;padding-top: 70px;}
+
+    </style>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
-    <script src="/resources/js/holder.js"></script>
+    <script src="/resources/js/jquery.loadTemplate-1.4.4.min.js"></script>
 </head>
-<body style="padding-bottom: 70px; padding-top:5px;">
+<body>
 
 <div class="container">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+
+            <div class="row">
+
+                <div class="col-xs-12 col-md-12">
+                    <div style="margin-top: 8px;">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                            <input type="text" class="form-control" placeholder="点点儿什么？"/>
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </nav>
+
+    <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+        <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="pull-left">
+                        <p class="navbar-text">
+                            <i class="fa fa-cutlery"></i> <span id="summary_info_number"></span>品
+                            <i class="fa fa-rmb"></i> <span id="summary_info_fee"></span>
+                        </p>
+
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-danger navbar-btn">去下单</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </nav>
 
     <div class="row" style="background-color: whitesmoke;">
         <div class="col-xs-3">
@@ -41,7 +92,7 @@
                 </ul>
             </div>
         </div>
-        <div class="col-xs-9"  style="background-color: white;">
+        <div class="col-xs-9"  style="background-color: white;min-height: 300px;">
             <div class="tab-content">
                 <div class="tab-pane active" id="favorite">
                     <div class="row">
