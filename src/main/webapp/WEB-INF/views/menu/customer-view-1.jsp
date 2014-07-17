@@ -56,7 +56,7 @@
                             <div class="pull-right">
                                 <span class="badge text-primary" data-content="sub_num" data-id="sub_number_id"></span>
                                 &nbsp;&nbsp;
-                                <button class="btn btn-default btn-add-to-cart" title="点击加入餐车" data-id="id"  data-template-bind='[{"attribute":"data-name","value":"name"},{"attribute":"data-price","value":"price"}]'>
+                                <button class="btn btn-default btn-add-to-cart" title="点击加入餐车" data-id="id"  data-template-bind='[{"attribute":"data-name","value":"name"},{"attribute":"data-price","value":"price"},{"attribute":"data-sub-number-id","value":"sub_number_id"}]'>
                                     <i class="fa fa-rmb"></i>
                                     <span data-content="price"></span>
                                 </button>
@@ -134,13 +134,16 @@
                 <div class="col-xs-12">
                     <div class="pull-left">
                         <p class="navbar-text" id="billSummaryTrigger" data-html="true" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
-                            <i class="fa fa-cutlery"></i>&nbsp;&nbsp;<strong id="summary_info_number"></strong>&nbsp;&nbsp;品&nbsp;&nbsp;
+                            <i class="fa fa-cutlery"></i>&nbsp;&nbsp;<strong id="summary_info_number"></strong>&nbsp;&nbsp;例&nbsp;&nbsp;
                             <i class="fa fa-rmb"></i>&nbsp;&nbsp;<strong id="summary_info_fee"></strong>
                         </p>
 
                     </div>
                     <div class="pull-right">
-                        <button class="btn btn-danger navbar-btn">去下单</button>
+                        <form action="/bill/view" method="post" enctype="application/x-www-form-urlencoded">
+                            <input type="hidden" name="param" id="billInfoParam"/>
+                            <button id="submitBillBtn" class="btn btn-danger navbar-btn">去下单</button>
+                        </form>
                     </div>
                 </div>
 
@@ -165,12 +168,13 @@
 </div>
 <script type="application/javascript">
     var type = [{typeid:"favorite",href:"#favorite",name:"精品推荐",info:[
-        {id:"test1",name:"Test1",img_url:"/resources/img/holder.jpg",price:15,month_sell_sum:145,sub_number_id:"sub_number_test1",star_info_id:"star_info_test1",star_info:5},
-        {id:"test2",name:"Test2",img_url:"/resources/img/holder.jpg",price:25,month_sell_sum:3455,sub_number_id:"sub_number_test2",star_info_id:"star_info_test2",star_info:4},
-        {id:"test3",name:"Test3",img_url:"/resources/img/holder.jpg",price:35,month_sell_sum:1233,sub_number_id:"sub_number_test3",star_info_id:"star_info_test3",star_info:3}
+        {id:"1",name:"虎皮尖椒",img_url:"/resources/img/hpjj.jpg",price:22,month_sell_sum:145,sub_number_id:"sub_number_1",star_info_id:"star_info_1",star_info:5},
+        {id:"2",name:"萝卜干煎蛋",img_url:"/resources/img/lbgjd.jpg",price:20,month_sell_sum:3455,sub_number_id:"sub_number_2",star_info_id:"star_info_2",star_info:4},
+        {id:"3",name:"松仁玉米",img_url:"/resources/img/srym.jpg",price:28,month_sell_sum:1233,sub_number_id:"sub_number_3",star_info_id:"star_info_3",star_info:3}
     ]},{typeid:"hot",href:"#hot",name:"养生热菜",info:[
-        {id:"test4",name:"Test4",img_url:"/resources/img/holder.jpg",price:68,month_sell_sum:656,sub_number_id:"sub_number_test4",star_info_id:"star_info_test4",star_info:5},
-        {id:"test5",name:"Test5",img_url:"/resources/img/holder.jpg",price:66,month_sell_sum:989,sub_number_id:"sub_number_test5",star_info_id:"star_info_test5",star_info:4}
+        {id:"4",name:"王府回锅肉",img_url:"/resources/img/wfhgr.jpg",price:28,month_sell_sum:656,sub_number_id:"sub_number_4",star_info_id:"star_info_4",star_info:5},
+        {id:"5",name:"西芹百合",img_url:"/resources/img/xqbh.jpg",price:28,month_sell_sum:989,sub_number_id:"sub_number_5",star_info_id:"star_info_5",star_info:4},
+        {id:"6",name:"咸鱼茄子煲",img_url:"/resources/img/xyqzb.jpg",price:26,month_sell_sum:989,sub_number_id:"sub_number_6",star_info_id:"star_info_6",star_info:4}
     ]}];
 
     var summary_info = {count:0,fee:0,detail:{}};
@@ -227,16 +231,23 @@
             summary_info['count'] = summary_info['count']+1;
             summary_info['fee'] = summary_info['fee'] + summary_info.detail[id]['fee'];
 
-            $('#sub_number_' + id).text(summary_info.detail[id]["count"]);
-
-
+            $('#' + $(this).attr('data-sub-number-id')).text(summary_info.detail[id]["count"]);
 
             updateSummaryInfo();
 
             console.log(summary_info);
         });
 
+        $('#submitBillBtn').click(function(){
+            if ($(this).hasClass('disabled')){
+                return;
+            }else{
+                $(this).addClass('disabled');
+                $('#billInfoParam').val(JSON.stringify(summary_info.detail));
+                $(this).parent("form").submit();
+            }
 
+        });
     });
 
 
