@@ -71,7 +71,7 @@
         }
 
         .menu-content {
-
+            background-color: #EEEEEE;
         }
 
         .top-header {
@@ -215,6 +215,10 @@
         };
 
         $(document).ready(function () {
+
+            //修正菜单的宽度
+            $('#affix_menu').width($('.col-xs-3').width());
+
             $("button.btn-price").bind("click", function () {
                 var priceStr = $(this).html().trim();
                 var menuEntry = $(this).parents("div.menu-entry")[0];
@@ -277,7 +281,7 @@
 
 <div class="row menu-content" style="margin-top: 50px;">
 <div class="col-xs-3 menu-category ">
-    <div class="affix affix-top">
+    <div id="affix_menu" class="affix affix-top">
         <ul id="category" class="nav nav-pills nav-stacked" role="tablist">
             <li class="active"><a data-toggle="tab" role="tab" href="#yang">烹羊世家</a></li>
             <li><a data-toggle="tab" role="tab" href="#lu">卤味叉烧</a></li>
