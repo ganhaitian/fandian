@@ -1,9 +1,11 @@
 package com.fandian.controller;
 
+import com.fandian.bean.BillDetail;
 import com.fandian.util.JSONUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
@@ -24,6 +26,12 @@ public class BillController {
     @RequestMapping("/new")
     public String toNewBillView(){
         return "menu/customer-view-1";
+    }
+
+    @RequestMapping("/confirm")
+    public String confirmBill(@RequestBody List<BillDetail> billDetails){
+
+        return "";
     }
 
     @RequestMapping("/view")

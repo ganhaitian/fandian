@@ -211,8 +211,9 @@
         }
 
         var bill = {
-            totalPrice: 0,
-            dishes: []
+            fee: 0,
+            count:0,
+            detail: {}
         };
 
         $(document).ready(function () {
@@ -220,23 +221,35 @@
             //修正菜单的宽度
             $('#affix_menu').width($('.col-xs-3').width());
 
-            $("button.btn-price").bind("click", function () {
+            $(document).on("click",'button.btn-price', function () {
                 var priceStr = $(this).html().trim();
                 var menuEntry = $(this).parents("div.menu-entry")[0];
                 var price = Number(priceStr.substr(1));
-                bill.totalPrice = bill.totalPrice + price;
-                bill.dishes.push({
+                bill.fee = bill.fee + price;
+                bill.count = bill.count + 1;
+                bill.detail[$(menuEntry).data("id")] = {
                     "name": $("label.inline span", menuEntry).html().trim(),
-                    "price": price,
-                    "amount": 1
-                });
+                    "fee": price,
+                    "count": 1
+                };
                 $("nav.footbar .navbar-text").html('<i class="fa fa-cutlery"></i> ' +
-                        bill.dishes.length + '品 <i class="fa fa-rmb"></i>' + bill.totalPrice);
+                        bill.count + '品 <i class="fa fa-rmb"></i>' + bill.fee);
             });
 
             //Initialized category
             $.each($(".menu-content li a"),function(index,category){
                 loadMenuCategory($(category).data("id"));
+            });
+
+            //提交账单按钮
+            $('#submitBillBtn').click(function(){
+                if ($(this).hasClass('disabled')){
+                    return;
+                }else{
+                    $(this).addClass('disabled');
+                    $('#billInfoParam').val(JSON.stringify(bill.detail));
+                    $(this).parent("form").submit();
+                }
             });
 
         });
@@ -266,7 +279,7 @@
 
                         $.each(data,function(index,menuEntry){
                             var menu = $('<li class="item-orange">'+
-                                '<div class="menu-entry">'+
+                                '<div class="menu-entry" data-id ="'+menuEntry.id+'" >'+
                                     '<div class="pull-left"><div>'+
                                         '<label class="inline">'+
                                             '<span class="lbl">'+menuEntry.name+'</span>'+
@@ -331,7 +344,10 @@
 
                 </div>
                 <div class="pull-right">
-                    <button class="btn btn-danger navbar-btn">去下单</button>
+                    <form action="/fandian/bill/view" method="post" enctype="application/x-www-form-urlencoded">
+                        <input type="hidden" name="param" id="billInfoParam"/>
+                        <button id="submitBillBtn" class="btn btn-danger navbar-btn btn-price">去下单</button>
+                    </form>
                 </div>
             </div>
 
