@@ -206,7 +206,7 @@
                 $.each(value.info,function(i,v){
                     var tmpHtml = "";
                     for (var j=0;j<5;j++){
-                        if (j< v.star_info){
+                        if (j< v.starts){
                             tmpHtml += "<i class=\"fa fa-star\"></i>";
                         }else{
                             tmpHtml += "<i class=\"fa fa-star-o\"></i>";
