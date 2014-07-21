@@ -13,13 +13,16 @@
     <!-- Scans within the base package of the application for @Components to configure as beans -->
     <context:component-scan base-package="com.fandian"/>
 
-    <!--<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
           destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url"
-                  value="jdbc:mysql://210.242.74.213:3306/fd?useUnicode=true&characterEncoding=utf-8;"/>
+        <property name="url" >
+            <value>
+                jdbc:mysql://210.242.74.213:3306/fd?characterEncoding=utf-8
+            </value>
+        </property>
         <property name="username" value="root"/>
-        <property name="password" value=""/>
+        <property name="password" value="windhot123456"/>
         <property name="initialSize" value="3"/>
         <property name="minIdle" value="3"/>
         <property name="maxActive" value="20"/>
@@ -31,6 +34,6 @@
         <property name="testOnBorrow" value="false"/>
         <property name="testOnReturn" value="false"/>
         <property name="filters" value="stat"/>
-    </bean>-->
+    </bean>
 
 </beans>
