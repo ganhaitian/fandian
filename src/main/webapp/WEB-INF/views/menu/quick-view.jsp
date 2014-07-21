@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta charset="utf-8">
@@ -232,6 +233,18 @@
                 $("nav.footbar .navbar-text").html('<i class="fa fa-cutlery"></i> ' +
                         bill.dishes.length + '品 <i class="fa fa-rmb"></i>' + bill.totalPrice);
             });
+
+            $.ajax({
+               url:"getDishInCategory",
+               headers:{
+                   Accept : "application/json; charset=utf-8"
+               },
+               data:{"categoryId":1},
+               success:function(data){
+                    alert(data);
+               }
+            });
+
         });
 
     </script>
@@ -283,16 +296,18 @@
 <div class="col-xs-3 menu-category ">
     <div id="affix_menu" class="affix affix-top">
         <ul id="category" class="nav nav-pills nav-stacked" role="tablist">
-            <li class="active"><a data-toggle="tab" role="tab" href="#yang">烹羊世家</a></li>
-            <li><a data-toggle="tab" role="tab" href="#lu">卤味叉烧</a></li>
-            <li><a data-toggle="tab" role="tab" href="#gaifan">盖饭</a></li>
-            <li><a data-toggle="tab" role="tab" href="#tanglei">汤类</a></li>
+            <c:forEach items="${categories}" var="category" varStatus="row">
+                <c:if test="${row.count == 1}">
+                    <li class="active"><a data-toggle="tab" date-id="${category.id}" role="tab" href="#tab_${category.id}"><c:out value="${category.name}"></c:out></a></li>
+                </c:if>
+                <li><a data-toggle="tab" date-id="${category.id}" role="tab" href="#tab_${category.id}"><c:out value="${category.name}"></c:out></a></li>
+            </c:forEach>
         </ul>
     </div>
 </div>
 <div class="col-xs-9 menu-entry ">
 <div id="categoryContent" class="tab-content">
-<div id="yang" class="tab-pane fade in active">
+<%--<div id="yang" class="tab-pane fade in active">
     <ul class="item-list">
         <li class="header"> 烹羊世家</li>
         <li class="item-orange">
@@ -478,7 +493,7 @@
             </div>
         </li>
     </ul>
-</div>
+</div>--%>
 <div id="lu" class="tab-pane">
     <ul class="item-list">
         <li class="header"> 卤味叉烧</li>
