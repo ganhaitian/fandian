@@ -19,6 +19,16 @@ public class Dish implements Serializable{
 
     private int sales;
 
+    private int stars;
+
+    public int getStars() {
+        return stars;
+    }
+
+    public void setStars(int stars) {
+        this.stars = stars;
+    }
+
     public int getId() {
         return id;
     }
