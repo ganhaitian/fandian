@@ -5,7 +5,8 @@
   Time: 下午11:22
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
     <meta charset="utf-8">
@@ -41,7 +42,7 @@
                             <div class="row">
 
                                 <h3 data-content="name"></h3>
-                                <p class="text-muted">月售 <strong data-content="month_sell_sum"></strong> 份</p>
+                                <p class="text-muted">月售 <strong data-content="sales"></strong> 份</p>
                                 <p class="text-warning" data-id="star_info_id">
 
                                 </p>
@@ -167,7 +168,7 @@
 
 </div>
 <script type="application/javascript">
-    var type = [{typeid:"favorite",href:"#favorite",name:"精品推荐",info:[
+    /*var type = [{typeid:"favorite",href:"#favorite",name:"精品推荐",info:[
         {id:"1",name:"虎皮尖椒",img_url:"/resources/img/hpjj.jpg",price:22,month_sell_sum:145,sub_number_id:"sub_number_1",star_info_id:"star_info_1",star_info:5},
         {id:"2",name:"萝卜干煎蛋",img_url:"/resources/img/lbgjd.jpg",price:20,month_sell_sum:3455,sub_number_id:"sub_number_2",star_info_id:"star_info_2",star_info:4},
         {id:"3",name:"松仁玉米",img_url:"/resources/img/srym.jpg",price:28,month_sell_sum:1233,sub_number_id:"sub_number_3",star_info_id:"star_info_3",star_info:3}
@@ -175,7 +176,8 @@
         {id:"4",name:"王府回锅肉",img_url:"/resources/img/wfhgr.jpg",price:28,month_sell_sum:656,sub_number_id:"sub_number_4",star_info_id:"star_info_4",star_info:5},
         {id:"5",name:"西芹百合",img_url:"/resources/img/xqbh.jpg",price:28,month_sell_sum:989,sub_number_id:"sub_number_5",star_info_id:"star_info_5",star_info:4},
         {id:"6",name:"咸鱼茄子煲",img_url:"/resources/img/xyqzb.jpg",price:26,month_sell_sum:989,sub_number_id:"sub_number_6",star_info_id:"star_info_6",star_info:4}
-    ]}];
+    ]}];*/
+    var type = ${typedata};
 
     var summary_info = {count:0,fee:0,detail:{}};
 
