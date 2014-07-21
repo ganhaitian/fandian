@@ -1,0 +1,49 @@
+{
+    "button": [
+        {
+            "name": "点菜", 
+            "sub_button": [
+                {
+                    "type": "view", 
+                    "name": "新单", 
+                    "url": "http://210.242.242.47/bill/new"
+                }, 
+                {
+                    "type": "view", 
+                    "name": "改单", 
+                    "url": "http://210.242.242.47/bill/edit"
+                }
+            ]
+        }, 
+        {
+            "name": "收款", 
+            "sub_button": [
+                {
+                    "type": "view", 
+                    "name": "折扣", 
+                    "url": "http://210.242.242.47/bill/discount"
+                }, 
+                {
+                    "type": "view", 
+                    "name": "埋单", 
+                    "url": "http://210.242.242.47/bill/pay"
+                }
+            ]
+        }, 
+        {
+            "name": "关于我们", 
+            "sub_button": [
+                {
+                    "type": "view", 
+                    "name": "介绍", 
+                    "url": "http://210.242.242.47/about/basic"
+                }, 
+                {
+                    "type": "view", 
+                    "name": "联系方式", 
+                    "url": "http://210.242.242.47/about/contact"
+                }
+            ]
+        }
+    ]
+}
