@@ -93,7 +93,7 @@
 
     <div class="row">
         <div class="col-xs-12">
-            <button class="btn-block btn btn-primary btn-lg">确定</button>
+            <button id="cofirm-bill" class="btn-block btn btn-primary btn-lg">确定</button>
         </div>
     </div>
     <br/><br/>
@@ -109,6 +109,23 @@
 
 
         });
+
+        $("#confirm-bill").click(function(){
+            var billDetails = [];
+            $("ul.list-group li").each(function(index,entry){
+                
+            });
+            $.ajax({
+                type:"POST",
+                url:"confirm",
+                dataType:"json",
+                data:"",
+                success:function(){
+
+                }
+            });
+        });
+
     });
 
 
