@@ -17,6 +17,8 @@ public class Dish implements Serializable{
 
     private String detail;
 
+    private int sales;
+
     public int getId() {
         return id;
     }
@@ -47,5 +49,13 @@ public class Dish implements Serializable{
 
     public void setDetail(String detail) {
         this.detail = detail;
+    }
+
+    public int getSales() {
+        return sales;
+    }
+
+    public void setSales(int sales) {
+        this.sales = sales;
     }
 }

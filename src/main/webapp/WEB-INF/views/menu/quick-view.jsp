@@ -234,18 +234,65 @@
                         bill.dishes.length + '品 <i class="fa fa-rmb"></i>' + bill.totalPrice);
             });
 
-            $.ajax({
-               url:"getDishInCategory",
-               headers:{
-                   Accept : "application/json; charset=utf-8"
-               },
-               data:{"categoryId":1},
-               success:function(data){
-                    alert(data);
-               }
+            //Initialized category
+            $.each($(".menu-content li a"),function(index,category){
+                loadMenuCategory($(category).data("id"));
             });
 
         });
+
+        function loadMenuCategory(categoryId){
+            if($("div.meny-entry div#tab_"+categoryId).length > 0){
+                return;
+            }
+            $.ajax({
+                url:"getDishInCategory",
+                headers:{
+                    Accept : "application/json; charset=utf-8"
+                },
+                data:{"categoryId":categoryId},
+                success:function(data){
+                    if($("div.meny-entry div#tab_"+categoryId).length == 0){
+                        var tabPane = $("<div id = 'tab_"+categoryId+"' class='tab-pane fade' ></div>");
+                        if($(".menu-content li:first a").data("id") == categoryId)
+                            tabPane = $("<div id = 'tab_"+categoryId+"' class='tab-pane fade in active' ></div>");
+
+                        $("div.tab-content").append(tabPane);
+
+                        var itemList = $("<ul class='item-list'></ul>");
+                        tabPane.append(itemList);
+
+                        itemList.append('<li class="header">啦啦啦</li>');
+
+                        $.each(data,function(index,menuEntry){
+                            var menu = $('<li class="item-orange">'+
+                                '<div class="menu-entry">'+
+                                    '<div class="pull-left"><div>'+
+                                        '<label class="inline">'+
+                                            '<span class="lbl">'+menuEntry.name+'</span>'+
+                                        '</label>'+
+                                    '</div>'+
+                                    '<div>'+
+                                        '<span class="rating">'+
+                                            '<span class="star"></span>'+
+                                            '<span class="star"></span>'+
+                                            '<span class="star"></span>'+
+                                            '<span class="star"></span>'+
+                                            '<span class="star"></span>'+
+                                        '</span>'+
+                                        '<label class="sales-data">月售'+menuEntry.sales+'份</label>'+
+                                    '</div>'+
+                                '</div>'+
+                                '<div class="inline pull-right position-relative dropdown-hover price-container">'+
+                                    '<button class="btn btn-price">'+menuEntry.price+'</button>'+
+                                '</div>'+
+                            '</li>');
+                            itemList.append(menu);
+                        });
+                    }
+                }
+            });
+        }
 
     </script>
 </head>
@@ -298,9 +345,11 @@
         <ul id="category" class="nav nav-pills nav-stacked" role="tablist">
             <c:forEach items="${categories}" var="category" varStatus="row">
                 <c:if test="${row.count == 1}">
-                    <li class="active"><a data-toggle="tab" date-id="${category.id}" role="tab" href="#tab_${category.id}"><c:out value="${category.name}"></c:out></a></li>
+                    <li class="active"><a data-toggle="tab" data-id="${category.id}" role="tab" href="#tab_${category.id}"><c:out value="${category.name}"></c:out></a></li>
                 </c:if>
-                <li><a data-toggle="tab" date-id="${category.id}" role="tab" href="#tab_${category.id}"><c:out value="${category.name}"></c:out></a></li>
+                <c:if test="${row.count > 1}">
+                    <li><a data-toggle="tab" data-id="${category.id}" role="tab" href="#tab_${category.id}"><c:out value="${category.name}"></c:out></a></li>
+                </c:if>
             </c:forEach>
         </ul>
     </div>
