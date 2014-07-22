@@ -2,6 +2,7 @@ package com.fandian.dao;
 
 import com.fandian.bean.Bill;
 import com.fandian.bean.BillDetail;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,6 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.List;
 
 /**
  * Created by gan on 14-7-22.
@@ -50,5 +52,18 @@ public class BillDao extends JdbcTemplate {
                 billId, billDetail.getDishId(), billDetail.getDishName(), billDetail.getAmount(), billDetail.getPrice());
         }
     }
+
+    public List<Bill> getAllBills() {
+            List<Bill> bills = query("select * from bill", new BeanPropertyRowMapper<Bill>(Bill.class));
+        for (Bill bill : bills) {
+            bill.setBillDetails(
+            query(
+                "select * from bill_detail where bill_id = ?",
+                new BeanPropertyRowMapper<BillDetail>(BillDetail.class), bill.getId()
+            ));
+        }
+        return bills;
+    }
+
 
 }

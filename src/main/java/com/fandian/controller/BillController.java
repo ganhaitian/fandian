@@ -38,11 +38,13 @@ public class BillController {
     }
 
     @RequestMapping(value = "/confirm", method = {RequestMethod.POST})
-    public String confirmBill(@RequestParam String param) {
+    public String confirmBill(@RequestParam String param,@RequestParam int tableNo) {
         List<BillDetail> billDetails = jsonUtil.transJsonToBeanListByGson(param, new TypeToken<List<BillDetail>>() {
         }.getType());
 
         Bill newBill = new Bill();
+        newBill.setTableNo(tableNo);
+
         for(BillDetail billDetail:billDetails){
             newBill.setFee(newBill.getFee() + billDetail.getPrice() * billDetail.getAmount());
         }

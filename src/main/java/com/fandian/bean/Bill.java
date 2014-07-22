@@ -1,5 +1,6 @@
 package com.fandian.bean;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,6 +15,8 @@ public class Bill {
     private int status;
 
     private int fee;
+
+    private Date createTime;
 
     private List<BillDetail> billDetails;
 
@@ -55,5 +58,13 @@ public class Bill {
 
     public void setTableNo(int tableNo) {
         this.tableNo = tableNo;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

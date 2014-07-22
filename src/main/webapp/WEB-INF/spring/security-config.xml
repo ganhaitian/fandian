@@ -12,6 +12,9 @@
     <security:http pattern="/oauth/**" security="none" />
     <security:http pattern="/menu/**" security="none" />
     <security:http pattern="/bill/**" security="none" />
+    <security:http pattern="/admin/**" security="none" />
+    <security:http pattern="/css/**" security="none" />
+    <security:http pattern="/js/**" security="none" />
     <security:http pattern="/resources/**" security="none" />
 
        
