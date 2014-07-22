@@ -2,6 +2,7 @@ package com.fandian.controller;
 
 import com.fandian.bean.BillDetail;
 import com.fandian.util.JSONUtil;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -32,7 +33,7 @@ public class BillController {
 
     @RequestMapping(value = "/confirm",method = {RequestMethod.POST })
     public String confirmBill(@RequestParam String param){
-        List<BillDetail> billDetails = jsonUtil.transJsonToBeanListByGson(param,BillDetail.class);
+        List<BillDetail> billDetails = jsonUtil.transJsonToBeanListByGson(param,new TypeToken<List<BillDetail>>(){}.getType());
         return "";
     }
 

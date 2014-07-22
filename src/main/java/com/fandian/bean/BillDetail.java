@@ -17,7 +17,7 @@ public class BillDetail implements Serializable {
 
     private int dishId;
 
-    private int dishName;
+    private String dishName;
 
     private int amout;
 
@@ -51,11 +51,11 @@ public class BillDetail implements Serializable {
         this.dishId = dishId;
     }
 
-    public int getDishName() {
+    public String getDishName() {
         return dishName;
     }
 
-    public void setDishName(int dishName) {
+    public void setDishName(String dishName) {
         this.dishName = dishName;
     }
 

@@ -57,7 +57,7 @@
     <div class="row">
         <ul class="list-group">
             <c:forEach items="${list}" var="dish">
-                <li class="list-group-item dish-entry" data-id="${dish.id}" data-name="${dish.name}" data-count="${dish.count}" data-fee="${data.fee}">
+                <li class="list-group-item dish-entry" data-id="${dish.id}" data-name="${dish.name}" data-count="${dish.count}" data-fee="${dish.fee}">
                     <span class="dish-name"><h4><i class="fa fa-angle-down"></i>&nbsp;&nbsp;${dish.name}
                         <span class="pull-right badge">${dish.count}</span></h4>
                     </span>
@@ -118,7 +118,7 @@
                     {
                      "dishId":$(this).data("id"),
                      "dishName":$(this).data("name"),
-                     "amount":$(this).data("amount"),
+                     "amount":$(this).data("count"),
                      "price":$(this).data("fee")
                     });
             });
