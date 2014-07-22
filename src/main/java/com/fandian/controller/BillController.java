@@ -8,10 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -35,6 +32,13 @@ public class BillController {
     @RequestMapping("/new")
     public String toNewBillView() {
         return "menu/customer-view-1";
+    }
+
+    @RequestMapping("/checkout")
+    @ResponseBody
+    public String checkoutBill(@RequestParam int billId) {
+        billDao.updateStatus(billId,1);
+        return "{\"success\":true}";
     }
 
     @RequestMapping(value = "/confirm", method = {RequestMethod.POST})

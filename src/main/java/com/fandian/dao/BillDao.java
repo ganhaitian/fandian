@@ -65,5 +65,9 @@ public class BillDao extends JdbcTemplate {
         return bills;
     }
 
+    public void updateStatus(int billId,int newStatus){
+        update("update bill set status = ? where id = ?",newStatus,billId);
+    }
+
 
 }

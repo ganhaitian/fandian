@@ -318,12 +318,13 @@
                                 <th>状态</th>
                                 <th style="text-align: right;">总消费</th>
                                 <th style="text-align: center;">创建时间</th>
+                                <th style="text-align: center;">操作</th>
                             </tr>
                         </thead>
                         <tbody>
                             <c:forEach items="${bills}" var="bill">
-                                <tr>
-                                    <td>${bill.tableNo}</td>
+                                <tr data-id = "${bill.id}" >
+                                    <td class="sorting_1" name="tableNo">${bill.tableNo}</td>
                                     <td>
                                         <c:if test="${bill.status == 0}">
                                             未结
@@ -334,6 +335,9 @@
                                     </td>
                                     <td style="text-align: right;" >${bill.fee}¥</td>
                                     <td style="text-align: center;">${bill.createTime}</td>
+                                    <td style="text-align: center;">
+                                        <button name="confirmCheckout" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#confirmCheckModal">结账</button>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </tbody>
@@ -343,6 +347,26 @@
         </div>
     </div>
 
+</div>
+
+<div class="modal fade" id="confirmCheckModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">确认结账</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button name="finalConfirmCheck" type="button" data-dismiss="modal" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>
 
 </div>
@@ -368,7 +392,40 @@
 
 <script>
     $(document).ready(function(){
-       $("#bill_table").dataTable();
+        $("#bill_table").dataTable();
+
+        var currentBillId = null;
+
+        $("button[name='confirmCheckout']").each(function(){
+            var oldConfirmCheckHandler = $(this).onclick;
+            $(this).onclick = null;
+
+            $(this).click(function(){
+                var tableNo = $(this).parent("td").siblings("td[name='tableNo']").html();
+                $("div#confirmCheckModal div.modal-body").html(tableNo+"号桌确认结账?");
+                currentBillId = $(this).parents("tr").data("id");
+            });
+
+            $(this).click(oldConfirmCheckHandler);
+        });
+
+        $("button[name='finalConfirmCheck']").click(function(){
+
+            if(!currentBillId)
+                return;
+
+            $.ajax({
+               url:"<%=realPath %>/bill/checkout",
+               data:{"billId":currentBillId},
+               dataType:"json",
+               success:function(data){
+                  if(data.success){
+                      alert("success");
+                  }
+               }
+            });
+        });
+
     });
 </script>
 
