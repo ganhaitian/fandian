@@ -336,7 +336,12 @@
                                     <td style="text-align: right;" >${bill.fee}¥</td>
                                     <td style="text-align: center;">${bill.createTime}</td>
                                     <td style="text-align: center;">
-                                        <button name="confirmCheckout" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#confirmCheckModal">结账</button>
+                                        <c:if test="${bill.status == 0}">
+                                            <button name="confirmCheckout" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#confirmCheckModal">结账</button>
+                                        </c:if>
+                                        <c:if test="${bill.status == 1}">
+                                            <button name="confirmCheckout" class="btn btn-sm btn-danger disabled" data-toggle="modal" data-target="#confirmCheckModal">已埋</button>
+                                        </c:if>
                                     </td>
                                 </tr>
                             </c:forEach>
