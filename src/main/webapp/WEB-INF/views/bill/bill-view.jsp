@@ -127,8 +127,7 @@
                 url:"confirm",
                 type:"POST",
                 dataType:"JSON",
-                contentType : "application/json",
-                data: JSON.stringify(billDetails),
+                data: {"param":JSON.stringify(billDetails)},
                 success:function(data){
                     alert(data);
                 }

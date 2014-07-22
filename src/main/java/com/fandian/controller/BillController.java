@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +31,8 @@ public class BillController {
     }
 
     @RequestMapping(value = "/confirm",method = {RequestMethod.POST })
-    public String confirmBill(@RequestBody List<BillDetail> billDetails){
-
+    public String confirmBill(@RequestParam String param){
+        List<BillDetail> billDetails = jsonUtil.transJsonToBeanListByGson(param,BillDetail.class);
         return "";
     }
 
