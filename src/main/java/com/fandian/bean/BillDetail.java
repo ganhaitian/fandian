@@ -19,7 +19,7 @@ public class BillDetail implements Serializable {
 
     private String dishName;
 
-    private int amout;
+    private int amount;
 
     private int price;
 
@@ -59,12 +59,12 @@ public class BillDetail implements Serializable {
         this.dishName = dishName;
     }
 
-    public int getAmout() {
-        return amout;
+    public int getAmount() {
+        return amount;
     }
 
-    public void setAmout(int amout) {
-        this.amout = amout;
+    public void setAmount(int amout) {
+        this.amount = amout;
     }
 
     public int getPrice() {

@@ -1,6 +1,8 @@
 package com.fandian.controller;
 
+import com.fandian.bean.Bill;
 import com.fandian.bean.BillDetail;
+import com.fandian.dao.BillDao;
 import com.fandian.util.JSONUtil;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
@@ -26,44 +29,56 @@ public class BillController {
     @Resource
     private JSONUtil jsonUtil;
 
+    @Inject
+    private BillDao billDao;
+
     @RequestMapping("/new")
-    public String toNewBillView(){
+    public String toNewBillView() {
         return "menu/customer-view-1";
     }
 
-    @RequestMapping(value = "/confirm",method = {RequestMethod.POST })
-    public String confirmBill(@RequestParam String param){
-        List<BillDetail> billDetails = jsonUtil.transJsonToBeanListByGson(param,new TypeToken<List<BillDetail>>(){}.getType());
+    @RequestMapping(value = "/confirm", method = {RequestMethod.POST})
+    public String confirmBill(@RequestParam String param) {
+        List<BillDetail> billDetails = jsonUtil.transJsonToBeanListByGson(param, new TypeToken<List<BillDetail>>() {
+        }.getType());
+
+        Bill newBill = new Bill();
+        for(BillDetail billDetail:billDetails){
+            newBill.setFee(newBill.getFee() + billDetail.getPrice() * billDetail.getAmount());
+        }
+        newBill.setBillDetails(billDetails);
+
+        billDao.saveNewBill(newBill);
         return "";
     }
 
     @RequestMapping("/view")
-    public String getQuickView(Model model, HttpServletRequest request){
+    public String getQuickView(Model model, HttpServletRequest request) {
         try {
             request.setCharacterEncoding("UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         String param = request.getParameter("param");
-        if (StringUtils.isEmpty(param)){
+        if (StringUtils.isEmpty(param)) {
 
-        }else{
+        } else {
             int sumfee = 0;
-            Map<String,Map<String,Object>> billDetail = jsonUtil.transJsonToBeanByGson(param,Map.class);
-            List<Map<String,String>> list = new ArrayList<Map<String, String>>();
+            Map<String, Map<String, Object>> billDetail = jsonUtil.transJsonToBeanByGson(param, Map.class);
+            List<Map<String, String>> list = new ArrayList<Map<String, String>>();
             Iterator<String> keys = billDetail.keySet().iterator();
-            while (keys.hasNext()){
+            while (keys.hasNext()) {
                 String key = keys.next();
-                Map<String,String> map = new HashMap<String, String>();
-                map.put("id",key);
-                map.put("name",billDetail.get(key).get("name").toString());
-                map.put("count",((Double)billDetail.get(key).get("count")).intValue()+"");
-                map.put("fee",((Double)billDetail.get(key).get("fee")).intValue()+"");
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("id", key);
+                map.put("name", billDetail.get(key).get("name").toString());
+                map.put("count", ((Double) billDetail.get(key).get("count")).intValue() + "");
+                map.put("fee", ((Double) billDetail.get(key).get("fee")).intValue() + "");
                 list.add(map);
                 sumfee += Double.parseDouble(map.get("count")) * Double.parseDouble(map.get("fee"));
             }
-            model.addAttribute("list",list);
-            model.addAttribute("sumfee",sumfee);
+            model.addAttribute("list", list);
+            model.addAttribute("sumfee", sumfee);
         }
 
         return "bill/bill-view";

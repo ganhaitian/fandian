@@ -344,7 +344,7 @@
 
                 </div>
                 <div class="pull-right">
-                    <form action="/bill/view" method="post" enctype="application/x-www-form-urlencoded">
+                    <form action="/fandian/bill/view" method="post" enctype="application/x-www-form-urlencoded">
                         <input type="hidden" name="param" id="billInfoParam"/>
                         <button id="submitBillBtn" class="btn btn-danger navbar-btn btn-price">去下单</button>
                     </form>
