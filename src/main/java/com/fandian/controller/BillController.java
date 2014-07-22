@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class BillController {
         return "menu/customer-view-1";
     }
 
-    @RequestMapping("/confirm")
+    @RequestMapping(value = "/confirm",method = {RequestMethod.POST })
     public String confirmBill(@RequestBody List<BillDetail> billDetails){
 
         return "";

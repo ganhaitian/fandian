@@ -57,7 +57,7 @@
     <div class="row">
         <ul class="list-group">
             <c:forEach items="${list}" var="dish">
-                <li class="list-group-item">
+                <li class="list-group-item dish-entry" data-id="${dish.id}" data-name="${dish.name}" data-count="${dish.count}" data-fee="${data.fee}">
                     <span class="dish-name"><h4><i class="fa fa-angle-down"></i>&nbsp;&nbsp;${dish.name}
                         <span class="pull-right badge">${dish.count}</span></h4>
                     </span>
@@ -93,7 +93,7 @@
 
     <div class="row">
         <div class="col-xs-12">
-            <button id="cofirm-bill" class="btn-block btn btn-primary btn-lg">确定</button>
+            <button id="confirm-bill" class="btn-block btn btn-primary btn-lg">确定</button>
         </div>
     </div>
     <br/><br/>
@@ -111,17 +111,26 @@
         });
 
         $("#confirm-bill").click(function(){
-            var billDetails = [];
-            $("ul.list-group li").each(function(index,entry){
-                
-            });
-            $.ajax({
-                type:"POST",
-                url:"confirm",
-                dataType:"json",
-                data:"",
-                success:function(){
 
+            var billDetails = [];
+            $("ul.list-group li.dish-entry").each(function(index,entry){
+                billDetails.push(
+                    {
+                     "dishId":$(this).data("id"),
+                     "dishName":$(this).data("name"),
+                     "amount":$(this).data("amount"),
+                     "price":$(this).data("fee")
+                    });
+            });
+
+            $.ajax({
+                url:"confirm",
+                type:"POST",
+                dataType:"JSON",
+                contentType : "application/json",
+                data: JSON.stringify(billDetails),
+                success:function(data){
+                    alert(data);
                 }
             });
         });

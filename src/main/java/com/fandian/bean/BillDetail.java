@@ -1,9 +1,15 @@
 package com.fandian.bean;
 
+import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
+
+import java.io.Serializable;
+
 /**
  * Created by gan on 14-7-21.
  */
-public class BillDetail {
+public class BillDetail implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int id;
 
@@ -16,6 +22,10 @@ public class BillDetail {
     private int amout;
 
     private int price;
+
+    public BillDetail(){
+
+    }
 
     public int getId() {
         return id;
