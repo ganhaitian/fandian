@@ -23,4 +23,9 @@ public class AdminController {
         return "admin/cashier";
     }
 
+    @RequestMapping("/menu")
+    public String getMenuView(){
+        return "admin/menu";
+    }
+
 }
