@@ -1,5 +1,7 @@
 package com.fandian.bean;
 
+import java.util.List;
+
 /**
  * Created by gan on 14-7-21.
  */
@@ -8,6 +10,16 @@ public class DishCategory {
     private int id;
 
     private String name;
+
+    private List<DishCategory> childCategories;
+
+    public List<DishCategory> getChildCategories() {
+        return childCategories;
+    }
+
+    public void setChildCategories(List<DishCategory> childCategories) {
+        this.childCategories = childCategories;
+    }
 
     public int getId() {
         return id;

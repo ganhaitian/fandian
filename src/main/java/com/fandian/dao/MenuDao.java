@@ -25,10 +25,11 @@ public class MenuDao extends JdbcTemplate {
         super.setDataSource(this.dataSource);
     }
 
-    public List<DishCategory> getDishCategories() {
+    public List<DishCategory> getDishCategories(int parentId) {
         List<DishCategory> dishCategories = super.query(
-            "select * from dish_category",
-            new BeanPropertyRowMapper<DishCategory>(DishCategory.class)
+            "select * from dish_category where parent_id = ?",
+            new BeanPropertyRowMapper<DishCategory>(DishCategory.class),
+            parentId
         );
         return dishCategories;
     }

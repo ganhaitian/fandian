@@ -340,11 +340,15 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Menu List</div>
                 <div class="panel-body panel-menu">
-                    <div class="row">
                         <div class="col-lg-2" >
                             <div class="sidebar" style="margin-top:0px;">
                                 <ul class="nav" id = "menu-menu">
-                                    <li>
+                                    <c:forEach items="${categories}" var="category">
+                                        <li><a href="#menu_panel" role="tab" data-toggle="tab">${category.name}</a>
+                                        
+                                        </li>
+                                    </c:forEach>
+                                   <%-- <li>
                                         <a href="#">羊肉
                                             <span class="fa arrow"></span>
                                         </a>
@@ -356,7 +360,7 @@
                                         </ul>
                                     </li>
                                     <li><a href="#menu_panel" role="tab" data-toggle="tab">凉菜</a></li>
-                                    <li><a href="#menu_panel" role="tab" data-toggle="tab">荤菜</a></li>
+                                    <li><a href="#menu_panel" role="tab" data-toggle="tab">荤菜</a></li>--%>
                                 </ul>
                             </div>
                         </div>
@@ -414,7 +418,6 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
