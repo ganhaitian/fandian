@@ -69,5 +69,12 @@ public class BillDao extends JdbcTemplate {
         update("update bill set status = ? where id = ?",newStatus,billId);
     }
 
+    public List<BillDetail> getBillDetails(int billId){
+        return query(
+            "select * from bill_detail where bill_id = ?",
+            new BeanPropertyRowMapper<BillDetail>(BillDetail.class), billId
+        );
+    }
+
 
 }

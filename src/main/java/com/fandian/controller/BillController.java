@@ -2,6 +2,7 @@ package com.fandian.controller;
 
 import com.fandian.bean.Bill;
 import com.fandian.bean.BillDetail;
+import com.fandian.bean.BillStatus;
 import com.fandian.dao.BillDao;
 import com.fandian.util.JSONUtil;
 import com.google.gson.reflect.TypeToken;
@@ -37,9 +38,17 @@ public class BillController {
     @RequestMapping("/checkout")
     @ResponseBody
     public String checkoutBill(@RequestParam int billId) {
-        billDao.updateStatus(billId,1);
+        billDao.updateStatus(billId, BillStatus.SETTLED.value());
         return "{\"success\":true}";
     }
+
+    @RequestMapping("/getBillDetails")
+    @ResponseBody
+    public String getBillDetails(@RequestParam int billId){
+        List<BillDetail> billDetails = billDao.getBillDetails(billId);
+        return jsonUtil.transToJsonStrByGson(billDetails);
+    }
+
 
     @RequestMapping(value = "/confirm", method = {RequestMethod.POST})
     public String confirmBill(@RequestParam String param,@RequestParam int tableNo) {

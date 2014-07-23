@@ -7,6 +7,9 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%
+    String realPath= application.getContextPath();
+%>
 <html>
 <head>
     <meta charset="utf-8">
@@ -32,7 +35,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
+    <script src="<%=realPath%>/resources/js/plugins/noty/jquery.noty.packaged.min.js"></script>
 
 </head>
 <body>
@@ -100,6 +103,32 @@
 </div>
 <script type="application/javascript">
 
+    $.noty.defaults = {
+        layout: 'top',
+        theme: 'defaultTheme',
+        type: 'alert',
+        text: '',
+        dismissQueue: true, // If you want to use queue feature set this true
+        template: '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
+        animation: {
+            open: {height: 'toggle'},
+            close: {height: 'toggle'},
+            easing: 'swing',
+            speed: 500 // opening & closing animation speed
+        },
+        timeout: 2000, // delay for closing event. Set false for sticky notifications
+        force: false, // adds notification to the beginning of queue when set to true
+        modal: false,
+        maxVisible: 5, // you can set max visible notification for dismissQueue true option
+        closeWith: ['click'], // ['click', 'button', 'hover']
+        callback: {
+            onShow: function() {},
+            afterShow: function() {},
+            onClose: function() {},
+            afterClose: function() {}
+        },
+        buttons: false // an array of buttons
+    };
 
     $(function(){
         $('.dish-name').click(function(){
@@ -111,6 +140,12 @@
         });
 
         $("#confirm-bill").click(function(){
+
+            var tableNo = $("select[name='desknumber']").val();
+            if(tableNo == 0){
+                noty({"text":"请输入桌单号!","layout":"topCenter","type":"error"});
+                return;
+            }
 
             var billDetails = [];
             $("ul.list-group li.dish-entry").each(function(index,entry){
@@ -127,7 +162,7 @@
                 url:"confirm",
                 type:"POST",
                 dataType:"JSON",
-                data: {"param":JSON.stringify(billDetails)},
+                data: {"param":JSON.stringify(billDetails),"tableNo":tableNo},
                 success:function(data){
                     alert(data);
                 }
