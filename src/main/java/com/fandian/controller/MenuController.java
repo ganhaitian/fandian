@@ -32,7 +32,7 @@ public class MenuController {
 
     @RequestMapping("/getQuickView")
     public String getQuickView(Model model){
-        model.addAttribute("categories",menuDao.getDishCategories(0));
+        model.addAttribute("categories",menuDao.getDishCategories());
         return "menu/quick-view";
     }
 
@@ -48,7 +48,7 @@ public class MenuController {
 
     @RequestMapping("/customer/top")
     public String getCustomerViewTop(Model model){
-        List<DishCategory> categories = menuDao.getDishCategories(0);
+        List<DishCategory> categories = menuDao.getDishCategories();
         List<DishListOfCustomerView> viewList = new ArrayList<DishListOfCustomerView>();
         for (DishCategory category : categories){
             DishListOfCustomerView viewItem = new DishListOfCustomerView();
