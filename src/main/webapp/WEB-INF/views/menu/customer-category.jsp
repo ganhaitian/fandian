@@ -147,9 +147,9 @@
                                         <h3>${dish.name}</h3>
                                         <p class="text-muted">月售 <strong>${dish.sales}</strong> 份</p>
                                         <p class="text-warning">
-                                            <s:forEach begin="0" end="5" step="1" var="i">
+                                            <s:forEach begin="1" end="5" step="1" var="i">
                                                 <s:choose>
-                                                    <s:when test="${i<dish.stars}">
+                                                    <s:when test="${i<=dish.stars}">
                                                         <i class="fa fa-star"></i>
                                                     </s:when>
                                                     <s:otherwise>
