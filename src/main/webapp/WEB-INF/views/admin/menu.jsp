@@ -66,7 +66,8 @@
         }
 
         .toolbar {
-            float: left;
+            float: right;
+            margin-left:8px;
         }
 
         #menu_panel{
@@ -357,6 +358,13 @@
                         <div class="col-lg-2" >
                             <div class="menu-list" style="margin-top:0px;">
                                 <ul class="nav nav-pills nav-stacked" id = "menu-menu">
+                                        <li style = "border-bottom: 1px solid #eee;padding:5px;">
+                                            <div class="btn-group">
+                                                <button name="addCategory" type="button" class="btn btn-default btn-sm" data-toggle = "modal" data-target = "#confirmAddCategory">增加</button>
+                                                <button name="updateCategory" type="button" class="btn btn-default btn-sm" data-toggle = "modal" data-target = "#confirmAddCategory">修改</button>
+                                                <button name="delCategory" data-toggle = "modal" data-target="#confirmDelCategory" type="button" class="btn btn-default btn-sm">删除</button>
+                                            </div>
+                                        </li>
                                     <c:forEach items="${categories}" var="category">
                                         <li><a href="#menu_panel" role="tab" data-toggle="tab" data-categoryid="${category.id}" >
                                                 ${category.name}
@@ -367,7 +375,7 @@
                                             <c:if test="${fn:length(category.childCategories) > 0}">
                                                 <ul class="nav nav-second-level nav-pills nav-stacked">
                                                 <c:forEach items="${category.childCategories}" var="childCategory">
-                                                    <li><a href="#menu_panel" role="tab" data-categoryid="${childCategory.id}" data-toggle="tab">${childCategory.name}</a></li>
+                                                    <li><a href="#menu_panel" role="tab" data-parentid="${childCategory.parentId}" data-categoryid="${childCategory.id}" data-toggle="tab">${childCategory.name}</a></li>
                                                 </c:forEach>
                                                 </ul>
                                             </c:if>
@@ -482,6 +490,72 @@
     <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="confirmAddCategory" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+                <h4 class="modal-title" id="addCategoryModalLabel">增加分类</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group" style="display: none">
+                        <label>ID</label>
+                        <input data-dv=0 name="id" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>分类名</label>
+                        <input name="name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>父分类</label>
+                        <select name="parentCategory" class="form-control">
+                            <option value="0">无</option>
+                            <c:forEach items="${categories}" var="category">
+                                <option value = "${category.id}">${category.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button name="confirmAddCategory" type="button" data-dismiss="modal"
+                        class="btn btn-primary">确认
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="confirmDelCategory" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+                <h4 class="modal-title" id="delCategoryModalLabel">删除分类</h4>
+            </div>
+            <div class="modal-body">
+                是否确认删除分类?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button name="confirmCategoryDel" type="button" data-dismiss="modal"
+                        class="btn btn-primary">确认
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
 </div>
 <!-- /#wrapper -->
 
@@ -505,6 +579,10 @@
 <script src="<%=realPath%>/resources/js/plugins/noty/jquery.noty.packaged.min.js"></script>
 
 <script>
+
+    String.prototype.trim = function () {
+        return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    }
 
     $.noty.defaults = {
         layout: 'top',
@@ -566,7 +644,7 @@
 
         $("#menu-menu").metisMenu();
 
-        $(".menu-list li:first").addClass("active");
+        $(".menu-list li:nth-child(2)").addClass("active");
         var categoryId = 1;
 
         var dt = $("#dish_table").DataTable({
@@ -603,6 +681,10 @@
             if($(this).parent("li").children("ul").length == 0){
                 categoryId = $(this).data("categoryid");
                 dt.ajax.reload();
+                $(this).parents("ul").find("li.active a").each(function(){
+                   if($(this).data("categoryid") != categoryId)
+                        $(this).parent().removeClass("active");
+                });
             }
         });
 
@@ -626,6 +708,57 @@
            var id = $(this).parents("tr").children("td:nth-child(1)").html();
            $("#confirmDelModal div.modal-body").data("dishid",id);
            $("#confirmDelModal div.modal-body").html("是否确认删除【"+dishName+"】?");
+        });
+
+        $("button[name=addCategory]").click(function(){
+            $("#confirmAddCategory input").val("");
+            $("#confirmAddCategory select").val(0);
+        });
+
+        $("button[name=updateCategory]").click(function(){
+            var selCategory = $("div.menu-list ul li.active a");
+            var id = $(selCategory).data("categoryid");
+            var name = $(selCategory).html().trim();
+            var parentId = $(selCategory).data("parentid");
+            if(parentId == undefined)
+                parentId = 0;
+            $("#confirmAddCategory input[name=id]").val(id);
+            $("#confirmAddCategory input[name=name]").val(name);
+            $("#confirmAddCategory select").val(parentId);
+        });
+
+        $("button[name=confirmAddCategory]").click(function(){
+            var categoryId = $("#confirmAddCategory input[name=id]").val();
+            if(categoryId == "")
+                categoryId = 0;
+            var categoryName = $("#confirmAddCategory input[name=name]").val();
+            var parentCategoryId = $("#confirmAddCategory select").val();
+            $.ajax({
+               url:"<%=realPath %>/menu/updateCategory",
+               type:"POST",
+               dataType:"json",
+               headers:{
+                Accept : "application/json; charset=utf-8"
+               },
+               data:{"param":JSON.stringify({"id":categoryId,"name":categoryName,"parentId":parentCategoryId})},
+               success:function(result){
+                   if(result.success)
+                       location.reload();
+               }
+            });
+        });
+
+        $("button[name=confirmCategoryDel]").click(function(){
+            var categoryId = $("div.menu-list ul li.active a").data("categoryid");
+            $.ajax({
+                url:"<%=realPath %>/menu/delCategory",
+                dataType:"json",
+                data:{"categoryId":categoryId},
+                success:function(result){
+                    if(result.success)
+                        location.reload();
+                }
+            });
         });
 
         $("button[name=confirmDishDel]").click(function(){

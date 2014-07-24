@@ -64,6 +64,24 @@ public class MenuController {
         return "{\"success\":true,\"dishId\":"+dishId+"}";
     }
 
+    @RequestMapping(value="updateCategory")
+    public @ResponseBody String updateCategory(@RequestParam String param){
+        DishCategory dishCategory = jsonUtil.transJsonToBeanByGson(param,DishCategory.class);
+        int categoryId = dishCategory.getId();
+        if(categoryId != 0){
+            menuDao.updateDishCategory(dishCategory);
+        }else{
+            menuDao.insertDishCategory(dishCategory);
+        }
+        return "{\"success\":true}";
+    }
+
+    @RequestMapping(value="delCategory")
+    public @ResponseBody String delCategory(@RequestParam int categoryId){
+        menuDao.delDishCategory(categoryId);
+        return "{\"success\":true}";
+    }
+
     @RequestMapping(value="delDish")
     public @ResponseBody String delDish(@RequestParam int dishId){
         menuDao.deleteDish(dishId);

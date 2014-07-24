@@ -103,5 +103,31 @@ public class MenuDao extends JdbcTemplate {
         return keyHolder.getKey().intValue();
     }
 
+    public int insertDishCategory(final DishCategory dishCategory){
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        update(new PreparedStatementCreator() {
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+
+                PreparedStatement ps = connection.prepareStatement(
+                    "insert into dish_category (name,parent_id) values(?,?) ", Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, dishCategory.getName());
+                ps.setInt(2, dishCategory.getParentId());
+
+                return ps;
+            }
+        }, keyHolder);
+
+        return keyHolder.getKey().intValue();
+    }
+
+    public void updateDishCategory(DishCategory dishCategory){
+        update("update dish_category set name = ?,parent_id=? where id = ?",
+            dishCategory.getName(),dishCategory.getParentId(),dishCategory.getId());
+    }
+
+    public void delDishCategory(int categoryId){
+        update("delete from dish_category where id = ?",categoryId);
+    }
+
 
 }
