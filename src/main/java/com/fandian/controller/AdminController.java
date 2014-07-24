@@ -1,6 +1,7 @@
 package com.fandian.controller;
 
 import com.fandian.dao.BillDao;
+import com.fandian.dao.MenuDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,9 @@ public class AdminController {
     @Inject
     private BillDao billDao;
 
+    @Inject
+    private MenuDao menuDao;
+
     @RequestMapping("/cashier")
     public String getCashierView(Model model){
         model.addAttribute("bills",billDao.getAllBills());
@@ -24,7 +28,8 @@ public class AdminController {
     }
 
     @RequestMapping("/menu")
-    public String getMenuView(){
+    public String getMenuView(Model model){
+        model.addAttribute("categories", menuDao.getDishCategories());
         return "admin/menu";
     }
 
