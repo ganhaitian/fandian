@@ -29,11 +29,17 @@ public class MenuDao extends JdbcTemplate {
         return super.queryForObject("select * from dish_category where id=?",new BeanPropertyRowMapper<DishCategory>(DishCategory.class), new Object[]{categoryId});
     }
 
-    public List<DishCategory> getDishCategories() {
+    public List<DishCategory> getRootDishCategories() {
         List<DishCategory> dishCategories = super.query(
                 "select * from dish_category where parent_id=0",
                 new BeanPropertyRowMapper<DishCategory>(DishCategory.class)
         );
+
+        return dishCategories;
+    }
+
+    public List<DishCategory> getDishCategories() {
+        List<DishCategory> dishCategories = getRootDishCategories();
         for (DishCategory category : dishCategories){
 
             category.setChildCategories(getChildDishCategories(category.getId()));
