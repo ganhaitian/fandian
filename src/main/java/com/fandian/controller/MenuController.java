@@ -41,6 +41,35 @@ public class MenuController {
         return jsonUtil.transToJsonStrByGson(menuDao.getDishesInCategory(categoryId));
     }
 
+    /**
+     * 获得给DataTable格式用的数据菜单数据
+     * @param categoryId
+     * @return
+     */
+    @RequestMapping(value="/getDishInCategoryByDtFormat")
+    public @ResponseBody String getDishInCategoryByDtFormat(@RequestParam int categoryId){
+        Map<String,Object> result = new HashMap<String,Object>();
+        result.put("data",menuDao.getDishesInCategory(categoryId));
+        return jsonUtil.transToJsonStrByGson(result);
+    }
+
+    @RequestMapping(value="updateDish")
+    public @ResponseBody String updateDish(@RequestParam String param){
+        Dish dish = jsonUtil.transJsonToBeanByGson(param,Dish.class);
+        int dishId = dish.getId();
+        if(dishId != 0){
+            menuDao.updateDish(dish);
+        }else
+            dishId = menuDao.insertDish(dish);
+        return "{\"success\":true,\"dishId\":"+dishId+"}";
+    }
+
+    @RequestMapping(value="delDish")
+    public @ResponseBody String delDish(@RequestParam int dishId){
+        menuDao.deleteDish(dishId);
+        return "{\"success\":true}";
+    }
+
     @RequestMapping("/customer/side")
     public String getCustomerView(){
         return "menu/customer-view";

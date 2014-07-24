@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html lang="en">
 <%
@@ -58,6 +59,18 @@
 
         tr.details td.details-control {
             background: url('<%=realPath %>/resources/img/details_close.png') no-repeat center center;
+        }
+
+        .menu-list .nav-second-level li a {
+            padding-left: 37px;
+        }
+
+        .toolbar {
+            float: left;
+        }
+
+        #menu_panel{
+            border-left:1px solid #eee;
         }
 
     </style>
@@ -342,10 +355,23 @@
                 <div class="panel-body panel-menu">
                     <div class="row">
                         <div class="col-lg-2" >
-                            <div class="sidebar" style="margin-top:0px;">
-                                <ul class="nav" id = "menu-menu">
+                            <div class="menu-list" style="margin-top:0px;">
+                                <ul class="nav nav-pills nav-stacked" id = "menu-menu">
                                     <c:forEach items="${categories}" var="category">
-                                        <li><a href="#menu_panel" role="tab" data-toggle="tab">${category.name}</a></li>
+                                        <li><a href="#menu_panel" role="tab" data-toggle="tab" data-categoryid="${category.id}" >
+                                                ${category.name}
+                                                <c:if test="${fn:length(category.childCategories) > 0}">
+                                                    <span class="fa arrow"></span>
+                                                </c:if>
+                                            </a>
+                                            <c:if test="${fn:length(category.childCategories) > 0}">
+                                                <ul class="nav nav-second-level nav-pills nav-stacked">
+                                                <c:forEach items="${category.childCategories}" var="childCategory">
+                                                    <li><a href="#menu_panel" role="tab" data-categoryid="${childCategory.id}" data-toggle="tab">${childCategory.name}</a></li>
+                                                </c:forEach>
+                                                </ul>
+                                            </c:if>
+                                        </li>
                                     </c:forEach>
                                     <%--<li>
                                         <a href="#">羊肉
@@ -364,56 +390,18 @@
                             </div>
                         </div>
                         <div id="menu_panel" class="col-lg-10">
-                            <table id="bill_table" class="table table-striped dataTable no-footer">
+                            <table id="dish_table" class="table table-striped dataTable no-footer">
                                 <thead>
                                 <tr role="row">
-                                    <th></th>
                                     <th>#</th>
-                                    <th>桌号</th>
-                                    <th>微信用户</th>
-                                    <th>状态</th>
-                                    <th style="text-align: right;">总消费</th>
-                                    <th style="text-align: center;">创建时间</th>
-                                    <th style="text-align: center;">操作</th>
+                                    <th>菜名</th>
+                                    <th>价格</th>
+                                    <th>星级</th>
+                                    <th>详细</th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach items="${bills}" var="bill">
-                                    <tr data-id="${bill.id}">
-                                        <td style="line-height: 2;padding: 5px"></td>
-                                        <td style="line-height: 2;padding: 5px"
-                                            name="id">${bill.id}</td>
-                                        <td style="line-height: 2;padding: 5px"
-                                            name="tableNo">${bill.tableNo}</td>
-                                        <td style="line-height: 2;padding: 5px"></td>
-                                        <td style="line-height: 2;padding: 5px" name="status">
-                                            <c:if test="${bill.status == 0}">
-                                                <span class="label label-success">未结</span>
-                                            </c:if>
-                                            <c:if test="${bill.status == 1}">
-                                                <span class="label label-danger">已结</span>
-                                            </c:if>
-                                        </td>
-                                        <td style="line-height: 2;padding: 5px;text-align: right;">${bill.fee}¥</td>
-                                        <td style="line-height: 2;padding: 5px;text-align: center;">${bill.createTime}</td>
-                                        <td style="line-height: 2;padding: 5px;text-align: center;">
-                                            <c:if test="${bill.status == 0}">
-                                                <button name="confirmCheckout"
-                                                        class="btn btn-sm btn-primary"
-                                                        data-toggle="modal"
-                                                        data-target="#confirmCheckModal">结账
-                                                </button>
-                                            </c:if>
-                                            <c:if test="${bill.status == 1}">
-                                                <button name="confirmCheckout"
-                                                        class="btn btn-sm btn-primary disabled"
-                                                        data-toggle="modal"
-                                                        data-target="#confirmCheckModal">结账
-                                                </button>
-                                            </c:if>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
                                 </tbody>
                             </table>
                         </div>
@@ -425,21 +413,66 @@
 
 </div>
 
-<div class="modal fade" id="confirmCheckModal" tabindex="-1" role="dialog"
+<div class="modal fade" id="editDishModal" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
                 </button>
-                <h4 class="modal-title" id="myModalLabel">确认结账</h4>
+                <h4 class="modal-title" id="myModalLabel">修改菜式</h4>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group" style="display: none">
+                        <label>ID</label>
+                        <input data-dv=0 name="id" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>菜名</label>
+                        <input name="name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>价格</label>
+                        <input data-dv=0 name="price" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>星级</label>
+                        <input data-dv=0 name = "stars" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>详细</label>
+                        <input name="detail" class="form-control">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button name="confirmDishEdit" type="button" data-dismiss="modal"
+                        class="btn btn-primary">确认
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="confirmDelModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+                <h4 class="modal-title" id="delModalLabel">删除菜式</h4>
             </div>
             <div class="modal-body">
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button name="finalConfirmCheck" type="button" data-dismiss="modal"
+                <button name="confirmDishDel" type="button" data-dismiss="modal"
                         class="btn btn-primary">确认
                 </button>
             </div>
@@ -533,97 +566,108 @@
 
         $("#menu-menu").metisMenu();
 
-        var dt = $("#bill_table").DataTable({
+        $(".menu-list li:first").addClass("active");
+        var categoryId = 1;
+
+        var dt = $("#dish_table").DataTable({
             "columns": [
+                { "data": "id" },
+                { "data": "name" },
+                { "data": "price" },
+                { "data": "stars" },
+                { "data": "detail" },
                 {
-                    "class": "details-control",
-                    "orderable": false,
-                    "defaultContent": ""
-                },
-                {
-                },
-                {
-                },
-                {
-                },
-                {
-                },
-                {
-                },
-                {
-                },
-                {
-
-                }
+                   "render": function ( data, type, full, meta ) {
+                    return '<button name="edit-dish" data-toggle="modal" data-target="#editDishModal" class="btn btn-sm btn-primary">修改</button>  '+
+                           '<button name="del-dish" data-toggle="modal" data-target="#confirmDelModal" class="btn btn-sm btn-danger">删除</button>';
+                }}
             ],
+            "ajax":{
+              "url":"<%=realPath %>/menu/getDishInCategoryByDtFormat",
+              headers:{
+                Accept : "application/json; charset=utf-8"
+              },
+              "data":function(d){
+                  d.categoryId = categoryId;
+              }
+            },
             "order": [
-                [4, 'desc']
-            ]
+                [0, 'asc']
+            ],
+            "dom": '<"toolbar">frtip'
         });
 
-        var currentBillId = null;
+        $("div.toolbar").html('<button name="add-dish" data-toggle="modal" data-target="#editDishModal" class="btn btn-sm btn-primary">增加</button>');
 
-        $("button[name='confirmCheckout']").each(function () {
-            var oldConfirmCheckHandler = $(this).onclick;
-            $(this).onclick = null;
+        $(".menu-list li a").click(function(){
+            if($(this).parent("li").children("ul").length == 0){
+                categoryId = $(this).data("categoryid");
+                dt.ajax.reload();
+            }
+        });
 
-            $(this).click(function () {
-                var tableNo = $(this).parent("td").siblings("td[name='tableNo']").html();
-                $("div#confirmCheckModal div.modal-body").html(tableNo + "号桌确认结账?");
-                currentBillId = $(this).parents("tr").data("id");
+        $(document).on("click",'button[name=edit-dish]', function (){
+            $("#editDishModal div.modal-header h4").html("修改菜式");
+            var tr = $(this).parents("tr");
+            var td = $("td",tr);
+            $("#editDishModal input").each(function(index,input){
+                $(input).val($(td[index]).html());
             });
-
-            $(this).click(oldConfirmCheckHandler);
         });
 
-        $("button[name='finalConfirmCheck']").click(function () {
+        $('button[name=add-dish]').click(function (){
+            $("#editDishModal div.modal-header h4").html("增加菜式");
+            //清空
+            $("#editDishModal form").find("input").val("");
+        });
 
-            if (!currentBillId)
-                return;
+        $(document).on("click","button[name=del-dish]",function(){
+           var dishName = $(this).parents("tr").children("td:nth-child(2)").html();
+           var id = $(this).parents("tr").children("td:nth-child(1)").html();
+           $("#confirmDelModal div.modal-body").data("dishid",id);
+           $("#confirmDelModal div.modal-body").html("是否确认删除【"+dishName+"】?");
+        });
 
-            var tr = $("#bill_table tr[data-id=" + currentBillId + "]");
+        $("button[name=confirmDishDel]").click(function(){
+            var id = $("#confirmDelModal div.modal-body").data("dishid");
             $.ajax({
-                url: "<%=realPath %>/bill/checkout",
-                data: {"billId": currentBillId},
-                dataType: "json",
-                success: function (data) {
-                    if (data.success) {
-                        $("td[name=status]", tr).html("<span class='label label-danger'>已结</span>");
-                        $("button[name=confirmCheckout]", tr).addClass("disabled");
-                        noty({"text": "结账成功!", "layout": "topCenter", "type": "success"});
-                    }
-                }
+               url:"<%=realPath %>/menu/delDish",
+               data:{"dishId":id},
+               dataType:"json",
+               success:function(result){
+                   if(result.success){
+                       noty({"text":"删除成功!","layout":"topCenter","type":"success"});
+                       dt.ajax.reload();
+                   }
+               }
             });
         });
 
-        var detailRows = [];
-
-        $('.table-list tbody').on('click', 'tr td:first-child', function () {
-            var tr = $(this).closest('tr');
-            var row = dt.row(tr);
-            var idx = $.inArray(tr.attr('id'), detailRows);
-
-            if (row.child.isShown()) {
-                tr.removeClass('details');
-                row.child.hide();
-
-                // Remove from the 'open' array
-                detailRows.splice(idx, 1);
-            }
-            else {
-                tr.addClass('details');
-                row.child(format(row.data())).show();
-
-                // Add to the 'open' array
-                if (idx === -1) {
-                    detailRows.push(tr.attr('id'));
+        $("button[name=confirmDishEdit]").click(function(){
+            var params = {};
+            $("#editDishModal input").each(function(index,input){
+                if($(input).val() == "")
+                    $(input).val($(input).data("dv"));
+                params[$(input).attr("name")] = $(input).val();
+            });
+            params["categoryId"] = $(".menu-list li.active a").data("categoryid");
+            $.ajax({
+               url:"<%=realPath %>/menu/updateDish",
+               dataType:"json",
+               type:"POST",
+               headers:{
+                    Accept : "application/json; charset=utf-8"
+                },
+               data: {"param":JSON.stringify(params)},
+               success:function(result){
+                if(result.success){
+                    var curPageNo = dt.page();
+                    dt.ajax.reload(function(json){
+                        dt.page(curPageNo).draw(false);
+                    });
+                    noty({"text":"修改成功!","layout":"topCenter","type":"success"});
                 }
-            }
-        });
-
-        dt.on('draw', function () {
-            $.each(detailRows, function (i, id) {
-                $('#' + id + ' td:first-child').trigger('click');
+               }
             });
         });
 
