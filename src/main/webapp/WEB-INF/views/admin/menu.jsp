@@ -62,7 +62,7 @@
         }
 
         .menu-list .nav-second-level li a {
-            padding-left: 37px;
+            padding-left: 27px;
         }
 
         .toolbar {
@@ -76,11 +76,12 @@
 
         .category-header{
            /* background-color: #EEEEEE;*/
-            padding-bottom:25px;
-            padding-top:5px;
-            padding-left: 10px;
-            padding-right: 5px;
+            padding: 5px 5px 25px 6px;
             border-bottom: 1px solid #000;
+        }
+
+        .menu-list li a{
+            padding: 10px 15px 10px 5px;
         }
 
     </style>
