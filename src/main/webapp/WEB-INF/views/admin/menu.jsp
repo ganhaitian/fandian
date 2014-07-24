@@ -74,6 +74,15 @@
             border-left:1px solid #eee;
         }
 
+        .category-header{
+           /* background-color: #EEEEEE;*/
+            padding-bottom:25px;
+            padding-top:5px;
+            padding-left: 10px;
+            padding-right: 5px;
+            border-bottom: 1px solid #000;
+        }
+
     </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -358,11 +367,12 @@
                         <div class="col-lg-2" >
                             <div class="menu-list" style="margin-top:0px;">
                                 <ul class="nav nav-pills nav-stacked" id = "menu-menu">
-                                        <li style = "border-bottom: 1px solid #eee;padding:5px;">
-                                            <div class="btn-group">
-                                                <button name="addCategory" type="button" class="btn btn-default btn-sm" data-toggle = "modal" data-target = "#confirmAddCategory">增加</button>
-                                                <button name="updateCategory" type="button" class="btn btn-default btn-sm" data-toggle = "modal" data-target = "#confirmAddCategory">修改</button>
-                                                <button name="delCategory" data-toggle = "modal" data-target="#confirmDelCategory" type="button" class="btn btn-default btn-sm">删除</button>
+                                        <li class="category-header">
+                                            <div class="pull-left" style="font-size: 16px;font-weight: 500;">分类</div>
+                                            <div style="margin-bottom:10px;" class="btn-group pull-right">
+                                                <button name="addCategory" type="button" class="btn btn-default btn-xs" data-toggle = "modal" data-target = "#confirmAddCategory"><i class="fa fa-plus"></i></button>
+                                                <button name="updateCategory" type="button" class="btn btn-default btn-xs" data-toggle = "modal" data-target = "#confirmAddCategory"><i class="fa fa-edit"></i></button>
+                                                <button name="delCategory" data-toggle = "modal" data-target="#confirmDelCategory" type="button" class="btn btn-default btn-xs"><i class="fa fa-trash-o"></i></button>
                                             </div>
                                         </li>
                                     <c:forEach items="${categories}" var="category">
