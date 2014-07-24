@@ -8,6 +8,7 @@ import com.fandian.dao.MenuDao;
 import com.fandian.util.JSONUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -68,6 +69,25 @@ public class MenuController {
     public @ResponseBody String delDish(@RequestParam int dishId){
         menuDao.deleteDish(dishId);
         return "{\"success\":true}";
+    }
+
+    @RequestMapping("/customer/category")
+    public String getCustomerMenuView(Model model){
+        List<DishCategory> rootCategories = menuDao.getRootDishCategories();
+        model.addAttribute("categories",rootCategories);
+        return "menu/customer-category";
+    }
+
+    @RequestMapping("/customer/category/{categoryId}")
+    public String getCustomerMenuSubView(Model model, @PathVariable int categoryId){
+        List<DishCategory> rootCategories = menuDao.getChildDishCategories(categoryId);
+        if (rootCategories.size() == 0){
+            List<Dish> dishes = menuDao.getDishesInCategory(categoryId);
+            model.addAttribute("dishes",dishes);
+        }
+        model.addAttribute("categories",rootCategories);
+        model.addAttribute("rootCategories",menuDao.getRootDishCategories());
+        return "menu/customer-category";
     }
 
     @RequestMapping("/customer/side")
