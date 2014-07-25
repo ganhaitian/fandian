@@ -6,6 +6,7 @@ import com.fandian.bean.BillStatus;
 import com.fandian.dao.BillDao;
 import com.fandian.util.JSONUtil;
 import com.google.gson.reflect.TypeToken;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -35,6 +36,7 @@ public class BillController {
         return "menu/customer-view-1";
     }
 
+    @Secured("ROLE_MANAGER")
     @RequestMapping("/checkout")
     @ResponseBody
     public String checkoutBill(@RequestParam int billId) {

@@ -6,13 +6,16 @@
           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
           http://www.springframework.org/schema/security
           http://www.springframework.org/schema/security/spring-security.xsd">
-    
+
+
+    <security:global-method-security secured-annotations="enabled" />
+
     <security:http pattern="/login" security="none"/>
     <security:http pattern="/testEcho" security="none"/>
     <security:http pattern="/oauth/**" security="none" />
-    <security:http pattern="/menu/**" security="none" />
+<!--    <security:http pattern="/menu/**" security="none" />-->
     <security:http pattern="/bill/**" security="none" />
-    <security:http pattern="/admin/**" security="none" />
+<!--    <security:http pattern="/admin/**" security="none" />-->
     <security:http pattern="/css/**" security="none" />
     <security:http pattern="/js/**" security="none" />
     <security:http pattern="/resources/**" security="none" />
@@ -25,7 +28,7 @@
 
 
 
-        <security:form-login login-page="/login" default-target-url="/" authentication-failure-url="/login?error=1" always-use-default-target="true"/>
+        <security:form-login login-page="/login" default-target-url="/admin/main" authentication-failure-url="/login?error=1" always-use-default-target="true"/>
 
         <security:logout />
 
@@ -34,7 +37,7 @@
 		<!-- 
 	    <security:intercept-url pattern="/**" access="isAuthenticated()" />
 		 -->
-        <security:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
+        <security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_MANAGER')" />
 	    <!-- sets this as the authentication filter over the default -->
 
         <security:session-management>
@@ -43,11 +46,9 @@
 	</security:http>
 
     <security:authentication-manager>
-        <security:authentication-provider>
+        <security:authentication-provider user-service-ref="userDetailsManager">
             <security:password-encoder hash="sha-256"></security:password-encoder>
-            <security:user-service>
-                <security:user name="admin" password="8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92" authorities="ROLE_USER" />
-            </security:user-service>
         </security:authentication-provider>
     </security:authentication-manager>
+
 </beans>

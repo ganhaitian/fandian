@@ -6,6 +6,9 @@ import com.fandian.bean.DishCustomerView;
 import com.fandian.bean.DishListOfCustomerView;
 import com.fandian.dao.MenuDao;
 import com.fandian.util.JSONUtil;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,6 +57,7 @@ public class MenuController {
         return jsonUtil.transToJsonStrByGson(result);
     }
 
+    @Secured("ROLE_MANAGER")
     @RequestMapping(value="updateDish")
     public @ResponseBody String updateDish(@RequestParam String param){
         Dish dish = jsonUtil.transJsonToBeanByGson(param,Dish.class);
@@ -65,6 +69,7 @@ public class MenuController {
         return "{\"success\":true,\"dishId\":"+dishId+"}";
     }
 
+    @Secured("ROLE_MANAGER")
     @RequestMapping(value="updateCategory")
     public @ResponseBody String updateCategory(@RequestParam String param){
         DishCategory dishCategory = jsonUtil.transJsonToBeanByGson(param,DishCategory.class);
@@ -77,12 +82,14 @@ public class MenuController {
         return "{\"success\":true}";
     }
 
+    @Secured("ROLE_MANAGER")
     @RequestMapping(value="delCategory")
     public @ResponseBody String delCategory(@RequestParam int categoryId){
         menuDao.delDishCategory(categoryId);
         return "{\"success\":true}";
     }
 
+    @Secured("ROLE_MANAGER")
     @RequestMapping(value="delDish")
     public @ResponseBody String delDish(@RequestParam int dishId){
         menuDao.deleteDish(dishId);

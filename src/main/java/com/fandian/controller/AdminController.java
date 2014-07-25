@@ -21,7 +21,12 @@ public class AdminController {
     @Inject
     private MenuDao menuDao;
 
-    @RequestMapping("/cashier")
+    /**
+     * 后台的主页面默认跳转到收银台的页面
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/cashier","/main"})
     public String getCashierView(Model model){
         model.addAttribute("bills",billDao.getAllBills());
         return "admin/cashier";

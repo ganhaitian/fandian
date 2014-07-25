@@ -36,4 +36,9 @@
         <property name="filters" value="stat"/>
     </bean>
 
+    <bean id="userDetailsManager"
+          class="org.springframework.security.provisioning.JdbcUserDetailsManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
 </beans>
