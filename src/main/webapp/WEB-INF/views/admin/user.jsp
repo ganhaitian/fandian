@@ -559,19 +559,25 @@
             });
         });
 
-        $("button[name=confirmDelUser]").click(function(){
+        $(document).on("click",'button[name=del-user]', function (){
             var tr = $(this).closest("tr");
             var row = dt.row(tr);
             var rowData = row.data();
+            $("#confirmUpdateUser div.modal-body").data("username",rowData.username);
+        });
+
+        $("button[name=confirmDelUser]").click(function(){
+            var username = $("#confirmUpdateUser div.modal-body").data("username");
             $.ajax({
                 url:"<%=realPath %>/user/delUser",
                 dataType:"json",
                 headers:{
                     Accept : "application/json; charset=utf-8"
                 },
-                data:{"username":rowData.username},
+                data:{"username":username},
                 success:function(result){
                     if(result.success){
+                        dt.ajax.reload();
                         noty({"text":"删除成功!","layout":"topCenter","type":"success"});
                     }
                 }
