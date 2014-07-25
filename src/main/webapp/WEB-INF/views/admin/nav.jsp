@@ -15,6 +15,9 @@
         <a class="" href="<%=realPath%>/admin/cashier"><i class="fa fa-dollar fa-fw"></i> 收银台</a>
     </li>
     <li name="menu">
-        <a class="" href="<%=realPath%>/admin/menu"><i class="fa fa-book fa-fw"></i> 菜单录入</a>
+        <a class="" href="<%=realPath%>/admin/menu"><i class="fa fa-book fa-fw"></i> 菜单</a>
+    </li>
+    <li name="user">
+        <a class="" href="<%=realPath%>/admin/user"><i class="fa fa-user fa-fw"></i> 用户</a>
     </li>
 </ul>

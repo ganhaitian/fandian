@@ -1,56 +1,62 @@
 package com.fandian.dao;
 
 import com.fandian.bean.User;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.List;
 
 /**
  * Created by gan on 14-7-25.
  */
 @Repository
-public class UserDao extends JdbcTemplate{
+public class UserDao extends JdbcTemplate {
 
-    @Resource(name="dataSource")
+    @Resource(name = "dataSource")
     private DataSource dataSource;
 
     @PostConstruct
-    public void initDataSource(){
+    public void initDataSource() {
         super.setDataSource(this.dataSource);
     }
 
-    public int insertUser(final User user){
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        update(new PreparedStatementCreator() {
-            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-
-                PreparedStatement ps = connection.prepareStatement(
-                    "insert into user (name,open_id) values(?,?) ", Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, user.getName());
-                ps.setString(2, user.getOpenId());
-
-                return ps;
-            }
-        }, keyHolder);
-        return keyHolder.getKey().intValue();
+    public List<User> getInternalUsers() {
+        List<User> users = query("select * from users where internal = 1 ", BeanPropertyRowMapper.newInstance(User.class));
+        for (User user : users) {
+            user.setAuthority(
+                queryForObject("select ifnull(authority,\"\") from authorities where username = ?",
+                    String.class, user.getUsername())
+            );
+        }
+        return users;
     }
 
-    public void updateUser(User user){
-        update("update user set name=?,open_id=? where id = ?",user.getName(),user.getOpenId(),user.getId());
+    public boolean hasUser(String username) {
+        int userNumber = queryForObject("select count(*) from users where username = ?", Integer.class, username);
+        if (userNumber > 0)
+            return true;
+        else
+            return false;
     }
 
-    public void deleteUser(int userId){
-        update("delete from user where id = ?",userId);
+    public void insertUser(final User user) {
+        super.update("insert into users (username,usernamecn,password,open_id,enabled,internal) values(?,?,?,?,?,?) ",
+            user.getUsername(), user.getUsernamecn(), user.getPassword(), user.getOpenId(), user.getEnabled(), user.getInternal());
+        super.update("insert into authorities (username,authority) values(?,?)", user.getUsername(), user.getAuthority());
+    }
+
+    public void updateUser(User user) {
+        update("update users set usernamecn=?,password=?,open_id=?,enabled=? where username = ?",
+            user.getUsernamecn(), user.getPassword(), user.getOpenId(), user.getEnabled(), user.getUsername());
+        update("update authorities set authority = ? where username = ?", user.getUsername(), user.getAuthority());
+    }
+
+    public void deleteUser(String userName) {
+        update("delete from users where username = ?", userName);
     }
 
 

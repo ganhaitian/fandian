@@ -38,4 +38,9 @@ public class AdminController {
         return "admin/menu";
     }
 
+    @RequestMapping("/user")
+    public String getUserView(){
+        return "admin/user";
+    }
+
 }
