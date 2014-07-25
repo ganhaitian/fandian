@@ -2,13 +2,11 @@ package com.fandian.controller;
 
 import com.fandian.bean.Dish;
 import com.fandian.bean.DishCategory;
-import com.fandian.bean.DishCustomerView;
-import com.fandian.bean.DishListOfCustomerView;
+import com.fandian.model.DishCustomerView;
+import com.fandian.model.DishListOfCustomerView;
 import com.fandian.dao.MenuDao;
 import com.fandian.util.JSONUtil;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;

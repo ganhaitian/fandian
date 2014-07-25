@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="s" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <html>
 <head>
@@ -169,7 +170,7 @@
                                     <div class="pull-right">
                                         <span class="badge text-primary" id="sub_number_${dish.id}"></span>
                                         &nbsp;&nbsp;
-                                        <button class="btn btn-default btn-add-to-cart" title="点击加入餐车" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
+                                        <button class="btn btn-default btn-add-to-cart" title="点击加入餐车" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
                                             <i class="fa fa-rmb"></i>
                                             <span>${dish.price}</span>
                                         </button>
@@ -190,7 +191,18 @@
 </div>
 <script type="application/javascript">
     $('.btn-add-to-cart').click(function(e){
-        $(this)
+        var btn = $(this);
+        $.ajax({
+            url:"/order/customer/addDish",
+            method:'POST',
+            data:{id:btn.attr('data-id'),name:btn.attr('data-name'),price:btn.attr('data-price')},
+            success:function(data){
+                console.log(data);
+            },
+            error:function(){
+                alert('err');
+            }
+        });
     });
 </script>
 </body>
