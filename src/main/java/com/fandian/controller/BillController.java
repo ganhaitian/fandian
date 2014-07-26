@@ -4,9 +4,11 @@ import com.fandian.bean.Bill;
 import com.fandian.bean.BillDetail;
 import com.fandian.bean.BillStatus;
 import com.fandian.dao.BillDao;
+import com.fandian.model.DishOrderInfo;
 import com.fandian.util.JSONUtil;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -72,30 +74,20 @@ public class BillController {
     @RequestMapping("/view")
     public String getQuickView(Model model, HttpServletRequest request) {
         try {
-            request.setCharacterEncoding("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        String param = request.getParameter("param");
-        if (StringUtils.isEmpty(param)) {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            if (OrderDishController.DISH_ORDER_CACHE.containsKey(username)){
+                int sumfee = 0;
 
-        } else {
-            int sumfee = 0;
-            Map<String, Map<String, Object>> billDetail = jsonUtil.transJsonToBeanByGson(param, Map.class);
-            List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-            Iterator<String> keys = billDetail.keySet().iterator();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("id", key);
-                map.put("name", billDetail.get(key).get("name").toString());
-                map.put("count", ((Double) billDetail.get(key).get("count")).intValue() + "");
-                map.put("fee", ((Double) billDetail.get(key).get("fee")).intValue() + "");
-                list.add(map);
-                sumfee += Double.parseDouble(map.get("count")) * Double.parseDouble(map.get("fee"));
+                model.addAttribute("list", OrderDishController.DISH_ORDER_CACHE.get(username));
+
+                for (DishOrderInfo dishOrderInfo : OrderDishController.DISH_ORDER_CACHE.get(username)){
+                    sumfee += dishOrderInfo.getNumber()*dishOrderInfo.getDish().getPrice();
+                }
+
+                model.addAttribute("sumfee", sumfee);
             }
-            model.addAttribute("list", list);
-            model.addAttribute("sumfee", sumfee);
+        } catch (Exception e) {
+
         }
 
         return "bill/bill-view";

@@ -33,7 +33,7 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
-    <script src="/resources/js/jquery.loadTemplate-1.4.4.min.js"></script>
+    <script src="<s:url value="/resources/js/jquery.loadTemplate-1.4.4.min.js"></s:url>"></script>
 </head>
 <body>
 
@@ -65,7 +65,7 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="typemenu" id="dishMenuContainer">
                                     <s:forEach items="${rootCategories}" var="tmp">
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="/menu/customer/category/${tmp.id}">${tmp.name}</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">${tmp.name}</a></li>
                                     </s:forEach>
                                 </ul>
                             </div>
@@ -93,20 +93,25 @@
         </div>
     </nav>
 
+
     <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
         <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="pull-left">
-                        <p class="navbar-text">
-                            <i class="fa fa-cutlery"></i> <span id="summary_info_number"></span>品
-                            <i class="fa fa-rmb"></i> <span id="summary_info_fee"></span>
+                        <p class="navbar-text" id="billSummaryTrigger" data-html="true" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+                            <i class="fa fa-cutlery"></i>&nbsp;&nbsp;<strong id="summary_info_number"></strong>&nbsp;&nbsp;例&nbsp;&nbsp;
+                            <i class="fa fa-rmb"></i>&nbsp;&nbsp;<strong id="summary_info_fee"></strong>
                         </p>
 
                     </div>
                     <div class="pull-right">
-                        <button class="btn btn-danger navbar-btn">去下单</button>
+                        <%--<form action="<s:url value="/bill/view"></s:url>" method="post" enctype="application/x-www-form-urlencoded">--%>
+                            <%--<input type="hidden" name="param" id="billInfoParam"/>--%>
+                            <%--<button id="submitBillBtn" class="btn btn-danger navbar-btn">去下单</button>--%>
+                        <%--</form>--%>
+                        <a href="<s:url value="/bill/view"></s:url>" class="btn btn-danger navbar-btn">去下单</a>
                     </div>
                 </div>
 
@@ -118,7 +123,7 @@
         <div class="col-xs-12">
             <div class="list-group">
                 <s:forEach items="${categories}" var="tmp">
-                    <a href="/menu/customer/category/${tmp.id}" class="list-group-item">
+                    <a href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>" class="list-group-item">
                         ${tmp.name}
                         <span class="pull-right"><i class="fa fa-chevron-right"></i></span>
                     </a>
@@ -139,7 +144,7 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <a href="#" class="thumbnail">
-                                        <img src="/resources/img/holder.jpg" alt="...">
+                                        <img src="<s:url value="/resources/img/holder.jpg"></s:url>" alt="...">
                                     </a>
                                 </div>
                                 <div class="col-xs-6">
@@ -190,20 +195,60 @@
 
 </div>
 <script type="application/javascript">
+
+    function updateUserOrderDetails(){
+        $.ajax({
+            url:"<s:url value="/order/customer/getDishes"></s:url>",
+            dataType:"json",
+            headers:{
+                Accept : "application/json; charset=utf-8"
+            },
+
+            success:function(result){
+                if (!result.dishes || !$.isArray(result.dishes)){
+                    result['dishes'] = [];
+                }
+
+                var dishCount = 0, dishFee = 0, popoverHtml = "";
+
+                $.each(result.dishes,function(i,v){
+                    dishCount += v.number;
+                    dishFee += v.number* v.dish.price;
+                    popoverHtml += "<li class=\"list-group-item\"><span class=\"badge\">"+ v.number +"</span>"+ v.dish.name+"</li>";
+                });
+
+                $('#summary_info_number').text(dishCount);
+                $('#summary_info_fee').text(dishFee);
+
+
+                $('#billSummaryTrigger').attr("data-content","<ul class=\"list-group\">"+popoverHtml+"</ul>");
+
+                $('#billSummaryTrigger').popover();
+            }
+        });
+    }
+
     $('.btn-add-to-cart').click(function(e){
         var btn = $(this);
         $.ajax({
-            url:"/order/customer/addDish",
+            url:"<s:url value="/order/customer/addDish"></s:url>",
             method:'POST',
             data:{id:btn.attr('data-id'),name:btn.attr('data-name'),price:btn.attr('data-price')},
             success:function(data){
-                console.log(data);
+                updateUserOrderDetails();
             },
             error:function(){
                 alert('err');
             }
         });
+
+
     });
+
+    updateUserOrderDetails();
+
+
+
 </script>
 </body>
 </html>

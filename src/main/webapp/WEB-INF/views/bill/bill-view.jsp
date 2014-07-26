@@ -60,9 +60,9 @@
     <div class="row">
         <ul class="list-group">
             <c:forEach items="${list}" var="dish">
-                <li class="list-group-item dish-entry" data-id="${dish.id}" data-name="${dish.name}" data-count="${dish.count}" data-fee="${dish.fee}">
-                    <span class="dish-name"><h4><i class="fa fa-angle-down"></i>&nbsp;&nbsp;${dish.name}
-                        <span class="pull-right badge">${dish.count}</span></h4>
+                <li class="list-group-item dish-entry" data-id="${dish.dish.id}" data-name="${dish.dish.name}" data-count="${dish.number}" data-fee="${dish.dish.price*dish.number}">
+                    <span class="dish-name"><h4><i class="fa fa-angle-down"></i>&nbsp;&nbsp;${dish.dish.name}
+                        <span class="pull-right badge">${dish.number}</span></h4>
                     </span>
                     <p class="tools-bar hide">
                         &nbsp;
@@ -77,7 +77,7 @@
 
 
             <li class="list-group-item">
-                <a href="/menu/customer/top"><h4><i class="fa fa-cutlery"></i>&nbsp;&nbsp;再点点儿</h4></a>
+                <a href="/menu/customer/category"><h4><i class="fa fa-cutlery"></i>&nbsp;&nbsp;再点点儿</h4></a>
             </li>
         </ul>
     </div>

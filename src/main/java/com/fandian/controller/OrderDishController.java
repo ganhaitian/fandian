@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/order")
 public class OrderDishController {
     //根据用户名，缓存菜单
-    private static final Map<String,List<DishOrderInfo>> DISH_ORDER_CACHE = new ConcurrentHashMap<String, List<DishOrderInfo>>();
+    public static final Map<String,List<DishOrderInfo>> DISH_ORDER_CACHE = new ConcurrentHashMap<String, List<DishOrderInfo>>();
     private Logger logger = LoggerFactory.getLogger(getClass());
     @Resource
     private JSONUtil jsonUtil;
