@@ -65,6 +65,7 @@
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+
     <![endif]-->
 
 </head>
@@ -90,15 +91,19 @@
             <div class="panel panel-default">
                 <div class="panel-heading">桌单列表</div>
                 <div class="panel-body table-list">
-                    <table id="bill_table" class="table table-striped dataTable no-footer">
+                    <table id="bill_table" class="cell-border table table-striped dataTable no-footer">
                         <thead>
                             <tr role="row">
                                 <th></th>
                                 <th>#</th>
                                 <th>桌号</th>
                                 <th>微信用户</th>
-                                <th>状态</th>
-                                <th style="text-align: right;">总消费</th>
+                                <th style="text-align: center;">状态</th>
+                                <th style="">总消费</th>
+                                <th style="">折扣</th>
+                                <th style="">实付</th>
+                                <th>付费方式</th>
+                                <th style="">操作员</th>
                                 <th style="text-align: center;">创建时间</th>
                                 <th style="text-align: center;">操作</th>
                             </tr>
@@ -110,7 +115,7 @@
                                     <td style="line-height: 2;padding: 5px" name="id" >${bill.id}</td>
                                     <td style="line-height: 2;padding: 5px" name="tableNo">${bill.tableNo}</td>
                                     <td style="line-height: 2;padding: 5px">${bill.userName}</td>
-                                    <td style="line-height: 2;padding: 5px" name="status" >
+                                    <td style="line-height: 2;padding: 5px;text-align: center;" name="status" >
                                         <c:if test="${bill.status == 0}">
                                             <span class="label label-success">未结</span>
                                         </c:if>
@@ -118,7 +123,11 @@
                                             <span class="label label-danger">已结</span>
                                         </c:if>
                                     </td>
-                                    <td style="line-height: 2;padding: 5px;text-align: right;" >${bill.fee}¥</td>
+                                    <td name = "fee" style="line-height: 2;padding: 5px;" >¥ ${bill.fee}</td>
+                                    <td style="line-height: 2;padding: 5px" >${bill.discount}</td>
+                                    <td style="line-height: 2;padding: 5px;" >¥ ${bill.actualFee}</td>
+                                    <td style="line-height: 2;padding: 5px" >${bill.paymentType}</td>
+                                    <td style="line-height: 2;padding: 5px"></td>
                                     <td style="line-height: 2;padding: 5px;text-align: center;">${bill.createTime}</td>
                                     <td style="line-height: 2;padding: 5px;text-align: center;">
                                         <c:if test="${bill.status == 0}">
@@ -147,6 +156,26 @@
                 <h4 class="modal-title" id="myModalLabel">确认结账</h4>
             </div>
             <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <p class="form-control-static confirm-msg"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>折扣</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>付款方式</label>
+                        <select class="form-control">
+                            <option value = "0">现金</option>
+                            <option value = "1">刷卡</option>
+                            <option value = "3">微信</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="alert alert-success checkout-msg" style="font-size: 17px;" role="alert"></div>
+                    </div>
+                </form>
 
             </div>
             <div class="modal-footer">
@@ -180,6 +209,7 @@
 <script src="<%=realPath %>/resources/js/plugins/dataTables/jquery.dataTables.js"></script>
 <script src="<%=realPath %>/resources/js/plugins/dataTables/dataTables.bootstrap.js"></script>
 <script src="<%=realPath%>/resources/js/plugins/noty/jquery.noty.packaged.min.js"></script>
+<script src="<%=realPath %>/resources/js/fandian.js"></script>
 
 <script>
 
@@ -250,7 +280,10 @@
                 },{
                 },{
                 },{
-
+                },{
+                },{
+                },{
+                },{
                 }
             ],
             "order":[[4,'desc']]
@@ -261,11 +294,13 @@
         $("button[name='confirmCheckout']").each(function(){
             var oldConfirmCheckHandler = $(this).onclick;
             $(this).onclick = null;
+            var fee = $(this).parent("td").siblings("td[name=fee]").html();
 
             $(this).click(function(){
                 var tableNo = $(this).parent("td").siblings("td[name='tableNo']").html();
-                $("div#confirmCheckModal div.modal-body").html(tableNo+"号桌确认结账?");
+                $("div#confirmCheckModal div.modal-body p.confirm-msg").html(tableNo+"号桌确认结账?");
                 currentBillId = $(this).parents("tr").data("id");
+                $("div#confirmCheckModal div.modal-body div.checkout-msg").html("<strong>实付金额:"+fee+"元</strong>");
             });
 
             $(this).click(oldConfirmCheckHandler);
@@ -287,7 +322,7 @@
                     $("button[name=confirmCheckout]",tr).addClass("disabled");
                     noty({"text":"结账成功!","layout":"topCenter","type":"success"});
                   }
-               }
+               },error:errorFunction
             });
         });
 

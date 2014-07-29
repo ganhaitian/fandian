@@ -16,11 +16,51 @@ public class Bill {
 
     private int fee;
 
+    private float actualFee;
+
+    private float discount;
+
+    private int paymentType;
+
     private String userName;
 
     private Date createTime;
 
     private List<BillDetail> billDetails;
+
+    private String operator;
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public float getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(float discount) {
+        this.discount = discount;
+    }
+
+    public int getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(int paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public float getActualFee() {
+        return actualFee;
+    }
+
+    public void setActualFee(float actualFee) {
+        this.actualFee = actualFee;
+    }
 
     public String getUserName() {
         return userName;
