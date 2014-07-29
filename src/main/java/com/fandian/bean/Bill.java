@@ -16,9 +16,19 @@ public class Bill {
 
     private int fee;
 
+    private String userName;
+
     private Date createTime;
 
     private List<BillDetail> billDetails;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public List<BillDetail> getBillDetails() {
         return billDetails;

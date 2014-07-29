@@ -109,7 +109,7 @@
                                     <td style="line-height: 2;padding: 5px"></td>
                                     <td style="line-height: 2;padding: 5px" name="id" >${bill.id}</td>
                                     <td style="line-height: 2;padding: 5px" name="tableNo">${bill.tableNo}</td>
-                                    <td style="line-height: 2;padding: 5px"></td>
+                                    <td style="line-height: 2;padding: 5px">${bill.userName}</td>
                                     <td style="line-height: 2;padding: 5px" name="status" >
                                         <c:if test="${bill.status == 0}">
                                             <span class="label label-success">未结</span>

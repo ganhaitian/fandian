@@ -47,10 +47,15 @@
             <div class="text-center">
                 <div class="col-xs-12 col-md-12">
                     <select name="desknumber" id="" class="form-control input-lg">
-                        <option value="0" selected="selected">请选择桌号</option>
-                        <option value="1">1桌</option>
-                        <option value="2">2桌</option>
-                        <option value="3">3桌</option>
+                        <c:if test="${existedBill}">
+                            <option value="${tableNo}">${tableNo}桌</option>
+                        </c:if>
+                        <c:if test="${!existedBill}">
+                            <option value="0" selected="selected">请选择桌号</option>
+                            <option value="1">1桌</option>
+                            <option value="2">2桌</option>
+                            <option value="3">3桌</option>
+                        </c:if>
                     </select>
                 </div>
             </div>
@@ -77,7 +82,7 @@
 
 
             <li class="list-group-item">
-                <a href="/menu/customer/category"><h4><i class="fa fa-cutlery"></i>&nbsp;&nbsp;再点点儿</h4></a>
+                <a href="<c:url value="/menu/customer/category"/>"><h4><i class="fa fa-cutlery"></i>&nbsp;&nbsp;再点点儿</h4></a>
             </li>
         </ul>
     </div>
@@ -94,9 +99,14 @@
 
     <br/>
 
-    <div class="row">
+    <div class="row confirm-panel">
         <div class="col-xs-12">
-            <button id="confirm-bill" class="btn-block btn btn-primary btn-lg">确定</button>
+            <c:if test="${existedBill}">
+                <div class='alert alert-success' style='text-align:center;'>您已成功下单，请耐心等待!</div>
+            </c:if>
+            <c:if test="${!existedBill}">
+                <button id="confirm-bill" class="btn-block btn btn-primary btn-lg">确定</button>
+            </c:if>
         </div>
     </div>
     <br/><br/>
@@ -164,7 +174,10 @@
                 dataType:"JSON",
                 data: {"param":JSON.stringify(billDetails),"tableNo":tableNo},
                 success:function(data){
-                    alert(data);
+                    if(data.success){
+                        $("div.confirm-panel").html(
+                            "<div class='alert alert-success' style='text-align:center;'>您已成功下单，请耐心等待!</div>");
+                    }
                 }
             });
         });

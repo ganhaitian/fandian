@@ -1,14 +1,20 @@
 package com.fandian.controller;
 
+import com.fandian.bean.Bill;
+import com.fandian.bean.BillStatus;
 import com.fandian.bean.Dish;
 import com.fandian.bean.DishCategory;
+import com.fandian.dao.BillDao;
 import com.fandian.model.DishCustomerView;
 import com.fandian.model.DishListOfCustomerView;
 import com.fandian.dao.MenuDao;
+import com.fandian.model.DishOrderInfo;
 import com.fandian.util.JSONUtil;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +35,9 @@ public class MenuController {
 
     @Inject
     private MenuDao menuDao;
+
+    @Inject
+    private BillDao billDao;
 
     private JSONUtil jsonUtil = new JSONUtil();
 
@@ -96,6 +105,16 @@ public class MenuController {
 
     @RequestMapping("/customer/category")
     public String getCustomerMenuView(Model model){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        //查看该用户是否已经存在订单
+        Bill existedBill = billDao.getBillByUsername(username);
+
+        //存在订单的话，直接跳入到订单查看的页面
+        if(existedBill != null && existedBill.getStatus() == BillStatus.COMMON.value() &&
+            OrderDishController.DISH_ORDER_CACHE.containsKey(username)){
+            return "redirect:/bill/view";
+        }
+
         List<DishCategory> rootCategories = menuDao.getRootDishCategories();
         model.addAttribute("categories",rootCategories);
         return "menu/customer-category";

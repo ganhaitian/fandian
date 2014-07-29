@@ -55,12 +55,17 @@ public class BillController {
 
 
     @RequestMapping(value = "/confirm", method = {RequestMethod.POST})
+    @ResponseBody
     public String confirmBill(@RequestParam String param,@RequestParam int tableNo) {
+        //关联上用户名
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
         List<BillDetail> billDetails = jsonUtil.transJsonToBeanListByGson(param, new TypeToken<List<BillDetail>>() {
         }.getType());
 
         Bill newBill = new Bill();
         newBill.setTableNo(tableNo);
+        newBill.setUserName(username);
 
         for(BillDetail billDetail:billDetails){
             newBill.setFee(newBill.getFee() + billDetail.getPrice() * billDetail.getAmount());
@@ -68,13 +73,23 @@ public class BillController {
         newBill.setBillDetails(billDetails);
 
         billDao.saveNewBill(newBill);
-        return "";
+        return "{\"success\":true}";
     }
 
     @RequestMapping("/view")
     public String getQuickView(Model model, HttpServletRequest request) {
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            //查看该用户是否已经存在订单
+            Bill existedBill = billDao.getBillByUsername(username);
+            //存在未结付的订单时
+            if(existedBill != null && existedBill.getStatus() == BillStatus.COMMON.value()){
+                model.addAttribute("existedBill",true);
+                model.addAttribute("tableNo",existedBill.getTableNo());
+            }else{
+                model.addAttribute("existedBill",false);
+            }
+
             if (OrderDishController.DISH_ORDER_CACHE.containsKey(username)){
                 int sumfee = 0;
 

@@ -29,6 +29,14 @@ public class BillDao extends JdbcTemplate {
         super.setDataSource(this.dataSource);
     }
 
+    public Bill getBillByUsername(String userName){
+        try{
+            return queryForObject("select * from bill where user_name = ?", BeanPropertyRowMapper.newInstance(Bill.class), userName);
+        }catch(Exception e){
+            return null;
+        }
+    }
+
     public void saveNewBill(final Bill bill) {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -36,11 +44,12 @@ public class BillDao extends JdbcTemplate {
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 
                 PreparedStatement ps = connection.prepareStatement(
-                    "insert into bill (table_no,status,fee,create_time) values(?,?,?,?) ", Statement.RETURN_GENERATED_KEYS);
+                    "insert into bill (table_no,status,fee,user_name,create_time) values(?,?,?,?,?) ", Statement.RETURN_GENERATED_KEYS);
                 ps.setInt(1, bill.getTableNo());
                 ps.setInt(2, bill.getStatus());
                 ps.setInt(3, bill.getFee());
-                ps.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+                ps.setString(4,bill.getUserName());
+                ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
 
                 return ps;
             }
