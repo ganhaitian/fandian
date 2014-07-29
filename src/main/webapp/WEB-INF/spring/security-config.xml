@@ -24,11 +24,11 @@
 	<!-- Configure Spring Security -->
 	<!-- use-expressions and hasRole only needed if jsp tags are used. 
 		If not using jsp tags you can omit the use-expressions property and set access="ROLE_USER" on the intercept-url tags -->
-	<security:http auto-config="true" use-expressions="true">
+	<security:http auto-config="true" use-expressions="true" entry-point-ref="loginEntryPoint">
 
 
 
-        <security:form-login login-page="/login" default-target-url="/admin/main" authentication-failure-url="/login?error=1" always-use-default-target="true"/>
+        <security:form-login default-target-url="/admin/main" authentication-failure-url="/login?error=1" />
 
         <security:logout />
 
@@ -51,4 +51,11 @@
         </security:authentication-provider>
     </security:authentication-manager>
 
+    <bean id="loginEntryPoint" class="com.fandian.security.LoginUrlEntryPoint">
+        <constructor-arg value="/login" />
+    </bean>
+
+    <bean id="myAuthenticationSuccHandler" class="com.fandian.security.MyAuthenticationSuccessHandler">
+        <property name="defaultTargetUrl" value="/admin/main"></property>
+    </bean>
 </beans>

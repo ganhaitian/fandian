@@ -1,5 +1,7 @@
 package com.fandian.controller;
 
+import com.fandian.bean.User;
+import com.fandian.dao.UserDao;
 import com.fandian.model.OauthAccessTokenDetail;
 import com.fandian.util.ConfigurationFactory;
 import com.fandian.util.HttpConnectUtil;
@@ -32,6 +34,9 @@ public class OAuthController {
 
     @Resource
     private JSONUtil jsonUtil;
+
+    @Resource
+    private UserDao userDao;
     /**
      *"https://open.weixin.qq.com/connect/oauth2/authorize?
      * appid=APPID&
@@ -85,8 +90,17 @@ public class OAuthController {
             }else{
                 OauthAccessTokenDetail oauthAccessTokenDetail = jsonUtil.transJsonToBeanByGson(jsonRes, OauthAccessTokenDetail.class);
                 logger.info("user openid:" + oauthAccessTokenDetail.getOpenid());
+                if (!userDao.hasUser(oauthAccessTokenDetail.getOpenid())){
+                    User user = new User();
+                    user.setUsername(oauthAccessTokenDetail.getOpenid());
+                    user.setPassword("4be85f53b208246362dbc07372269eaef29600a1e7f17ace94d1530470193e5e");
+                    user.setEnabled(1);
+                    user.setInternal(0);
+                    user.setAuthority("ROLE_USER");
+                    userDao.insertUser(user);
+                }
                 model.addAttribute("openid",oauthAccessTokenDetail.getOpenid());
-                return "admin/user/infoedit";
+                return "admin/user/weixinlogin";
             }
 
 
