@@ -122,6 +122,10 @@
             </div>
             <div class="modal-body">
                 <form role="form">
+                    <div class="form-group" style="display: none">
+                        <label>ID</label>
+                        <input name="id" class="form-control" value="">
+                    </div>
                     <div class="form-group">
                         <label>客户名</label>
                         <input name="name" class="form-control" value="">
@@ -253,7 +257,7 @@
                 },{
                     "data":"unsettleFee"
                 },{
-                    "data":"lastSettleTime"
+                    "data":"lastSettleTimeStr"
                 },{
                     "render": function ( data, type, full, meta ) {
                         return '<button name="checkout" data-toggle="modal" data-target="#confirmCheckout" class="btn btn-sm btn-primary">结付</button>  '+
@@ -293,7 +297,7 @@
         $("button[name=confirmDelUser]").click(function(){
             var username = $("#confirmUpdateUser div.modal-body").data("username");
             $.ajax({
-                url:"<%=realPath %>/user/delUser",
+                url:"<%=realPath %>/customer/delCustomer",
                 dataType:"json",
                 headers:{
                     Accept : "application/json; charset=utf-8"
@@ -314,7 +318,7 @@
                 params[$(input).attr("name")] = $(input).val();
             });
             $.ajax({
-                url:"<%=realPath %>/user/updateUser",
+                url:"<%=realPath %>/customer/updateCustomer",
                 dataType:"json",
                 type:"POST",
                 headers:{

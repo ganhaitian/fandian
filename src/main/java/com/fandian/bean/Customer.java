@@ -1,6 +1,7 @@
 package com.fandian.bean;
 
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -15,6 +16,12 @@ public class Customer {
     private float unsettleFee;
 
     private Date lastSettleTime;
+
+    private String lastSettleTimeStr;
+
+    public String getLastSettleTimeStr() {
+        return this.lastSettleTimeStr;
+    }
 
     public int getId() {
         return id;
@@ -46,5 +53,8 @@ public class Customer {
 
     public void setLastSettleTime(Date lastSettleTime) {
         this.lastSettleTime = lastSettleTime;
+        if(lastSettleTime != null){
+            lastSettleTimeStr = new SimpleDateFormat("yyyy-MM-dd H:m:s").format(this.lastSettleTime);
+        }
     }
 }

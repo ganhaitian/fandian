@@ -1,5 +1,6 @@
 package com.fandian.controller;
 
+import com.fandian.bean.Customer;
 import com.fandian.bean.User;
 import com.fandian.dao.CustomerDao;
 import com.fandian.dao.UserDao;
@@ -39,12 +40,26 @@ public class CustomerController {
     public
     @ResponseBody
     String updateCustomer(@RequestParam String param) {
-        return null;
+        try {
+            Customer customer = jsonUtil.transJsonToBeanByGson(param, Customer.class);
+            if(customer.getId() == 0){
+                customerDao.insertCustomer(customer);
+            }else
+                customerDao.updateCustomer(customer);
+            return "{\"success\":true}";
+        }catch (Exception e){
+            return "{\"success\":false}";
+        }
     }
 
     @RequestMapping("/delCustomer")
-    public @ResponseBody String delUser(@RequestParam String username){
-        return "{\"success\":true}";
+    public @ResponseBody String delUser(@RequestParam int customerId){
+        try {
+            customerDao.deleteCustomer(customerId);
+            return "{\"success\":true}";
+        }catch (Exception e){
+            return "{\"success\":false}";
+        }
     }
 
 }
