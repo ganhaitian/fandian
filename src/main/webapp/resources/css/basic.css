@@ -1,0 +1,4 @@
+body {background-color: #f4f5f0;}
+
+.search-input-container input{padding-left: 30px; background-color: #dbdad8; border-color: #dbdad8; color:#a6a5a3;}
+.search-input-container .inner-icon{left: 0; color:#a6a5a3;}

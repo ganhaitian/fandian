@@ -22,11 +22,11 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
 
-
+    <link rel="stylesheet" href="<s:url value="/resources/css/basic.css"></s:url> ">
 
     <style type="text/css">
-        body {padding-bottom: 70px;padding-top: 70px;}
-
+        body {padding-bottom: 70px;padding-top: 10px;}
+        a {color: #000000;}
     </style>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -38,7 +38,7 @@
 <body>
 
 <div class="container">
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-top hide" role="navigation">
         <div class="container">
 
             <div class="row">
@@ -119,19 +119,48 @@
         </div>
     </nav>
     <s:if test="${fn:length(categories) > 0}">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="list-group">
-                <s:forEach items="${categories}" var="tmp">
-                    <a href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>" class="list-group-item">
-                        ${tmp.name}
-                        <span class="pull-right"><i class="fa fa-chevron-right"></i></span>
-                    </a>
-                </s:forEach>
-
+        <div class="row">
+            <div class="container search-input-container">
+                <div class="form-group has-feedback">
+                    <label class="control-label sr-only" for="inputSuccess5">Hidden label</label>
+                    <input type="text" class="form-control" id="inputSuccess5" placeholder="菜品搜索">
+                    <span class="glyphicon glyphicon-search form-control-feedback inner-icon"></span>
+                </div>
             </div>
+
+            <%--<div class="col-xs-12">
+                <div class="list-group">
+                    <s:forEach items="${categories}" var="tmp">
+                        <a href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>" class="list-group-item">
+                            ${tmp.name}
+                            <span class="pull-right"><i class="fa fa-chevron-right"></i></span>
+                        </a>
+                    </s:forEach>
+
+                </div>
+            </div>--%>
+            <s:forEach items="${categories}" var="tmp">
+                <div class="col-xs-4">
+                    <a href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">
+
+                            <div class="row" style="margin-top: 20px;">
+
+                                <div class="text-center">
+                                    <div class="row">
+                                        <img src="<s:url value="/resources/img/holder.jpg"></s:url>" width="50%" alt="" class="img-circle"/>
+                                    </div>
+
+                                    <h4>${tmp.name}</h4>
+
+                                </div>
+
+                            </div>
+
+                    </a>
+                </div>
+
+            </s:forEach>
         </div>
-    </div>
     </s:if>
 
     <s:if test="${fn:length(dishes) > 0}">
@@ -144,7 +173,7 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <a href="#" class="thumbnail">
-                                        <img src="<s:url value="/resources/img/holder.jpg"></s:url>" alt="...">
+                                        <img src="<s:url value="/resources/img/holder.jpg"></s:url>" alt="..." class="img-rounded"/>
                                     </a>
                                 </div>
                                 <div class="col-xs-6">
@@ -164,6 +193,12 @@
                                                 </s:choose>
                                             </s:forEach>
                                         </p>
+                                        <p class="text-muted">
+                                            <strong>
+                                                <i class="fa fa-rmb"></i>
+                                                 ${dish.price}
+                                            </strong>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -175,9 +210,9 @@
                                     <div class="pull-right">
                                         <span class="badge text-primary" id="sub_number_${dish.id}"></span>
                                         &nbsp;&nbsp;
-                                        <button class="btn btn-default btn-add-to-cart" title="点击加入餐车" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
-                                            <i class="fa fa-rmb"></i>
-                                            <span>${dish.price}</span>
+                                        <button class="btn btn-inverse btn-add-to-cart" title="点击加入餐车" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
+                                            <i class="fa fa-shopping-cart"></i>
+                                            <span>我要点</span>
                                         </button>
                                     </div>
 
