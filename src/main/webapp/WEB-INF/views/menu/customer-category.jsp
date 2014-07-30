@@ -25,8 +25,8 @@
     <link rel="stylesheet" href="<s:url value="/resources/css/basic.css"></s:url> ">
 
     <style type="text/css">
-        body {padding-bottom: 70px;padding-top: 10px;}
-        a {color: #000000;}
+        body {padding-bottom: 70px;padding-top: 70px;}
+        a {color: inherit;}
     </style>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -38,55 +38,64 @@
 <body>
 
 <div class="container">
-    <nav class="navbar navbar-default navbar-fixed-top hide" role="navigation">
+    <nav class="navbar navbar-orange navbar-fixed-top" role="navigation">
         <div class="container">
+            <div class="col-xs-12 col-md-12">
+                <div class="text-center">
+                    <div class="navbar-text" style="float: none;">
+                        <h4>
+                            <s:choose>
+                                <s:when test="${rootcategory != null && rootcategory.parentId == 0}">
+                                    <span class="pull-left">
+                                        <a href="<s:url value="/menu/customer/category"></s:url> ">
+                                            <i class="fa fa-chevron-left"></i>
+                                        </a>
+                                    </span>
+                                    <strong>${rootcategory.name}</strong>
+                                    <div class="pull-right">
+                                        <div class="dropdown">
 
-            <div class="row">
-                <s:choose>
-                    <s:when test="${fn:length(rootCategories) > 0}">
-                        <div class="col-xs-8 col-md-8">
-                            <div style="margin-top: 8px;">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                    <input type="text" class="form-control" placeholder="点点儿什么？"/>
-                                </div>
+                                            <i class="fa fa-list" data-toggle="dropdown"></i>
+                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="typemenu" id="dishMenuContainer">
+                                                <s:forEach items="${rootCategories}" var="tmp">
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">${tmp.name}</a></li>
+                                                    <li class="divider"></li>
+                                                </s:forEach>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </s:when>
+                                <s:when test="${rootcategory != null && rootcategory.parentId > 0}">
 
-                            </div>
-
-
-                        </div>
-                        <div class="col-xs-4 col-md-4">
-
-                            <div class="dropdown">
-
-                                <button class="btn btn-default btn-block navbar-btn" data-toggle="dropdown">
-                                    分类
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="typemenu" id="dishMenuContainer">
-                                    <s:forEach items="${rootCategories}" var="tmp">
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">${tmp.name}</a></li>
-                                    </s:forEach>
-                                </ul>
-                            </div>
-                        </div>
-                    </s:when>
-                    <s:otherwise>
-                        <div class="col-xs-12 col-md-12">
-                            <div style="margin-top: 8px;">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                    <input type="text" class="form-control" placeholder="点点儿什么？"/>
-                                </div>
-
-                            </div>
+                                    <span class="pull-left">
+                                       <a href="<s:url value="/menu/customer/category/${rootcategory.parentId}"></s:url> ">
+                                           <i class="fa fa-chevron-left"></i>
+                                       </a>
+                                    </span>
+                                    <strong>${rootcategory.name}</strong>
+                                    <div class="pull-right">
+                                        <div class="dropdown">
 
 
-                        </div>
-                    </s:otherwise>
-                </s:choose>
+                                            <i class="fa fa-list" data-toggle="dropdown"></i>
 
+                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="typemenu" id="dishMenuContainer">
+                                                <s:forEach items="${rootCategories}" var="tmp">
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">${tmp.name}</a></li>
+                                                    <li class="divider"></li>
+                                                </s:forEach>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </s:when>
+                                <s:otherwise>
+                                    <strong>石山乳羊第一家</strong>
+                                </s:otherwise>
+                            </s:choose>
 
+                        </h4>
+                    </div>
+                </div>
             </div>
 
 
@@ -94,7 +103,7 @@
     </nav>
 
 
-    <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+    <nav class="navbar navbar-inverse navbar-fixed-bottom hide" role="navigation" id="nav_order_summary">
         <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
         <div class="container">
             <div class="row">
@@ -118,15 +127,19 @@
             </div>
         </div>
     </nav>
+
+    <div class="row">
+        <div class="container search-input-container">
+            <div class="form-group has-feedback">
+                <label class="control-label sr-only" for="inputSuccess5">Hidden label</label>
+                <input type="text" class="form-control" id="inputSuccess5" placeholder="菜品搜索">
+                <span class="glyphicon glyphicon-search form-control-feedback inner-icon"></span>
+            </div>
+        </div>
+    </div>
     <s:if test="${fn:length(categories) > 0}">
         <div class="row">
-            <div class="container search-input-container">
-                <div class="form-group has-feedback">
-                    <label class="control-label sr-only" for="inputSuccess5">Hidden label</label>
-                    <input type="text" class="form-control" id="inputSuccess5" placeholder="菜品搜索">
-                    <span class="glyphicon glyphicon-search form-control-feedback inner-icon"></span>
-                </div>
-            </div>
+
 
             <%--<div class="col-xs-12">
                 <div class="list-group">
@@ -172,9 +185,9 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-xs-6">
-                                    <a href="#" class="thumbnail">
-                                        <img src="<s:url value="/resources/img/holder.jpg"></s:url>" alt="..." class="img-rounded"/>
-                                    </a>
+
+                                    <img src="<s:url value="/resources/img/holder.jpg"></s:url>" width="100%" alt="..." class="img-rounded"/>
+
                                 </div>
                                 <div class="col-xs-6">
                                     <div class="row">
@@ -250,6 +263,7 @@
                     dishCount += v.number;
                     dishFee += v.number* v.dish.price;
                     popoverHtml += "<li class=\"list-group-item\"><span class=\"badge\">"+ v.number +"</span>"+ v.dish.name+"</li>";
+                    $('#sub_number_' + v.dish.id).text(v.number);
                 });
 
                 $('#summary_info_number').text(dishCount);
@@ -259,6 +273,10 @@
                 $('#billSummaryTrigger').attr("data-content","<ul class=\"list-group\">"+popoverHtml+"</ul>");
 
                 $('#billSummaryTrigger').popover();
+
+                if (dishCount > 0){
+                    $('#nav_order_summary').removeClass('hide');
+                }
             }
         });
     }
@@ -271,6 +289,7 @@
             data:{id:btn.attr('data-id'),name:btn.attr('data-name'),price:btn.attr('data-price')},
             success:function(data){
                 updateUserOrderDetails();
+                $('#'+btn.attr('data-sub-number-id')).text(parseInt($('#'+btn.attr('data-sub-number-id')).text())+1);
             },
             error:function(){
                 alert('err');

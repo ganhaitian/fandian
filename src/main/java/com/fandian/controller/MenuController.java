@@ -127,6 +127,7 @@ public class MenuController {
             List<Dish> dishes = menuDao.getDishesInCategory(categoryId);
             model.addAttribute("dishes",dishes);
         }
+        model.addAttribute("rootcategory",menuDao.getDishCategory(categoryId));
         model.addAttribute("categories",rootCategories);
         model.addAttribute("rootCategories",menuDao.getRootDishCategories());
         return "menu/customer-category";
