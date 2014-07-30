@@ -22,7 +22,7 @@ public class Bill {
 
     private int paymentType;
 
-    private String userName;
+    private String userName = "";
 
     private Date createTime;
 

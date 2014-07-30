@@ -107,7 +107,7 @@ public class MenuController {
     public String getCustomerMenuView(Model model){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         //查看该用户是否已经存在订单
-        Bill existedBill = billDao.getBillByUsername(username);
+        Bill existedBill = billDao.getCommonBillByUsername(username);
 
         //存在订单的话，直接跳入到订单查看的页面
         if(existedBill != null && existedBill.getStatus() == BillStatus.COMMON.value() &&

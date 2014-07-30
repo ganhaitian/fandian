@@ -2,6 +2,7 @@ package com.fandian.dao;
 
 import com.fandian.bean.Bill;
 import com.fandian.bean.BillDetail;
+import com.fandian.bean.BillStatus;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -29,10 +30,19 @@ public class BillDao extends JdbcTemplate {
         super.setDataSource(this.dataSource);
     }
 
-    public Bill getBillByUsername(String userName){
-        try{
-            return queryForObject("select * from bill where user_name = ?", BeanPropertyRowMapper.newInstance(Bill.class), userName);
-        }catch(Exception e){
+    public Bill getCommonBillByUsername(String userName) {
+        try {
+            return queryForObject("select * from bill where user_name = ? and status = ?",
+                BeanPropertyRowMapper.newInstance(Bill.class), userName, BillStatus.COMMON.value());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Bill getBillById(int billId) {
+        try {
+            return queryForObject("select * from bill where id = ?", BeanPropertyRowMapper.newInstance(Bill.class), billId);
+        } catch (Exception e) {
             return null;
         }
     }
@@ -48,7 +58,7 @@ public class BillDao extends JdbcTemplate {
                 ps.setInt(1, bill.getTableNo());
                 ps.setInt(2, bill.getStatus());
                 ps.setInt(3, bill.getFee());
-                ps.setString(4,bill.getUserName());
+                ps.setString(4, bill.getUserName());
                 ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
 
                 return ps;
@@ -63,22 +73,27 @@ public class BillDao extends JdbcTemplate {
     }
 
     public List<Bill> getAllBills() {
-            List<Bill> bills = query("select * from bill", new BeanPropertyRowMapper<Bill>(Bill.class));
+        List<Bill> bills = query("select * from bill", new BeanPropertyRowMapper<Bill>(Bill.class));
         for (Bill bill : bills) {
             bill.setBillDetails(
-            query(
-                "select * from bill_detail where bill_id = ?",
-                new BeanPropertyRowMapper<BillDetail>(BillDetail.class), bill.getId()
-            ));
+                query(
+                    "select * from bill_detail where bill_id = ?",
+                    new BeanPropertyRowMapper<BillDetail>(BillDetail.class), bill.getId()
+                ));
         }
         return bills;
     }
 
-    public void updateStatus(int billId,int newStatus){
-        update("update bill set status = ? where id = ?",newStatus,billId);
+    public void updateStatus(int billId, int newStatus) {
+        update("update bill set status = ? where id = ?", newStatus, billId);
     }
 
-    public List<BillDetail> getBillDetails(int billId){
+    public void updateCheckoutInfo(int billId, int newStatus, float discount, float actualFee, int paymentType,String operator) {
+        update("update bill set status = ?,discount = ?,actual_fee = ?,payment_type = ?,operator = ? where id = ?",
+            newStatus, discount, actualFee, paymentType,operator,billId);
+    }
+
+    public List<BillDetail> getBillDetails(int billId) {
         return query(
             "select * from bill_detail where bill_id = ?",
             new BeanPropertyRowMapper<BillDetail>(BillDetail.class), billId

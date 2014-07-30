@@ -43,4 +43,9 @@ public class AdminController {
         return "admin/user";
     }
 
+    @RequestMapping("/bcustomer")
+    public String getBCustomerView(){
+        return "admin/bcustomer";
+    }
+
 }

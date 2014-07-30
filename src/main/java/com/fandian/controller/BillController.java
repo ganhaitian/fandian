@@ -41,22 +41,48 @@ public class BillController {
     @Secured("ROLE_MANAGER")
     @RequestMapping("/checkout")
     @ResponseBody
-    public String checkoutBill(@RequestParam int billId) {
-        billDao.updateStatus(billId, BillStatus.SETTLED.value());
+    public String checkoutBill(@RequestParam int billId, @RequestParam float discount, @RequestParam int paymentType) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        Bill bill = billDao.getBillById(billId);
+        if (bill == null || bill.getStatus() != BillStatus.COMMON.value()) {
+            result.put("success", false);
+            result.put("errMsg", "账单不存在，或者账单状态错误!");
+            return jsonUtil.transToJsonStrByGson(result);
+        }
+
+        //折扣值异常
+        if (discount > bill.getFee()) {
+            result.put("success", false);
+            result.put("errMsg", "折扣金额错误!");
+            return jsonUtil.transToJsonStrByGson(result);
+        }
+
+        //更新账单结账状态
+        float actualFee = bill.getFee() - discount;
+        billDao.updateCheckoutInfo(billId, BillStatus.SETTLED.value(), discount, actualFee, paymentType,username);
         return "{\"success\":true}";
     }
 
     @RequestMapping("/getBillDetails")
     @ResponseBody
-    public String getBillDetails(@RequestParam int billId){
+    public String getBillDetails(@RequestParam int billId) {
         List<BillDetail> billDetails = billDao.getBillDetails(billId);
         return jsonUtil.transToJsonStrByGson(billDetails);
     }
 
+    @RequestMapping("/getAllBills")
+    @ResponseBody
+    public String getAllBills(){
+        Map<String,Object> result = new HashMap<String,Object>();
+        result.put("data",billDao.getAllBills());
+        return jsonUtil.transToJsonStrByGson(result);
+    }
 
     @RequestMapping(value = "/confirm", method = {RequestMethod.POST})
     @ResponseBody
-    public String confirmBill(@RequestParam String param,@RequestParam int tableNo) {
+    public String confirmBill(@RequestParam String param, @RequestParam int tableNo) {
         //关联上用户名
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -67,7 +93,7 @@ public class BillController {
         newBill.setTableNo(tableNo);
         newBill.setUserName(username);
 
-        for(BillDetail billDetail:billDetails){
+        for (BillDetail billDetail : billDetails) {
             newBill.setFee(newBill.getFee() + billDetail.getPrice() * billDetail.getAmount());
         }
         newBill.setBillDetails(billDetails);
@@ -81,22 +107,21 @@ public class BillController {
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             //查看该用户是否已经存在订单
-            Bill existedBill = billDao.getBillByUsername(username);
+            Bill existedBill = billDao.getCommonBillByUsername(username);
             //存在未结付的订单时
-            if(existedBill != null && existedBill.getStatus() == BillStatus.COMMON.value()){
-                model.addAttribute("existedBill",true);
-                model.addAttribute("tableNo",existedBill.getTableNo());
-            }else{
-                model.addAttribute("existedBill",false);
+            if (existedBill != null) {
+                model.addAttribute("existedBill", true);
+                model.addAttribute("tableNo", existedBill.getTableNo());
+            } else {
+                model.addAttribute("existedBill", false);
             }
 
-            if (OrderDishController.DISH_ORDER_CACHE.containsKey(username)){
+            if (OrderDishController.DISH_ORDER_CACHE.containsKey(username)) {
                 int sumfee = 0;
-
                 model.addAttribute("list", OrderDishController.DISH_ORDER_CACHE.get(username));
 
-                for (DishOrderInfo dishOrderInfo : OrderDishController.DISH_ORDER_CACHE.get(username)){
-                    sumfee += dishOrderInfo.getNumber()*dishOrderInfo.getDish().getPrice();
+                for (DishOrderInfo dishOrderInfo : OrderDishController.DISH_ORDER_CACHE.get(username)) {
+                    sumfee += dishOrderInfo.getNumber() * dishOrderInfo.getDish().getPrice();
                 }
 
                 model.addAttribute("sumfee", sumfee);
