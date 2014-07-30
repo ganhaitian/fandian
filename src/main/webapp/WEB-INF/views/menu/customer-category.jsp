@@ -102,32 +102,32 @@
         </div>
     </nav>
 
-    <s:if test="${fn:length(dishes) > 0}">
-        <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
-            <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
-            <div class="container">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="pull-left">
-                            <p class="navbar-text" id="billSummaryTrigger" data-html="true" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
-                                <i class="fa fa-cutlery"></i>&nbsp;&nbsp;<strong id="summary_info_number"></strong>&nbsp;&nbsp;例&nbsp;&nbsp;
-                                <i class="fa fa-rmb"></i>&nbsp;&nbsp;<strong id="summary_info_fee"></strong>
-                            </p>
 
-                        </div>
-                        <div class="pull-right">
-                            <%--<form action="<s:url value="/bill/view"></s:url>" method="post" enctype="application/x-www-form-urlencoded">--%>
-                                <%--<input type="hidden" name="param" id="billInfoParam"/>--%>
-                                <%--<button id="submitBillBtn" class="btn btn-danger navbar-btn">去下单</button>--%>
-                            <%--</form>--%>
-                            <a href="<s:url value="/bill/view"></s:url>" class="btn btn-danger navbar-btn">去下单</a>
-                        </div>
+    <nav class="navbar navbar-inverse navbar-fixed-bottom hide" role="navigation" id="nav_order_summary">
+        <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="pull-left">
+                        <p class="navbar-text" id="billSummaryTrigger" data-html="true" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+                            <i class="fa fa-cutlery"></i>&nbsp;&nbsp;<strong id="summary_info_number"></strong>&nbsp;&nbsp;例&nbsp;&nbsp;
+                            <i class="fa fa-rmb"></i>&nbsp;&nbsp;<strong id="summary_info_fee"></strong>
+                        </p>
+
                     </div>
-
+                    <div class="pull-right">
+                        <%--<form action="<s:url value="/bill/view"></s:url>" method="post" enctype="application/x-www-form-urlencoded">--%>
+                            <%--<input type="hidden" name="param" id="billInfoParam"/>--%>
+                            <%--<button id="submitBillBtn" class="btn btn-danger navbar-btn">去下单</button>--%>
+                        <%--</form>--%>
+                        <a href="<s:url value="/bill/view"></s:url>" class="btn btn-danger navbar-btn">去下单</a>
+                    </div>
                 </div>
+
             </div>
-        </nav>
-    </s:if>
+        </div>
+    </nav>
+
     <div class="row">
         <div class="container search-input-container">
             <div class="form-group has-feedback">
@@ -186,7 +186,7 @@
                             <div class="row">
                                 <div class="col-xs-6">
 
-                                    <img src="<s:url value="/resources/img/holder.jpg"></s:url>" alt="..." class="img-rounded"/>
+                                    <img src="<s:url value="/resources/img/holder.jpg"></s:url>" width="100%" alt="..." class="img-rounded"/>
 
                                 </div>
                                 <div class="col-xs-6">
@@ -273,6 +273,10 @@
                 $('#billSummaryTrigger').attr("data-content","<ul class=\"list-group\">"+popoverHtml+"</ul>");
 
                 $('#billSummaryTrigger').popover();
+
+                if (dishCount > 0){
+                    $('#nav_order_summary').removeClass('hide');
+                }
             }
         });
     }

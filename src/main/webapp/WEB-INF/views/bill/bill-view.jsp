@@ -65,16 +65,16 @@
     <div class="row">
         <ul class="list-group">
             <c:forEach items="${list}" var="dish">
-                <li class="list-group-item dish-entry" data-id="${dish.dish.id}" data-name="${dish.dish.name}" data-count="${dish.number}" data-fee="${dish.dish.price*dish.number}">
+                <li id="dish_${dish.dish.id}" class="list-group-item dish-entry" data-id="${dish.dish.id}" data-name="${dish.dish.name}" data-count="${dish.number}" data-fee="${dish.dish.price*dish.number}">
                     <span class="dish-name"><h4><i class="fa fa-angle-down"></i>&nbsp;&nbsp;${dish.dish.name}
-                        <span class="pull-right badge">${dish.number}</span></h4>
+                        <span class="pull-right badge" id="dish_number_${dish.dish.id}">${dish.number}</span></h4>
                     </span>
                     <p class="tools-bar hide">
                         &nbsp;
                     <span class="pull-right">
-                        <button class="btn btn-default"><i class="fa fa-minus-circle"></i></button>
-                        <button class="btn btn-default"><i class="fa fa-plus-circle"></i></button>
-                        <button class="btn btn-default"><i class="fa fa-trash-o"></i></button>
+                        <button class="btn btn-default btn-oper-minus" data-id="${dish.dish.id}" data-price="${dish.dish.price}"><i class="fa fa-minus-circle"></i></button>
+                        <button class="btn btn-default btn-oper-plus" data-id="${dish.dish.id}" data-price="${dish.dish.price}"><i class="fa fa-plus-circle"></i></button>
+                        <button class="btn btn-default  btn-oper-remove" data-id="${dish.dish.id}" data-price="${dish.dish.price}"><i class="fa fa-trash-o"></i></button>
                     </span>
                     </p>
                 </li>
@@ -92,7 +92,7 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="text-center">
-                <h4>消费 <i class="fa fa-rmb"></i> <span class="text-danger">${sumfee}</span></h4>
+                <h4>消费 <i class="fa fa-rmb"></i> <span class="text-danger" id="bill_sum_fee">${sumfee}</span></h4>
             </div>
         </div>
     </div>
@@ -146,6 +146,85 @@
 
             $(this).find('i').toggleClass('fa-angle-down').toggleClass('fa-angle-up');
 
+
+        });
+
+        //minus btn  click
+        $('.btn-oper-minus').click(function(){
+            var dish_id = $(this).data('id');
+            var dish_price = $(this).data('price');
+            var dish_number = parseInt($('#dish_number_'+dish_id).text());
+            var sum_fee = parseInt($('#bill_sum_fee').text());
+            if (dish_number > 1){
+                $.ajax({
+                    url:"<c:url value="/order/customer/delDish"></c:url>",
+                    type:"POST",
+                    dataType:"JSON",
+                    data: {"id":dish_id},
+                    success:function(data){
+                        if(data.success){
+                            $('#dish_number_'+dish_id).text(dish_number-1);
+                            $('#bill_sum_fee').text(sum_fee-dish_price);
+                        }
+                    }
+                });
+            }else{
+                $.ajax({
+                    url:"<c:url value="/order/customer/removeDish"></c:url>",
+                    type:"POST",
+                    dataType:"JSON",
+                    data: {"id":dish_id},
+                    success:function(data){
+                        if(data.success){
+                            $('#dish_'+dish_id).fadeOut();
+                            $('#bill_sum_fee').text(sum_fee-dish_price);
+                        }
+                    }
+                });
+            }
+        });
+
+        //plus dish btn
+        $('.btn-oper-plus').click(function(){
+            var dish_id = $(this).data('id');
+            var dish_price = $(this).data('price');
+            var dish_number = parseInt($('#dish_number_'+dish_id).text());
+            var sum_fee = parseInt($('#bill_sum_fee').text());
+
+            $.ajax({
+                url:"<c:url value="/order/customer/addDish"></c:url>",
+                type:"POST",
+                dataType:"JSON",
+                data: {"id":dish_id},
+                success:function(data){
+                    if(data.success){
+                        $('#dish_number_'+dish_id).text(dish_number+1);
+                        $('#bill_sum_fee').text(sum_fee+dish_price);
+                    }
+                }
+            });
+
+        });
+
+        //remove dish btn
+        $('.btn-oper-remove').click(function(){
+            var dish_id = $(this).data('id');
+            var dish_price = $(this).data('price');
+            var dish_number = parseInt($('#dish_number_'+dish_id).text());
+            var sum_fee = parseInt($('#bill_sum_fee').text());
+
+            $.ajax({
+                url:"<c:url value="/order/customer/removeDish"></c:url>",
+                type:"POST",
+                dataType:"JSON",
+                data: {"id":dish_id},
+                success:function(data){
+                    if(data.success){
+                        $('#dish_'+dish_id).fadeOut();
+                        $('#bill_sum_fee').text(sum_fee-dish_price*dish_number);
+                    }
+                }
+            });
 
         });
 
