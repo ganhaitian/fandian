@@ -28,13 +28,15 @@ public class Bill {
 
     private List<BillDetail> billDetails;
 
-    private String operator;
+    private String operator = "";
 
     public String getOperator() {
         return operator;
     }
 
     public void setOperator(String operator) {
+        if(operator == null)
+            return;
         this.operator = operator;
     }
 

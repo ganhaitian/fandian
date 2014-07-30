@@ -41,4 +41,7 @@ public class CustomerDao extends JdbcTemplate{
         update("delete from customer where id = ?",customerId);
     }
 
+    public void updateCheckoutInfo(int customerId) {
+        update("update customer set unsettle_fee = 0 where id = ?",customerId);
+    }
 }

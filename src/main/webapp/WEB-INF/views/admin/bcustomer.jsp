@@ -37,9 +37,10 @@
 
     <style type="text/css">
 
-        td {
+        .table > tbody > tr > td {
            line-height: 2;
-           padding:5px;
+           padding:3px;
+           vertical-align: middle;
         }
 
         table.simple-table td{
@@ -57,6 +58,16 @@
 
         tr.details td.details-control {
             background: url('<%=realPath %>/resources/img/details_close.png') no-repeat center center;
+        }
+
+        td.center-td{
+            text-align: center;
+        }
+
+        td.common-td{
+            line-height: 2;
+            padding:3px;
+            vertical-align: middle;
         }
 
     </style>
@@ -99,7 +110,7 @@
                                 <th>客户名</th>
                                 <th>未结总额</th>
                                 <th>最近结付时间</th>
-                                <th>操作</th>
+                                <th style="text-align: center">操作</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -150,21 +161,21 @@
     <!-- /.modal-dialog -->
 </div>
 
-<div class="modal fade" id="confirmDelUser" tabindex="-1" role="dialog"
+<div class="modal fade" id="confirmDelCustomer" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
                 </button>
-                <h4 class="modal-title" id="delCategoryModalLabel">删除用户</h4>
+                <h4 class="modal-title" id="delCategoryModalLabel">删除客戶</h4>
             </div>
             <div class="modal-body">
-                是否确认删除用户?
+                是否确认删除客戶?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button name="confirmDelUser" type="button" data-dismiss="modal"
+                <button name="confirmDelCustomer" type="button" data-dismiss="modal"
                         class="btn btn-primary">确认
                 </button>
             </div>
@@ -173,6 +184,32 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+
+    <div class="modal fade" id="confirmCheckModal" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="checkoutModalLabel">确认结付</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button name="finalConfirmCheck" type="button" data-dismiss="modal"
+                            class="btn btn-primary">确认
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
 
 </div>
 <!-- /#wrapper -->
@@ -237,7 +274,6 @@
     $(document).ready(function(){
 
         $("li[name=bcustomer] a").addClass("active");
-        var userId = 0;
 
         var dt = $("#bill_table").DataTable({
             ajax:{
@@ -249,20 +285,22 @@
             "columns":[
                 {
                     "data":"id",
-                    "render":function(){
-                        return ++userId;
-                    }
+                    className:"common-td"
                 },{
-                    "data":"name"
+                    "data":"name",
+                    className:"common-td"
                 },{
-                    "data":"unsettleFee"
+                    "data":"unsettleFee",
+                    className:"common-td"
                 },{
-                    "data":"lastSettleTimeStr"
+                    "data":"lastSettleTimeStr",
+                    className:"common-td"
                 },{
+                    className:"center-td",
                     "render": function ( data, type, full, meta ) {
-                        return '<button name="checkout" data-toggle="modal" data-target="#confirmCheckout" class="btn btn-sm btn-primary">结付</button>  '+
+                        return '<button name="checkout" data-toggle="modal" data-target="#confirmCheckModal" class="btn btn-sm btn-warning">结付</button>  '+
                                '<button name="edit-customer" data-toggle="modal" data-target="#confirmUpdateCustomer" class="btn btn-sm btn-primary">修改</button>  '+
-                               '<button name="del-customer" data-toggle="modal" data-target="#confirmDelUser" class="btn btn-sm btn-danger">删除</button>  ';
+                               '<button name="del-customer" data-toggle="modal" data-target="#confirmDelCustomer" class="btn btn-sm btn-danger">删除</button>  ';
                     }
                 }
             ],
@@ -287,22 +325,48 @@
             });
         });
 
-        $(document).on("click",'button[name=del-user]', function (){
+        $(document).on("click",'button[name=del-customer]', function (){
             var tr = $(this).closest("tr");
             var row = dt.row(tr);
             var rowData = row.data();
-            $("#confirmUpdateUser div.modal-body").data("username",rowData.username);
+            $("#confirmDelCustomer div.modal-body").data("id",rowData.id);
         });
 
-        $("button[name=confirmDelUser]").click(function(){
-            var username = $("#confirmUpdateUser div.modal-body").data("username");
+        $(document).on("click",'button[name=checkout]',function(){
+            var tr = $(this).closest("tr");
+            var row = dt.row(tr);
+            var rowData = row.data();
+            $("#confirmCheckModal div.modal-body").html("確認對【"+rowData.name+"】"+"進行結付?");
+            $("#confirmCheckModal div.modal-body").data("id",rowData.id);
+        });
+
+        $("button[name=finalConfirmCheck]").click(function(){
+            var id = $("#confirmCheckModal div.modal-body").data("id");
+            $.ajax({
+                url:"<%=realPath %>/customer/checkout",
+                dataType:"json",
+                headers:{
+                    Accept : "application/json; charset=utf-8"
+                },
+                data:{"customerId":id},
+                success:function(result){
+                    if(result.success){
+                        dt.ajax.reload();
+                        noty({"text":"結付成功!","layout":"topCenter","type":"success"});
+                    }
+                }
+            });
+        });
+
+        $("button[name=confirmDelCustomer]").click(function(){
+            var id = $("#confirmDelCustomer div.modal-body").data("id");
             $.ajax({
                 url:"<%=realPath %>/customer/delCustomer",
                 dataType:"json",
                 headers:{
                     Accept : "application/json; charset=utf-8"
                 },
-                data:{"username":username},
+                data:{"customerId":id},
                 success:function(result){
                     if(result.success){
                         dt.ajax.reload();
@@ -315,7 +379,8 @@
         $("button[name=confirmUpdateCustomer]").click(function(){
             var params = {};
             $("#confirmUpdateCustomer input").each(function(index,input){
-                params[$(input).attr("name")] = $(input).val();
+                if($(input).val() != "")
+                    params[$(input).attr("name")] = $(input).val();
             });
             $.ajax({
                 url:"<%=realPath %>/customer/updateCustomer",

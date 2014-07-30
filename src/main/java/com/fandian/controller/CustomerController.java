@@ -62,4 +62,14 @@ public class CustomerController {
         }
     }
 
+    @RequestMapping("/checkout")
+    public @ResponseBody String checkout(@RequestParam int customerId){
+        try {
+            customerDao.updateCheckoutInfo(customerId);
+            return "{\"success\":true}";
+        }catch (Exception e){
+            return "{\"success\":false}";
+        }
+    }
+
 }
