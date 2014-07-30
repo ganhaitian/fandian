@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
 
     <link href="<%=realPath %>/resources/css/plugins/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="<%=realPath %>/resources/css/plugins/validator/bootstrapValidator.min.css" rel="stylesheet">
 
     <style type="text/css">
 
@@ -156,13 +157,13 @@
                 <h4 class="modal-title" id="myModalLabel">确认结账</h4>
             </div>
             <div class="modal-body">
-                <form role="form">
+                <form id="confirmCheckForm" role="form">
                     <div class="form-group">
                         <p class="form-control-static confirm-msg"></p>
                     </div>
                     <div class="form-group">
-                        <label>折扣</label>
-                        <input type="text" class="form-control">
+                        <label>折扣金额<sup>*</sup></label>
+                        <input type="text" class="form-control" name="discount">
                     </div>
                     <div class="form-group">
                         <label>付款方式</label>
@@ -210,6 +211,7 @@
 <script src="<%=realPath %>/resources/js/plugins/dataTables/dataTables.bootstrap.js"></script>
 <script src="<%=realPath%>/resources/js/plugins/noty/jquery.noty.packaged.min.js"></script>
 <script src="<%=realPath %>/resources/js/fandian.js"></script>
+<script src="<%=realPath %>/resources/js/plugins/validator/bootstrapValidator.min.js"></script>
 
 <script>
 
@@ -294,12 +296,15 @@
         $("button[name='confirmCheckout']").each(function(){
             var oldConfirmCheckHandler = $(this).onclick;
             $(this).onclick = null;
-            var fee = $(this).parent("td").siblings("td[name=fee]").html();
+            var fee = $(this).parent("td").siblings("td[name=fee]").html().substring(2);
 
             $(this).click(function(){
                 var tableNo = $(this).parent("td").siblings("td[name='tableNo']").html();
                 $("div#confirmCheckModal div.modal-body p.confirm-msg").html(tableNo+"号桌确认结账?");
                 currentBillId = $(this).parents("tr").data("id");
+                //折扣初始化为1.0
+                var a = $("div#confirmCheckModal div.modal-body input[name=discount]").val(0);
+                a.data("originfee",fee);
                 $("div#confirmCheckModal div.modal-body div.checkout-msg").html("<strong>实付金额:"+fee+"元</strong>");
             });
 
@@ -357,7 +362,56 @@
             } );
         } );
 
+        $("#confirmCheckForm").bootstrapValidator({
+            message:"不合法的输入值",
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields:{
+                discount:{
+                    validators:{
+                        numeric: {
+                            message: '折扣金额必须为有效数字'
+                        },
+                        between: {
+                            inclusive:true,
+                            min:0,
+                            max:getMaxDiscount,
+                            message: '折扣必须为介于0和总消费之间'
+                        },
+                        notEmpty:{
+                            message: '折扣值非空'
+                        }
+                    }
+                }
+            }
+        }).on('error.validator.bv', function(e, data) {
+            // $(e.target)    --> The form instance
+            // data.field     --> The field name
+            // data.element   --> The field element
+            // data.validator --> The validator name
+
+            // Do something ...
+            $(data.element).val("");
+        }).on('success.field.bv', function(e,data){
+
+            var currentDiscount = $(data.element).val();
+            var originFee = $(data.element).data("originfee");
+            var actualFee = parseFloat(originFee) - parseFloat(currentDiscount);
+            $("div#confirmCheckModal div.modal-body div.checkout-msg").html("<strong>实付金额:"+actualFee+"元</strong>");
+
+        });
+
+        function getMaxDiscount(value, validator, $field){
+            var originFee = $field.data("originfee");
+            return originFee;
+        }
+
     });
+
+
 </script>
 
 </body>
