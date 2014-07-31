@@ -130,7 +130,7 @@
                                 <th style="">总消费</th>
                                 <th style="">折扣</th>
                                 <th style="">实付</th>
-                                <th>付费方式</th>
+                                <th style="text-align: center;">付费方式</th>
                                 <th style="">挂账商户</th>
                                 <th style="">操作员</th>
                                 <th style="text-align: center;">创建时间</th>
@@ -400,8 +400,17 @@ $(document).ready(function () {
                 }
             },
             {
-                className: "common-td",
-                data: "paymentType"
+                className: "center-td",
+                data: "paymentType",
+                "render": function (data, type, full, meta) {
+                    if (data == 0) {
+                        return '<span class="label label-default">现金</span>';
+                    } else if (data == 1) {
+                        return '<span class="label label-info">刷卡</span>';
+                    } else if (data = 2){
+                        return '<span class="label label-success">微信</span>';
+                    }
+                }
             },
             {
                 className: "common-td",
@@ -491,9 +500,6 @@ $(document).ready(function () {
 
     $("button[name='finalConfirmCheck']").click(function () {
 
-        if (!currentBillId)
-            return;
-
         //获得折扣金额
         var discountValue = $("input[name=discount]", $(this).parents("div.modal-content")).val();
         //获得付款方式
@@ -547,7 +553,7 @@ $(document).ready(function () {
         });
     });
 
-    $("#confirmCheckForm").bootstrapValidator({
+    var confirmCheckValidator = $("#confirmCheckForm").bootstrapValidator({
         message: "不合法的输入值",
         feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
@@ -582,6 +588,7 @@ $(document).ready(function () {
         $(data.element).val("");
         var originFee = $(data.element).data("originfee");
         $("div#confirmCheckModal div.modal-body div.checkout-msg").html("<strong>实付金额:" + originFee + "元</strong>");
+        $("button[name='finalConfirmCheck']").addClass("disabled");
 
     }).on('success.field.bv', function (e, data) {
 
@@ -589,7 +596,7 @@ $(document).ready(function () {
         var originFee = $(data.element).data("originfee");
         var actualFee = parseFloat(originFee) - parseFloat(currentDiscount);
         $("div#confirmCheckModal div.modal-body div.checkout-msg").html("<strong>实付金额:" + actualFee + "元</strong>");
-
+        $("button[name='finalConfirmCheck']").removeClass("disabled");
     });
 
     function getMaxDiscount(value, validator, $field) {
