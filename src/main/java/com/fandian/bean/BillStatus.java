@@ -6,7 +6,8 @@ package com.fandian.bean;
 public enum BillStatus {
 
     COMMON(0),//普通
-    SETTLED(1);//已结付
+    SETTLED(1),//已结付
+    LOSSES(2);//已挂账
 
     private int status;
 

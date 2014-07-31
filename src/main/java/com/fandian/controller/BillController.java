@@ -3,7 +3,9 @@ package com.fandian.controller;
 import com.fandian.bean.Bill;
 import com.fandian.bean.BillDetail;
 import com.fandian.bean.BillStatus;
+import com.fandian.bean.Customer;
 import com.fandian.dao.BillDao;
+import com.fandian.dao.CustomerDao;
 import com.fandian.model.DishOrderInfo;
 import com.fandian.util.JSONUtil;
 import com.google.gson.reflect.TypeToken;
@@ -32,6 +34,9 @@ public class BillController {
 
     @Inject
     private BillDao billDao;
+
+    @Inject
+    private CustomerDao customerDao;
 
     @RequestMapping("/new")
     public String toNewBillView() {
@@ -63,6 +68,26 @@ public class BillController {
         float actualFee = bill.getFee() - discount;
         billDao.updateCheckoutInfo(billId, BillStatus.SETTLED.value(), discount, actualFee, paymentType,username);
         return "{\"success\":true}";
+    }
+
+    @RequestMapping("/losses")
+    @ResponseBody
+    public String lossesBill(@RequestParam int billId,@RequestParam int customerId){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        Customer customer = customerDao.getCustomerById(customerId);
+        Bill bill = billDao.getBillById(billId);
+        if(customer != null){
+            billDao.updateBillLossesInfo(billId,customerId,customer.getName(),username);
+            customerDao.updateCustomerFee(customerId,bill.getFee());
+            result.put("success",true);
+        }else{
+            result.put("success",false);
+            result.put("errMsg","客户不存在!");
+        }
+
+        return jsonUtil.transToJsonStrByGson(result);
     }
 
     @RequestMapping("/getBillDetails")

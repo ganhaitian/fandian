@@ -1,6 +1,7 @@
 package com.fandian.controller;
 
 import com.fandian.dao.BillDao;
+import com.fandian.dao.CustomerDao;
 import com.fandian.dao.MenuDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +17,7 @@ import javax.inject.Inject;
 public class AdminController {
 
     @Inject
-    private BillDao billDao;
+    private CustomerDao customerDao;
 
     @Inject
     private MenuDao menuDao;
@@ -28,7 +29,8 @@ public class AdminController {
      */
     @RequestMapping(value = {"/cashier","/main"})
     public String getCashierView(Model model){
-        model.addAttribute("bills",billDao.getAllBills());
+        //model.addAttribute("bills",billDao.getAllBills());
+        model.addAttribute("customers",customerDao.getAllCustomers());
         return "admin/cashier";
     }
 

@@ -101,4 +101,8 @@ public class BillDao extends JdbcTemplate {
     }
 
 
+    public void updateBillLossesInfo(int billId, int customerId, String customerName,String operator) {
+        update("update bill set losses_customer_id = ?,losses_customer_name = ?,status = 2,discount = fee,operator = ? where id = ?",
+            customerId,customerName,operator,billId);
+    }
 }

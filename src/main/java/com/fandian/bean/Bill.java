@@ -1,5 +1,6 @@
 package com.fandian.bean;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -26,9 +27,41 @@ public class Bill {
 
     private Date createTime;
 
+    private String createTimeStr;
+
     private List<BillDetail> billDetails;
 
     private String operator = "";
+
+    private int lossesCustomerId;
+
+    private String lossesCustomerName = "";
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
+    }
+
+    public int getLossesCustomerId() {
+        return lossesCustomerId;
+    }
+
+    public void setLossesCustomerId(int lossesCustomerId) {
+        this.lossesCustomerId = lossesCustomerId;
+    }
+
+    public String getLossesCustomerName() {
+        return lossesCustomerName;
+    }
+
+    public void setLossesCustomerName(String lossesCustomerName) {
+        if(lossesCustomerName == null)
+            return;
+        this.lossesCustomerName = lossesCustomerName;
+    }
 
     public String getOperator() {
         return operator;
@@ -118,5 +151,8 @@ public class Bill {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+        if(createTime != null){
+            this.createTimeStr = new SimpleDateFormat("yyyy-MM-dd H:m:s").format(createTime);
+        }
     }
 }

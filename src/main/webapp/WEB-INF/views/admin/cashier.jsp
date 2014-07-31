@@ -78,6 +78,10 @@
             text-align: center;
         }
 
+        .right-td{
+            text-align:right;
+        }
+
         td .label {
             font-size: 82%;
         }
@@ -127,6 +131,7 @@
                                 <th style="">折扣</th>
                                 <th style="">实付</th>
                                 <th>付费方式</th>
+                                <th style="">挂账商户</th>
                                 <th style="">操作员</th>
                                 <th style="text-align: center;">创建时间</th>
                                 <th style="text-align: center;">操作</th>
@@ -204,6 +209,43 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                     <button name="finalConfirmCheck" type="button" data-dismiss="modal"
+                            class="btn btn-primary">确认
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="confirmLossesModal" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="lossesModalLabel">确认挂账</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="confirmLossesForm" role="form">
+                        <div class="form-group">
+                            <p class="form-control-static confirm-msg"></p>
+                        </div>
+                        <div class="form-group">
+                            <label>挂账商户</label>
+                            <select class="form-control" name="payment-type">
+                            <c:forEach items = "${customers}" var="customer">
+                                <option value = "${customer.id}">${customer.name}</option>
+                            </c:forEach>
+                            </select>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button name="finalConfirmLosses" type="button" data-dismiss="modal"
                             class="btn btn-primary">确认
                     </button>
                 </div>
@@ -331,25 +373,30 @@ $(document).ready(function () {
                         return '<span class="label label-success">未结</span>';
                     } else if (data == 1) {
                         return '<span class="label label-danger">已结</span>';
+                    } else if (data = 2){
+                        return '<span class="label label-warning">挂账</span>';
                     }
                 }
             },
             {
-                className: "common-td",
+                className: "right-td",
                 data: "fee",
                 "render": function (data, type, full, meta) {
-                    return "¥ "+data;
+                    return data + " ¥";
                 }
             },
             {
-                className: "common-td",
-                data: "discount"
+                className: "right-td",
+                data: "discount",
+                "render": function (data, type, full, meta) {
+                    return data + " ¥";
+                }
             },
             {
-                className: "common-td",
+                className: "right-td",
                 data: "actualFee",
                 "render": function (data, type, full, meta) {
-                    return "¥ "+data;
+                    return data + " ¥";
                 }
             },
             {
@@ -358,20 +405,26 @@ $(document).ready(function () {
             },
             {
                 className: "common-td",
+                data: "lossesCustomerName"
+            },
+            {
+                className: "common-td",
                 data: "operator"
             },
             {
                 className: "center-td",
-                data: "createTime"
+                data: "createTimeStr"
             },
             {
                 className: "center-td",
                 data: "status",
                 "render": function (data, type, full, meta) {
                     if (data == 0) {
-                        return '<button name="confirmCheckout" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#confirmCheckModal">结账</button>';
-                    } else if (data == 1) {
-                        return '<button name="confirmCheckout" class="btn btn-sm btn-primary disabled" data-toggle="modal" data-target="#confirmCheckModal">结账</button>';
+                        return '<button name="confirmCheckout" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#confirmCheckModal">结账</button>   '+
+                                '<button name="confirmLosses" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#confirmLossesModal">挂账</button>' ;
+                    } else if (data == 1 || data == 2) {
+                        return '<button name="confirmCheckout" class="btn btn-sm btn-primary disabled" data-toggle="modal" data-target="#confirmCheckModal">结账</button>   '+
+                                '<button name="confirmLosses" class="btn btn-sm btn-warning disabled" data-toggle="modal" data-target="#confirmLossesModal">挂账</button>' ;
                     }
                 }
             }
@@ -383,6 +436,16 @@ $(document).ready(function () {
     });
 
     var currentBillId = null;
+
+    $("button[name=confirmLosses]").each(function(){
+        var rowData = dt.row($(this).closest("tr")).data();
+
+        $(this).click(function () {
+            var tableNo = rowData.tableNo;
+            $("div#confirmLossesModal div.modal-body p.confirm-msg").html(tableNo + "号桌确认挂账?");
+            currentBillId = rowData.id;
+        });
+    });
 
     $("button[name='confirmCheckout']").each(function () {
         var oldConfirmCheckHandler = $(this).onclick;
@@ -402,6 +465,28 @@ $(document).ready(function () {
         });
 
         $(this).click(oldConfirmCheckHandler);
+    });
+
+    $("button[name='finalConfirmLosses']").click(function(){
+        if (!currentBillId)
+            return;
+        var customerId = $("div#confirmLossesModal div.modal-body select").val();
+        $.ajax({
+            url: "<%=realPath %>/bill/losses",
+            data: {"billId": currentBillId,"customerId":customerId},
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    //$("td[name=status]",tr).html("<span class='label label-danger'>已结</span>");
+                    //$("button[name=confirmCheckout]",tr).addClass("disabled");
+                    dt.ajax.reload();
+                    noty({"text": "挂账成功!", "layout": "topCenter", "type": "success"});
+                } else {
+                    noty({"text": "挂账失败，原因:" + data.errMsg, "layout": "topCenter", "type": "error"});
+                }
+            }, error: errorFunction
+        });
+
     });
 
     $("button[name='finalConfirmCheck']").click(function () {
