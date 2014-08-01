@@ -68,7 +68,7 @@
         }
 
         .table tbody tr:hover td,.table tbody tr:hover th{
-            background-color: #f5f5f5;
+            background-color: #FFFF00;
         }
 
         .common-td {
@@ -344,6 +344,7 @@ $(document).ready(function () {
     $("li[name=cashier] a").addClass("active");
 
     var dt = $("#bill_table").DataTable({
+        "oLanguage":defaultDataTableOLanguage,
         ajax: {
             "url": "<c:url value="/bill/getAllBills"></c:url>",
             headers: {
