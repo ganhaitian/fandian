@@ -63,8 +63,12 @@
         }
 
         .table > tbody > tr > td {
-            padding: 3px;
+            padding: 5px;
             vertical-align: middle;
+        }
+
+        .table tbody tr:hover td,.table tbody tr:hover th{
+            background-color: #f5f5f5;
         }
 
         .common-td {
@@ -429,11 +433,11 @@ $(document).ready(function () {
                 data: "status",
                 "render": function (data, type, full, meta) {
                     if (data == 0) {
-                        return '<button name="confirmCheckout" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#confirmCheckModal">结账</button>   '+
-                                '<button name="confirmLosses" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#confirmLossesModal">挂账</button>' ;
+                        return '<button name="confirmCheckout" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#confirmCheckModal">结账</button>   '+
+                                '<button name="confirmLosses" class="btn btn-xs btn-warning" data-toggle="modal" data-target="#confirmLossesModal">挂账</button>' ;
                     } else if (data == 1 || data == 2) {
-                        return '<button name="confirmCheckout" class="btn btn-sm btn-primary disabled" data-toggle="modal" data-target="#confirmCheckModal">结账</button>   '+
-                                '<button name="confirmLosses" class="btn btn-sm btn-warning disabled" data-toggle="modal" data-target="#confirmLossesModal">挂账</button>' ;
+                        return '<button name="confirmCheckout" class="btn btn-xs btn-primary disabled" data-toggle="modal" data-target="#confirmCheckModal">结账</button>   '+
+                                '<button name="confirmLosses" class="btn btn-xs btn-warning disabled" data-toggle="modal" data-target="#confirmLossesModal">挂账</button>' ;
                     }
                 }
             }
