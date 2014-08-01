@@ -160,7 +160,7 @@
 
                                 <div class="text-center">
                                     <div class="row">
-                                        <img src="<s:url value="/resources/img/holder.jpg"></s:url>" width="50%" alt="" class="img-circle"/>
+                                        <img src="<s:url value="/resources/img/icon/category/${tmp.id}.png"></s:url>" width="50%" alt="" class="img-circle"/>
                                     </div>
 
                                     <h4>${tmp.name}</h4>
@@ -186,7 +186,7 @@
                             <div class="row">
                                 <div class="col-xs-6">
 
-                                    <img src="<s:url value="/resources/img/holder.jpg"></s:url>" width="100%" alt="..." class="img-rounded"/>
+                                    <img src="<s:url value="/resources/img/icon/dish/${dish.id}.jpg"></s:url>" width="100%" alt="..." class="img-rounded"/>
 
                                 </div>
                                 <div class="col-xs-6">
