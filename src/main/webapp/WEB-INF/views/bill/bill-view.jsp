@@ -82,7 +82,7 @@
 
 
             <li class="list-group-item">
-                <a href="<c:url value="/menu/customer/category"/>"><h4><i class="fa fa-cutlery"></i>&nbsp;&nbsp;再点点儿</h4></a>
+                <a href="<c:url value="/menu/customer/category?editing=1"/>"><h4><i class="fa fa-cutlery"></i>&nbsp;&nbsp;再点点儿</h4></a>
             </li>
         </ul>
     </div>

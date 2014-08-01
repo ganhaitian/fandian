@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -104,14 +105,18 @@ public class MenuController {
     }
 
     @RequestMapping("/customer/category")
-    public String getCustomerMenuView(Model model){
+    public String getCustomerMenuView(Model model,HttpServletRequest request){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         //查看该用户是否已经存在订单
         Bill existedBill = billDao.getCommonBillByUsername(username);
 
-        //存在订单的话，直接跳入到订单查看的页面
+        //查看是否为改单需求，跳转过来的
+        String editing = request.getParameter("editing");
+
+        //存在订单的话，并且非改单需求，直接跳入到订单查看的页面
         if(existedBill != null && existedBill.getStatus() == BillStatus.COMMON.value() &&
-            OrderDishController.DISH_ORDER_CACHE.containsKey(username)){
+            OrderDishController.DISH_ORDER_CACHE.containsKey(username) &&
+            (editing != null && editing.equals("0"))){
             return "redirect:/bill/view";
         }
 
