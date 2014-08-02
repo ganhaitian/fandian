@@ -1,9 +1,6 @@
 package com.fandian.controller;
 
-import com.fandian.bean.Bill;
-import com.fandian.bean.BillDetail;
-import com.fandian.bean.BillStatus;
-import com.fandian.bean.Customer;
+import com.fandian.bean.*;
 import com.fandian.dao.BillDao;
 import com.fandian.dao.CustomerDao;
 import com.fandian.model.DishOrderInfo;
@@ -133,24 +130,32 @@ public class BillController {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             //查看该用户是否已经存在订单
             Bill existedBill = billDao.getCommonBillByUsername(username);
+            List<BillDetail> savedBillDetails = null;
             //存在未结付的订单时
             if (existedBill != null) {
                 model.addAttribute("existedBill", true);
                 model.addAttribute("tableNo", existedBill.getTableNo());
+                savedBillDetails = billDao.getBillDetails(existedBill.getId());
             } else {
                 model.addAttribute("existedBill", false);
             }
-
-            if (OrderDishController.DISH_ORDER_CACHE.containsKey(username)) {
-                int sumfee = 0;
-                model.addAttribute("list", OrderDishController.DISH_ORDER_CACHE.get(username));
-
-                for (DishOrderInfo dishOrderInfo : OrderDishController.DISH_ORDER_CACHE.get(username)) {
-                    sumfee += dishOrderInfo.getNumber() * dishOrderInfo.getDish().getPrice();
-                }
-
-                model.addAttribute("sumfee", sumfee);
+            if (!OrderDishController.DISH_ORDER_CACHE.containsKey(username)) {
+                OrderDishController.DISH_ORDER_CACHE.put(username,new ArrayList<DishOrderInfo>());
             }
+
+            boolean hasDiff = mergeDBAndCacheDishInfo(OrderDishController.DISH_ORDER_CACHE.get(username), savedBillDetails);
+
+            model.addAttribute("hasDiff",hasDiff);
+
+            int sumfee = 0;
+            model.addAttribute("list", OrderDishController.DISH_ORDER_CACHE.get(username));
+
+            for (DishOrderInfo dishOrderInfo : OrderDishController.DISH_ORDER_CACHE.get(username)) {
+                sumfee += dishOrderInfo.getNumber() * dishOrderInfo.getDish().getPrice();
+            }
+
+            model.addAttribute("sumfee", sumfee);
+
         } catch (Exception e) {
 
         }
@@ -158,5 +163,45 @@ public class BillController {
         return "bill/bill-view";
     }
 
+    /**
+     * 合并cache与数据库的订单信息
+     * 核对cache中的菜品数量与已保存桌单中数量
+     * 如果cache中的数量大，则该桌单已被修改
+     * 页面需进行提示，并显示提交按钮
+     * @param cacheDishOrderInfos 缓存中的菜品订购信息
+     * @param savedBillDetails 数据库中保存的菜品订购信息
+     * @return 是否存在差异
+     */
+    private boolean mergeDBAndCacheDishInfo(List<DishOrderInfo> cacheDishOrderInfos, List<BillDetail> savedBillDetails){
+        boolean hasDiff = false;
+        if (savedBillDetails == null){
+            return true;
+        }
+        for (BillDetail billDetail : savedBillDetails){
 
+            boolean existInCache = false;
+            for (DishOrderInfo dishOrderInfo : cacheDishOrderInfos){
+                if (billDetail.getDishId() == dishOrderInfo.getDish().getId()){
+                    existInCache = true;
+                    if (billDetail.getAmount() != dishOrderInfo.getNumber()){
+                        hasDiff = true;
+                    }
+                }
+            }
+            if (!existInCache){
+                DishOrderInfo tmp = new DishOrderInfo();
+                tmp.setNumber(billDetail.getAmount());
+                Dish dish = new Dish();
+                dish.setId(billDetail.getDishId());
+                dish.setName(billDetail.getDishName());
+                dish.setPrice(billDetail.getPrice()/billDetail.getAmount());
+                tmp.setDish(dish);
+                cacheDishOrderInfos.add(tmp);
+            }
+        }
+        if (cacheDishOrderInfos.size() != savedBillDetails.size()){
+            hasDiff = true;
+        }
+        return hasDiff;
+    }
 }

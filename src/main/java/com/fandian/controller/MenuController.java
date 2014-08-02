@@ -114,8 +114,7 @@ public class MenuController {
         String editing = request.getParameter("editing");
 
         //存在订单的话，并且非改单需求，直接跳入到订单查看的页面
-        if(existedBill != null && existedBill.getStatus() == BillStatus.COMMON.value() &&
-            OrderDishController.DISH_ORDER_CACHE.containsKey(username) &&
+        if(existedBill != null && existedBill.getStatus() == BillStatus.COMMON.value()  &&
             (editing == null || editing.equals("0"))){
             return "redirect:/bill/view";
         }

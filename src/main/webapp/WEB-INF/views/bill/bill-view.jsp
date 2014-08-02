@@ -101,10 +101,10 @@
 
     <div class="row confirm-panel">
         <div class="col-xs-12">
-            <c:if test="${existedBill}">
+            <c:if test="${existedBill and !hasDiff}">
                 <div class='alert alert-success' style='text-align:center;'>您已成功下单，请耐心等待!</div>
             </c:if>
-            <c:if test="${!existedBill}">
+            <c:if test="${!existedBill or hasDiff}">
                 <button id="confirm-bill" class="btn-block btn btn-primary btn-lg">确定</button>
             </c:if>
         </div>
