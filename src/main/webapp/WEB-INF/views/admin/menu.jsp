@@ -110,6 +110,12 @@
             width: 100%;
         }
 
+        .text-warning {
+            color: #8a6d3b;
+        }
+
+
+
     </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -193,7 +199,8 @@
                                     <th>#</th>
                                     <th>菜名</th>
                                     <th style="text-align: right">价格</th>
-                                    <th>星级</th>
+                                    <th style="text-align: center">星级</th>
+                                    <th style="text-align: right">销售量</th>
                                     <th>详细</th>
                                     <th style="text-align:center;">操作</th>
                                 </tr>
@@ -237,11 +244,18 @@
                     </div>
                     <div class="form-group">
                         <label>星级</label>
-                        <input data-dv=0 name = "stars" class="form-control">
+                        <select class="form-control" name = "stars" data-dv=0 >
+                            <option value="0">没星</option>
+                            <option value="1">1星</option>
+                            <option value="2">2星</option>
+                            <option value="3">3星</option>
+                            <option value="4">4星</option>
+                            <option value="5">满星</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>详细</label>
-                        <input name="detail" class="form-control">
+                        <input name="detail" class="form-control" data-dv="">
                     </div>
                    <div class="form-group" style="padding:15px;text-align:right;border-top: 1px solid #e5e5e5;">
                         <button name="confirmDishEdit" type="submit" class="btn btn-primary">确认
@@ -440,8 +454,8 @@
 
         $("#menu-menu").metisMenu();
 
-        $(".menu-list li:nth-child(2)").addClass("active");
-        var categoryId = 1;
+        //$(".menu-list li:nth-child(2)").addClass("active");
+        var categoryId = 0;
 
         var dt = $("#dish_table").DataTable({
             "oLanguage":defaultDataTableOLanguage,
@@ -449,9 +463,28 @@
                 { "data": "id" },
                 { "data": "name" },
                 { "data": "price",
+                  "className":"right-td",
+                  "render":function(data){
+                      return data + " ¥";
+                  }
+                },
+                { "data": "stars",
+                  className:"center-td",
+                  "render":function(data){
+                      var starHtml = "<p class='text-warning'>";
+                      for(var i = 0;i < data;i++){
+                          starHtml += "<i class='fa fa-star'></i>";
+                      }
+                      for(var i = data ; i < 5;i++){
+                          starHtml += "<i class='fa fa-star-o'></i>";
+                      }
+                      starHtml += "</p>";
+                      return starHtml;
+                  }
+                },
+                { "data": "sales",
                   "className":"right-td"
                 },
-                { "data": "stars" },
                 { "data": "detail" },
                 {
                    className:"center-td",
@@ -470,7 +503,7 @@
               }
             },
             "order": [
-                [0, 'asc']
+                [4, 'desc'],[0, 'asc']
             ],
             "dom": '<"toolbar">frtip',
             "pageLength": 25
@@ -494,10 +527,11 @@
 
         $(document).on("click",'button[name=edit-dish]', function (){
             $("#editDishModal div.modal-header h4").html("修改菜式");
-            var tr = $(this).parents("tr");
-            var td = $("td",tr);
-            $("#editDishModal input").each(function(index,input){
-                $(input).val($(td[index]).html());
+            var tr = $(this).closest("tr");
+            var rowData = dt.row(tr).data();
+            //var td = $("td",tr);
+            $("#editDishModal input,#editDishModal select").each(function(index,input){
+                $(input).val(rowData[$(input).attr('name')]);
             });
 
             var validator = $("#editDishForm").data('bootstrapValidator');
@@ -510,7 +544,10 @@
             var validator = $("#editDishForm").data('bootstrapValidator');
             validator.resetForm(true);
 
-            $("#editDishModal input[name=id]").val(0);
+            $("#editDishModal input,#editDishModal select").each(function(index,input){
+                $(input).val($(input).data("dv"));
+            });
+
         });
 
         $(document).on("click","button[name=del-dish]",function(){
@@ -640,7 +677,7 @@
             var bv = $form.data('bootstrapValidator');
 
             var params = {};
-            $("#editDishModal input").each(function(index,input){
+            $("#editDishModal input,#editDishModal select").each(function(index,input){
                 if($(input).val() == "")
                     $(input).val($(input).data("dv"));
                 params[$(input).attr("name")] = $(input).val();
