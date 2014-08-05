@@ -91,7 +91,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">Big Customer</h1>
+            <h1 class="page-header">大客户</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -232,6 +232,7 @@
 <script src="<%=realPath %>/resources/js/plugins/dataTables/jquery.dataTables.js"></script>
 <script src="<%=realPath %>/resources/js/plugins/dataTables/dataTables.bootstrap.js"></script>
 <script src="<%=realPath%>/resources/js/plugins/noty/jquery.noty.packaged.min.js"></script>
+<script src="<%=realPath %>/resources/js/fandian.js"></script>
 
 <script>
 
@@ -276,6 +277,7 @@
         $("li[name=bcustomer] a").addClass("active");
 
         var dt = $("#bill_table").DataTable({
+            "oLanguage":defaultDataTableOLanguage,
             ajax:{
                 "url":"<c:url value="/customer/list"></c:url>",
                 headers:{

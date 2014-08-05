@@ -87,7 +87,7 @@
         }
 
         td .label {
-            font-size: 82%;
+            font-size: 85%;
         }
 
     </style>

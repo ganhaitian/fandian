@@ -19,6 +19,8 @@ var defaultDataTableOLanguage = {
     "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
     "sZeroRecords": "没有检索到数据",
     "sSearch": "搜索: ",
+    "sProcessing": "<img src='/fandian/resources/img/loading.gif'> 加载数据...",
+    "sLoadingRecords": "<img src='/fandian/resources/img/loading.gif'> 加载数据...",
     "oPaginate": {
         "sFirst": "首页",
         "sPrevious": "前一页",

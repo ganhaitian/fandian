@@ -34,6 +34,7 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
 
     <link href="<%=realPath %>/resources/css/plugins/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="<%=realPath %>/resources/css/basic.css" rel="stylesheet">
 
     <style type="text/css">
 
@@ -208,6 +209,7 @@
 <script src="<%=realPath %>/resources/js/plugins/dataTables/jquery.dataTables.js"></script>
 <script src="<%=realPath %>/resources/js/plugins/dataTables/dataTables.bootstrap.js"></script>
 <script src="<%=realPath%>/resources/js/plugins/noty/jquery.noty.packaged.min.js"></script>
+<script src="<%=realPath %>/resources/js/fandian.js"></script>
 
 <script>
 
@@ -272,6 +274,7 @@
         var userId = 0;
 
         var dt = $("#bill_table").DataTable({
+            "oLanguage":defaultDataTableOLanguage,
             ajax:{
                 "url":"<c:url value="/user/listInternal"></c:url>",
                 headers:{

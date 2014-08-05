@@ -36,6 +36,7 @@
           href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
 
     <link href="<%=realPath %>/resources/css/plugins/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="<%=realPath %>/resources/css/basic.css" rel="stylesheet">
 
     <style type="text/css">
 
@@ -84,12 +85,18 @@
             padding: 10px 15px 10px 5px;
         }
 
+        td.right-td{
+            text-align: right;
+        }
+
+
     </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+
     <![endif]-->
 
 </head>
@@ -165,10 +172,10 @@
                                 <tr role="row">
                                     <th>#</th>
                                     <th>菜名</th>
-                                    <th>价格</th>
+                                    <th style="text-align: right">价格</th>
                                     <th>星级</th>
                                     <th>详细</th>
-                                    <th>操作</th>
+                                    <th style="text-align:center;">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -193,7 +200,7 @@
                 <h4 class="modal-title" id="myModalLabel">修改菜式</h4>
             </div>
             <div class="modal-body">
-                <form role="form">
+                <form role="form" id="editDishForm">
                     <div class="form-group" style="display: none">
                         <label>ID</label>
                         <input data-dv=0 name="id" class="form-control">
@@ -214,14 +221,17 @@
                         <label>详细</label>
                         <input name="detail" class="form-control">
                     </div>
+                   <div class="form-group" style="padding:15px;text-align:right;border-top: 1px solid #e5e5e5;">
+                        <button name="confirmDishEdit" type="submit" class="btn btn-primary">确认
+                        </button>
+                    </div>
                 </form>
             </div>
-            <div class="modal-footer">
+            <%--<div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button name="confirmDishEdit" type="button" data-dismiss="modal"
-                        class="btn btn-primary">确认
+                <button name="confirmDishEdit" type="submit" class="btn btn-primary">确认
                 </button>
-            </div>
+            </div>--%>
         </div>
         <!-- /.modal-content -->
     </div>
@@ -339,6 +349,8 @@
 <script src="<%=realPath %>/resources/js/plugins/dataTables/jquery.dataTables.js"></script>
 <script src="<%=realPath %>/resources/js/plugins/dataTables/dataTables.bootstrap.js"></script>
 <script src="<%=realPath%>/resources/js/plugins/noty/jquery.noty.packaged.min.js"></script>
+<script src="<%=realPath %>/resources/js/fandian.js"></script>
+<script src="<%=realPath %>/resources/js/plugins/validator/bootstrapValidator.js"></script>
 
 <script>
 
@@ -410,16 +422,20 @@
         var categoryId = 1;
 
         var dt = $("#dish_table").DataTable({
+            "oLanguage":defaultDataTableOLanguage,
             "columns": [
                 { "data": "id" },
                 { "data": "name" },
-                { "data": "price" },
+                { "data": "price",
+                  "className":"right-td"
+                },
                 { "data": "stars" },
                 { "data": "detail" },
                 {
+                   className:"center-td",
                    "render": function ( data, type, full, meta ) {
-                    return '<button name="edit-dish" data-toggle="modal" data-target="#editDishModal" class="btn btn-sm btn-primary">修改</button>  '+
-                           '<button name="del-dish" data-toggle="modal" data-target="#confirmDelModal" class="btn btn-sm btn-danger">删除</button>';
+                    return '<button name="edit-dish" data-toggle="modal" data-target="#editDishModal" class="btn btn-xs btn-primary">修改</button>  '+
+                           '<button name="del-dish" data-toggle="modal" data-target="#confirmDelModal" class="btn btn-xs btn-danger">删除</button>';
                 }}
             ],
             "ajax":{
@@ -434,7 +450,8 @@
             "order": [
                 [0, 'asc']
             ],
-            "dom": '<"toolbar">frtip'
+            "dom": '<"toolbar">frtip',
+            "pageLength": 25
         });
 
         $("div.toolbar").html('<button name="add-dish" data-toggle="modal" data-target="#editDishModal" class="btn btn-sm btn-primary">增加</button>');
@@ -457,12 +474,17 @@
             $("#editDishModal input").each(function(index,input){
                 $(input).val($(td[index]).html());
             });
+
+            var validator = $("#editDishForm").data('bootstrapValidator');
+            validator.resetForm();
         });
 
         $('button[name=add-dish]').click(function (){
             $("#editDishModal div.modal-header h4").html("增加菜式");
-            //清空
-            $("#editDishModal form").find("input").val("");
+
+            var validator = $("#editDishForm").data('bootstrapValidator');
+            validator.resetForm(true);
+
         });
 
         $(document).on("click","button[name=del-dish]",function(){
@@ -538,7 +560,59 @@
             });
         });
 
-        $("button[name=confirmDishEdit]").click(function(){
+        /*$("button[name=confirmDishEdit]").click(function(){
+
+
+        });*/
+
+        var editDishFormValidator = $("#editDishForm").bootstrapValidator({
+            //submitButtons:'button[name="confirmDishEdit"]',
+            excluded:[':disabled'],
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: '菜名非空'
+                        }
+                    }
+                },
+                price:{
+                    validators:{
+                        notEmpty: {
+                            message: '价格非空'
+                        },
+                        numeric: {
+                            message: '价格金额必须为有效数字'
+                        },
+                        greaterThan:{
+                            value:0,
+                            inclusive:false,
+                            message:"价格必须为正数"
+                        }
+                    }
+                }
+            }
+        }).on('error.field.bv',function (e, data) {
+            $(data.element).val("");
+            //$("button[name='confirmDishEdit']").addClass("disabled");
+
+        }).on('success.validator.bv', function (e, data) {
+            //$("button[name='confirmDishEdit']").removeClass("disabled");
+        }).on('success.form.bv', function(e) {
+            // Prevent form submission
+            e.preventDefault();
+
+            // Get the form instance
+            var $form = $(e.target);
+
+            // Get the BootstrapValidator instance
+            var bv = $form.data('bootstrapValidator');
+
             var params = {};
             $("#editDishModal input").each(function(index,input){
                 if($(input).val() == "")
@@ -547,23 +621,28 @@
             });
             params["categoryId"] = $(".menu-list li.active a").data("categoryid");
             $.ajax({
-               url:"<%=realPath %>/menu/updateDish",
-               dataType:"json",
-               type:"POST",
-               headers:{
+                url:"<%=realPath %>/menu/updateDish",
+                dataType:"json",
+                type:"POST",
+                async:false,
+                headers:{
                     Accept : "application/json; charset=utf-8"
                 },
-               data: {"param":JSON.stringify(params)},
-               success:function(result){
-                if(result.success){
-                    var curPageNo = dt.page();
-                    dt.ajax.reload(function(json){
-                        dt.page(curPageNo).draw(false);
-                    });
-                    noty({"text":"修改成功!","layout":"topCenter","type":"success"});
-                }
-               },error:errorFunction
+                data: {"param":JSON.stringify(params)},
+                success:function(result){
+                    if(result.success){
+                        var curPageNo = dt.page();
+                        dt.ajax.reload(function(json){
+                            dt.page(curPageNo).draw(false);
+                        });
+                        noty({"text":"修改成功!","layout":"topCenter","type":"success"});
+                    }
+                },error:errorFunction
             });
+
+            //关闭窗口
+            $("#editDishModal button.close").trigger('click');
+
         });
 
     });
