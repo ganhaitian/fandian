@@ -89,6 +89,26 @@
             text-align: right;
         }
 
+        .ol_loading_mask {
+            background-color: #FFFFFF;
+            display: none;
+            height: 100%;
+            left: 0;
+            opacity: 0.6;
+            position: absolute;
+            top: 0;
+            width: 100%;
+        }
+
+        .ol_loading {
+            background: url("<%=realPath %>/resources/img/loading1.gif") no-repeat scroll center center rgba(0, 0, 0, 0);
+            display: none;
+            height: 31px;
+            left: 0;
+            position: absolute;
+            top: 40%;
+            width: 100%;
+        }
 
     </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -181,6 +201,8 @@
                                 <tbody>
                                 </tbody>
                             </table>
+                            <div style="z-index: 800; display: none;" class="ol_loading_mask null_mask "></div>
+                            <div style="z-index: 801; display: none;" class="ol_loading "></div>
                         </div>
                     </div>
                 </div>
@@ -458,8 +480,11 @@
 
         $(".menu-list li a").click(function(){
             if($(this).parent("li").children("ul").length == 0){
+                $('#menu_panel div[class^="ol_loading"]').css('display','block');
                 categoryId = $(this).data("categoryid");
-                dt.ajax.reload();
+                dt.ajax.reload(function(json){
+                    $('#menu_panel div[class^="ol_loading"]').css('display','none');
+                });
                 $(this).parents("ul").find("li.active a").each(function(){
                    if($(this).data("categoryid") != categoryId)
                         $(this).parent().removeClass("active");
@@ -485,6 +510,7 @@
             var validator = $("#editDishForm").data('bootstrapValidator');
             validator.resetForm(true);
 
+            $("#editDishModal input[name=id]").val(0);
         });
 
         $(document).on("click","button[name=del-dish]",function(){
@@ -632,8 +658,10 @@
                 success:function(result){
                     if(result.success){
                         var curPageNo = dt.page();
+                        $('#menu_panel div[class^="ol_loading"]').css('display','block');
                         dt.ajax.reload(function(json){
                             dt.page(curPageNo).draw(false);
+                            $('#menu_panel div[class^="ol_loading"]').css('display','none');
                         });
                         noty({"text":"修改成功!","layout":"topCenter","type":"success"});
                     }
