@@ -23,14 +23,17 @@ public class Dish implements Serializable{
 
     private int categoryId;
 
-    private int picPath;
+    private String picPath;
 
-    public int getPicPath() {
+    public String getPicPath() {
         return picPath;
     }
 
-    public void setPicPath(int picPath) {
-        this.picPath = picPath;
+    public void setPicPath(String picPath) {
+        if(picPath == null){
+            this.picPath = "";
+        }else
+            this.picPath = picPath;
     }
 
     public int getCategoryId() {

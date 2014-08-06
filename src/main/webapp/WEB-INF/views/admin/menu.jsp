@@ -114,7 +114,9 @@
             color: #8a6d3b;
         }
 
-
+        img.pic-path{
+           border:1px solid;
+        }
 
     </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -197,6 +199,7 @@
                                 <thead>
                                 <tr role="row">
                                     <th>#</th>
+                                    <th style="text-align: center;">圖片</th>
                                     <th>菜名</th>
                                     <th style="text-align: right">价格</th>
                                     <th style="text-align: center">星级</th>
@@ -465,8 +468,25 @@
         var dt = $("#dish_table").DataTable({
             "oLanguage":defaultDataTableOLanguage,
             "columns": [
-                { "data": "id" },
-                { "data": "name" },
+                {
+                    "data": "id",
+                    "width": 25
+                },
+                {
+                    "data": "picPath",
+                    "name": "pic-path",
+                    "className": "center-td",
+                    "render" :function(data, type, row){
+                        if(row.picPath)
+                            return "<img class='pic-path' name = 'pic-path' src = '<%=realPath %>/resources/img/icon/dish/"+row.picPath+"' height = 48 width = 80 />";
+                        else
+                            return "";
+                    }
+                    //"visible": false
+                },
+                {
+                    "data": "name"
+                },
                 { "data": "price",
                   "className":"right-td",
                   "render":function(data){
@@ -494,11 +514,9 @@
                 {
                    className:"center-td",
                    "render": function ( data, type, full, meta ) {
-                    return '<button name="edit-dish" data-toggle="modal" data-target="#editDishModal" class="btn btn-xs btn-primary">修改</button>  '+
-                           '<button name="del-dish" data-toggle="modal" data-target="#confirmDelModal" class="btn btn-xs btn-danger">删除</button>';
-                }},{
-                    "data":"picPath"
-                }
+                    return '<button name="edit-dish" data-toggle="modal" data-target="#editDishModal" class="btn btn-sm btn-primary">修改</button>  '+
+                           '<button name="del-dish" data-toggle="modal" data-target="#confirmDelModal" class="btn btn-sm btn-danger">删除</button>';
+                }}
             ],
             "ajax":{
               "url":"<%=realPath %>/menu/getDishInCategoryByDtFormat",
@@ -514,6 +532,16 @@
             ],
             "dom": '<"toolbar">frtip',
             "pageLength": 10
+        });
+
+        $(document).on('mouseover','#dish_table tr td:nth-child(2)',function(){
+            var tr = $(this).closest("tr");
+            $("td img[name='pic-path']",tr).css("width",200).css("height",122);
+        });
+
+        $(document).on('mouseout','#dish_table tr td:nth-child(2)',function(){
+            var tr = $(this).closest("tr");
+            $("td img[name='pic-path']",tr).css("width",80).css("height",48);
         });
 
         $("div.toolbar").html('<button name="add-dish" data-toggle="modal" data-target="#editDishModal" class="btn btn-sm btn-primary">增加</button>');

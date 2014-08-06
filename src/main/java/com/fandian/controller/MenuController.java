@@ -86,10 +86,13 @@ public class MenuController {
         //如果图片有修改过，不过是新增还是修改已有的
         if(picEdited == 1 && file != null){
             String fileName = dishId + ".jpg";
+
             try{
                 String webPath = ContextLoader.getCurrentWebApplicationContext().getServletContext().getRealPath("/");
-                FileUtils.copyInputStreamToFile(file.getFileItem().getInputStream(),
-                    new File(webPath+"/resources/img/dish"+fileName));
+                String picPath = webPath + "/resources/img/icon/dish/" + fileName;
+                FileUtils.copyInputStreamToFile(file.getFileItem().getInputStream(),new File(picPath));
+
+                menuDao.updateDishPicPath(dishId,fileName);
             }catch(Exception e){
                 e.printStackTrace();
                 return "{\"success\":false}";

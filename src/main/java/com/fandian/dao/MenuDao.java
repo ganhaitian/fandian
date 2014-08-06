@@ -133,4 +133,8 @@ public class MenuDao extends JdbcTemplate {
         return query("select * from dish where name like %?%",BeanPropertyRowMapper.newInstance(Dish.class),keyWord);
     }
 
+    public void updateDishPicPath(int dishId,String picPath){
+        update("update dish set pic_path = ? where id = ?",picPath,dishId);
+    }
+
 }
