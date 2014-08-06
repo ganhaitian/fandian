@@ -80,10 +80,12 @@
                 </li>
             </c:forEach>
 
+            <c:if test="${(!existedBill && isCustomer) || !isCustomer}">
+                <li class="list-group-item">
+                    <a href="<c:url value="/menu/customer/category?editing=1"/>"><h4><i class="fa fa-cutlery"></i>&nbsp;&nbsp;再点点儿</h4></a>
+                </li>
+            </c:if>
 
-            <li class="list-group-item">
-                <a href="<c:url value="/menu/customer/category?editing=1"/>"><h4><i class="fa fa-cutlery"></i>&nbsp;&nbsp;再点点儿</h4></a>
-            </li>
         </ul>
     </div>
 
@@ -101,10 +103,10 @@
 
     <div class="row confirm-panel">
         <div class="col-xs-12">
-            <c:if test="${existedBill and !hasDiff}">
+            <c:if test="${existedBill and isCustomer}">
                 <div class='alert alert-success' style='text-align:center;'>您已成功下单，请耐心等待!</div>
             </c:if>
-            <c:if test="${!existedBill or hasDiff}">
+            <c:if test="${!isCustomer || (isCustomer && !existedBill)}">
                 <button id="confirm-bill" class="btn-block btn btn-primary btn-lg">确定</button>
             </c:if>
         </div>

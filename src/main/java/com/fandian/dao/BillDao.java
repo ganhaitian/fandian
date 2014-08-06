@@ -47,6 +47,14 @@ public class BillDao extends JdbcTemplate {
         }
     }
 
+    public Bill getBillByTableNo(int tableNo) {
+        try {
+            return queryForObject("select * from bill where table_no = ? and status=0", BeanPropertyRowMapper.newInstance(Bill.class), tableNo);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public void saveNewBill(final Bill bill) {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -104,5 +112,12 @@ public class BillDao extends JdbcTemplate {
     public void updateBillLossesInfo(int billId, int customerId, String customerName,String operator) {
         update("update bill set losses_customer_id = ?,losses_customer_name = ?,status = 2,discount = fee,operator = ? where id = ?",
             customerId,customerName,operator,billId);
+    }
+
+    public List<Bill> getActiveBills(){
+        return query(
+                "select * from bill where status = ?",
+                new BeanPropertyRowMapper<Bill>(Bill.class), BillStatus.COMMON.value()
+        );
     }
 }

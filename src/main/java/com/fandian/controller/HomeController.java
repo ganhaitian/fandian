@@ -32,6 +32,11 @@ public class HomeController {
 		return "home";
 	}
 
+    @RequestMapping("/denied")
+    public String denied(){
+        return "denied";
+    }
+
     @RequestMapping(value="/login", method=RequestMethod.GET)
     public String login(HttpServletRequest request,HttpServletResponse response) {
         String agent = request.getHeader("User-Agent");

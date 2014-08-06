@@ -5,7 +5,10 @@ import com.fandian.dao.BillDao;
 import com.fandian.dao.CustomerDao;
 import com.fandian.model.DishOrderInfo;
 import com.fandian.util.JSONUtil;
+import com.fandian.util.UserTypeJudger;
 import com.google.gson.reflect.TypeToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -25,6 +28,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/bill")
 public class BillController {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Resource
     private JSONUtil jsonUtil;
@@ -101,6 +106,27 @@ public class BillController {
         result.put("data",billDao.getAllBills());
         return jsonUtil.transToJsonStrByGson(result);
     }
+    @Secured(value={"ROLE_WAITOR","ROLE_MANAGER"})
+    @RequestMapping("/desk/active")
+    public String getActiveDesk(Model model){
+        try {
+            model.addAttribute("bills", billDao.getActiveBills());
+        } catch (Exception e) {
+            log.error("查询桌单异常",e);
+        }
+        return "bill/bill-desk-list";
+    }
+
+    @Secured(value={"ROLE_WAITOR","ROLE_MANAGER"})
+    @RequestMapping("/desk/active/{billId}")
+    public String getActiveDesk(Model model,@PathVariable int billId){
+        try {
+            model.addAttribute("bills", billDao.getActiveBills());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "bill/bill-desk-list";
+    }
 
     @RequestMapping(value = "/confirm", method = {RequestMethod.POST})
     @ResponseBody
@@ -127,18 +153,32 @@ public class BillController {
     @RequestMapping("/view")
     public String getQuickView(Model model, HttpServletRequest request) {
         try {
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            //查看该用户是否已经存在订单
-            Bill existedBill = billDao.getCommonBillByUsername(username);
+            String username = null;
+            Bill existedBill = null;
+            if (UserTypeJudger.isCustomer(SecurityContextHolder.getContext().getAuthentication())){
+                username = SecurityContextHolder.getContext().getAuthentication().getName();
+                existedBill = billDao.getCommonBillByUsername(username);
+                model.addAttribute("isCustomer",true);
+
+            }else{
+                existedBill = billDao.getBillByTableNo((Integer.parseInt(request.getParameter("tableNo"))));
+                model.addAttribute("isCustomer",false);
+            }
+
             List<BillDetail> savedBillDetails = null;
             //存在未结付的订单时
             if (existedBill != null) {
                 model.addAttribute("existedBill", true);
                 model.addAttribute("tableNo", existedBill.getTableNo());
                 savedBillDetails = billDao.getBillDetails(existedBill.getId());
+                username = existedBill.getUserName();
+
             } else {
                 model.addAttribute("existedBill", false);
             }
+
+
+
             if (!OrderDishController.DISH_ORDER_CACHE.containsKey(username)) {
                 OrderDishController.DISH_ORDER_CACHE.put(username,new ArrayList<DishOrderInfo>());
             }
@@ -157,7 +197,7 @@ public class BillController {
             model.addAttribute("sumfee", sumfee);
 
         } catch (Exception e) {
-
+            log.error("获取桌单异常",e);
         }
 
         return "bill/bill-view";

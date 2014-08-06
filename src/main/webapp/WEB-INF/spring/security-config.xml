@@ -24,7 +24,7 @@
 	<!-- Configure Spring Security -->
 	<!-- use-expressions and hasRole only needed if jsp tags are used. 
 		If not using jsp tags you can omit the use-expressions property and set access="ROLE_USER" on the intercept-url tags -->
-	<security:http auto-config="true" use-expressions="true" entry-point-ref="loginEntryPoint">
+	<security:http auto-config="true" use-expressions="true" entry-point-ref="loginEntryPoint" access-denied-page="/denied">
 
 
 
