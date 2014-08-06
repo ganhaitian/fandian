@@ -23,6 +23,16 @@ public class Dish implements Serializable{
 
     private int categoryId;
 
+    private int picPath;
+
+    public int getPicPath() {
+        return picPath;
+    }
+
+    public void setPicPath(int picPath) {
+        this.picPath = picPath;
+    }
+
     public int getCategoryId() {
         return categoryId;
     }

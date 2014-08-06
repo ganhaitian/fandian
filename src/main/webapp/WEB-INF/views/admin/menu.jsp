@@ -496,7 +496,9 @@
                    "render": function ( data, type, full, meta ) {
                     return '<button name="edit-dish" data-toggle="modal" data-target="#editDishModal" class="btn btn-xs btn-primary">修改</button>  '+
                            '<button name="del-dish" data-toggle="modal" data-target="#confirmDelModal" class="btn btn-xs btn-danger">删除</button>';
-                }}
+                }},{
+                    "data":"picPath"
+                }
             ],
             "ajax":{
               "url":"<%=realPath %>/menu/getDishInCategoryByDtFormat",
