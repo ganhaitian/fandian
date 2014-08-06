@@ -40,63 +40,66 @@
 <div class="container">
     <nav class="navbar navbar-orange navbar-fixed-top" role="navigation">
         <div class="container">
-            <div class="col-xs-12 col-md-12">
-                <div class="text-center">
-                    <div class="navbar-text" style="float: none;">
-                        <h4>
-                            <s:choose>
-                                <s:when test="${rootcategory != null && rootcategory.parentId == 0}">
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <div class="text-center">
+                        <div class="navbar-text" style="float: none;">
+                            <h4>
+                                <s:choose>
+                                    <s:when test="${rootcategory != null && rootcategory.parentId == 0}">
                                     <span class="pull-left">
                                         <a href="<s:url value="/menu/customer/category"></s:url> ">
                                             <i class="fa fa-chevron-left"></i>
                                         </a>
                                     </span>
-                                    <strong>${rootcategory.name}</strong>
-                                    <div class="pull-right">
-                                        <div class="dropdown">
+                                        <strong>${rootcategory.name}</strong>
+                                        <div class="pull-right">
+                                            <div class="dropdown">
 
-                                            <i class="fa fa-list" data-toggle="dropdown"></i>
-                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="typemenu" id="dishMenuContainer">
-                                                <s:forEach items="${rootCategories}" var="tmp">
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">${tmp.name}</a></li>
-                                                    <li class="divider"></li>
-                                                </s:forEach>
-                                            </ul>
+                                                <i class="fa fa-list" data-toggle="dropdown"></i>
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="typemenu" id="dishMenuContainer">
+                                                    <s:forEach items="${rootCategories}" var="tmp">
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">${tmp.name}</a></li>
+                                                        <li class="divider"></li>
+                                                    </s:forEach>
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
-                                </s:when>
-                                <s:when test="${rootcategory != null && rootcategory.parentId > 0}">
+                                    </s:when>
+                                    <s:when test="${rootcategory != null && rootcategory.parentId > 0}">
 
                                     <span class="pull-left">
                                        <a href="<s:url value="/menu/customer/category/${rootcategory.parentId}"></s:url> ">
                                            <i class="fa fa-chevron-left"></i>
                                        </a>
                                     </span>
-                                    <strong>${rootcategory.name}</strong>
-                                    <div class="pull-right">
-                                        <div class="dropdown">
+                                        <strong>${rootcategory.name}</strong>
+                                        <div class="pull-right">
+                                            <div class="dropdown">
 
 
-                                            <i class="fa fa-list" data-toggle="dropdown"></i>
+                                                <i class="fa fa-list" data-toggle="dropdown"></i>
 
-                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="typemenu" id="dishMenuContainer">
-                                                <s:forEach items="${rootCategories}" var="tmp">
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">${tmp.name}</a></li>
-                                                    <li class="divider"></li>
-                                                </s:forEach>
-                                            </ul>
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="typemenu" id="dishMenuContainer">
+                                                    <s:forEach items="${rootCategories}" var="tmp">
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">${tmp.name}</a></li>
+                                                        <li class="divider"></li>
+                                                    </s:forEach>
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
-                                </s:when>
-                                <s:otherwise>
-                                    <strong>石山乳羊第一家</strong>
-                                </s:otherwise>
-                            </s:choose>
+                                    </s:when>
+                                    <s:otherwise>
+                                        <strong>石山乳羊第一家</strong>
+                                    </s:otherwise>
+                                </s:choose>
 
-                        </h4>
+                            </h4>
+                        </div>
                     </div>
                 </div>
             </div>
+
 
 
         </div>
@@ -128,8 +131,8 @@
         </div>
     </nav>
 
-    <div class="row">
-        <div class="container search-input-container">
+    <div class="search-input-container">
+        <div class="container">
             <div class="form-group has-feedback">
                 <label class="control-label sr-only" for="inputSuccess5">Hidden label</label>
                 <input type="text" class="form-control" id="inputSuccess5" placeholder="菜品搜索">
@@ -138,7 +141,7 @@
         </div>
     </div>
     <s:if test="${fn:length(categories) > 0}">
-        <div class="row">
+        <div class="">
 
 
             <%--<div class="col-xs-12">
@@ -156,7 +159,7 @@
                 <div class="col-xs-4">
                     <a href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">
 
-                            <div class="row" style="margin-top: 20px;">
+                            <div class="row">
 
                                 <div class="text-center">
                                     <div class="row">
