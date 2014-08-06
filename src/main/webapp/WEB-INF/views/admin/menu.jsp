@@ -506,7 +506,7 @@
                 [4, 'desc'],[0, 'asc']
             ],
             "dom": '<"toolbar">frtip',
-            "pageLength": 25
+            "pageLength": 10
         });
 
         $("div.toolbar").html('<button name="add-dish" data-toggle="modal" data-target="#editDishModal" class="btn btn-sm btn-primary">增加</button>');
