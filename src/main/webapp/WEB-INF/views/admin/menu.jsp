@@ -200,7 +200,7 @@
                                     <th>菜名</th>
                                     <th style="text-align: right">价格</th>
                                     <th style="text-align: center">星级</th>
-                                    <th style="text-align: right">销售量</th>
+                                    <th style="text-align: left">销售量</th>
                                     <th>详细</th>
                                     <th style="text-align:center;">操作</th>
                                 </tr>
@@ -256,6 +256,10 @@
                     <div class="form-group">
                         <label>详细</label>
                         <input name="detail" class="form-control" data-dv="">
+                    </div>
+                    <div class="form-group">
+                        <label>图片</label>
+                        <input name="pic" type="file">
                     </div>
                    <div class="form-group" style="padding:15px;text-align:right;border-top: 1px solid #e5e5e5;">
                         <button name="confirmDishEdit" type="submit" class="btn btn-primary">确认
@@ -387,6 +391,7 @@
 <script src="<%=realPath%>/resources/js/plugins/noty/jquery.noty.packaged.min.js"></script>
 <script src="<%=realPath %>/resources/js/fandian.js"></script>
 <script src="<%=realPath %>/resources/js/plugins/validator/bootstrapValidator.js"></script>
+<script src="<%=realPath %>/resources/js/plugins/form/jquery.form.min.js"></script>
 
 <script>
 
@@ -483,7 +488,7 @@
                   }
                 },
                 { "data": "sales",
-                  "className":"right-td"
+                  "className":"left-td"
                 },
                 { "data": "detail" },
                 {
@@ -526,6 +531,7 @@
         });
 
         $(document).on("click",'button[name=edit-dish]', function (){
+            picEdited = 0;
             $("#editDishModal div.modal-header h4").html("修改菜式");
             var tr = $(this).closest("tr");
             var rowData = dt.row(tr).data();
@@ -539,6 +545,7 @@
         });
 
         $('button[name=add-dish]').click(function (){
+            picEdited = 0;
             $("#editDishModal div.modal-header h4").html("增加菜式");
 
             var validator = $("#editDishForm").data('bootstrapValidator');
@@ -628,6 +635,12 @@
 
         });*/
 
+        var picEdited = 0;
+
+        $(document).on("change","#editDishForm input[name=pic]",function(){
+            picEdited = 1;
+        });
+
         var editDishFormValidator = $("#editDishForm").bootstrapValidator({
             //submitButtons:'button[name="confirmDishEdit"]',
             excluded:[':disabled'],
@@ -676,14 +689,15 @@
             // Get the BootstrapValidator instance
             var bv = $form.data('bootstrapValidator');
 
-            var params = {};
+           /* var params = {};
             $("#editDishModal input,#editDishModal select").each(function(index,input){
                 if($(input).val() == "")
                     $(input).val($(input).data("dv"));
                 params[$(input).attr("name")] = $(input).val();
             });
-            params["categoryId"] = $(".menu-list li.active a").data("categoryid");
-            $.ajax({
+            params["categoryId"] = $(".menu-list li.active a").data("categoryid");*/
+            var categoryId = $(".menu-list li.active a").data("categoryid");
+            $("#editDishForm").ajaxSubmit({
                 url:"<%=realPath %>/menu/updateDish",
                 dataType:"json",
                 type:"POST",
@@ -691,7 +705,12 @@
                 headers:{
                     Accept : "application/json; charset=utf-8"
                 },
-                data: {"param":JSON.stringify(params)},
+                data: {"categoryId":categoryId,"picEdited":picEdited},
+                beforeSerialize:function($form,options){
+                    var picInput = $form.find("input[name=pic]")
+                    if(picEdited == 0)
+                        picInput.prop("disabled",true);
+                },
                 success:function(result){
                     if(result.success){
                         var curPageNo = dt.page();
@@ -704,6 +723,9 @@
                     }
                 },error:errorFunction
             });
+
+            //先禁掉，再开启
+            $form.find("input[name=pic]").prop("disabled",false);
 
             //关闭窗口
             $("#editDishModal button.close").trigger('click');

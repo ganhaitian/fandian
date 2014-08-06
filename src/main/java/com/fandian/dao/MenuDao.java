@@ -129,5 +129,8 @@ public class MenuDao extends JdbcTemplate {
         update("delete from dish_category where id = ?",categoryId);
     }
 
+    public List<Dish> searchDish(String keyWord){
+        return query("select * from dish where name like %?%",BeanPropertyRowMapper.newInstance(Dish.class),keyWord);
+    }
 
 }
