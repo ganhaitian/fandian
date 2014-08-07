@@ -138,8 +138,8 @@
     <div class="row search-input-container">
         <div class="container">
             <div class="form-group has-feedback">
-                <label class="control-label sr-only" for="inputSuccess5">Hidden label</label>
-                <input type="text" class="form-control" id="inputSuccess5" placeholder="菜品搜索">
+                <label class="control-label sr-only" for="search-input">Hidden label</label>
+                <input type="text" class="form-control" id="search-input" placeholder="搜索">
                 <span class="glyphicon glyphicon-search form-control-feedback inner-icon"></span>
             </div>
         </div>
@@ -309,6 +309,10 @@
     $(function(){
         $('.btn-add-to-cart').click(function(e){
             var btn = $(this);
+
+            $(docuemnt).on('focus','#search-input',function(){
+               alert('a');
+            });
 
             $.ajax({
                 url:"<s:url value="/order/customer/addDish"></s:url>",
