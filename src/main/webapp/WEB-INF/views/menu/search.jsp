@@ -28,7 +28,9 @@
     <link rel="stylesheet" href="<s:url value="/resources/css/basic.css"></s:url> ">
 
     <style type="text/css">
-        body {padding-top: 70px;}
+        /*body {*/
+            /*padding-top: 70px;*/
+        /*}*/
         a {color: inherit;}
 
         /*.search-input-container input{
@@ -53,6 +55,37 @@
             border-top:0px;
         }
 
+        .navbar-header{
+            float:left;
+        }
+
+        .container{
+            padding:0px;
+        }
+
+        .navbar{
+            min-height: 0px;
+            margin-bottom: 0px;
+        }
+
+        .navbar .form-group{
+            margin-bottom: 0px;
+        }
+
+        .navbar .input-group .form-control{
+            margin:7px;
+        }
+
+        .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
+            margin: 0 10 0 15;
+        }
+
+        .navbar .input-group-addon{
+            border:0px;
+            background-color: #f4f5f0;
+            color: #c05950;
+        }
+
     </style>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -65,28 +98,24 @@
 <body>
 
 <div class="container">
-    <nav class="navbar navbar-orange navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-default navbar-orange" role="navigation">
         <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Brand</a>
-            </div>
-                <div class="collapse navbar-collapse">
-                    <form class="navbar-form navbar-left" role="search">
-                        <div class="form-group">
-                            <label class="control-label sr-only" for="search-input">Hidden label</label>
-                            <span class="glyphicon glyphicon-search form-control-feedback inner-icon"></span>
-                            <input type="text" class="form-control" id="search-input" placeholder="搜索">
-                        </div>
-                        <button class="btn btn-default" type="button" id="search-btn" >搜索</button>
-                    </form>
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header navbar-orange">
+                <div class="form-group has-feedback input-group search-input-container">
+                    <span class="input-group-addon">
+                        <a href="<s:url value="/menu/customer/category"></s:url> ">
+                            <i class="fa fa-chevron-left"></i>
+                        </a>
+                    </span>
+                    <input style="padding-left:10px;" type="text" class="form-control" id="search-input" placeholder="搜索">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">搜索</button>
+                    </span>
                 </div>
-        </div>
+            </div>
+
+        </div><!-- /.container-fluid -->
     </nav>
 
 
@@ -115,16 +144,6 @@
         </div>
     </nav>
 
-    <div class="row search-input-container">
-        <div class="container">
-            <div class="input-group has-feedback">
-
-                <span class="input-group-btn">
-
-                </span>
-            </div>
-        </div>
-    </div>
 
     <div class="row" id="keyword-list" >
         <ul class="list-group" >
