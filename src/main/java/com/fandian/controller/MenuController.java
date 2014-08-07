@@ -14,6 +14,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -73,27 +74,27 @@ public class MenuController {
     @RequestMapping(value = "updateDish")
     public
     @ResponseBody
-    String updateDish(@ModelAttribute Dish dish,@RequestParam int picEdited,
+    String updateDish(@ModelAttribute Dish dish, @RequestParam int picEdited,
         @RequestParam(value = "pic", required = false) CommonsMultipartFile file) {
 
         int dishId = dish.getId();
         if (dishId != 0) {
             menuDao.updateDish(dish);
-        } else{
+        } else {
             dishId = menuDao.insertDish(dish);
         }
 
         //如果图片有修改过，不过是新增还是修改已有的
-        if(picEdited == 1 && file != null){
+        if (picEdited == 1 && file != null) {
             String fileName = dishId + ".jpg";
 
-            try{
+            try {
                 String webPath = ContextLoader.getCurrentWebApplicationContext().getServletContext().getRealPath("/");
                 String picPath = webPath + "/resources/img/icon/dish/" + fileName;
-                FileUtils.copyInputStreamToFile(file.getFileItem().getInputStream(),new File(picPath));
+                FileUtils.copyInputStreamToFile(file.getFileItem().getInputStream(), new File(picPath));
 
-                menuDao.updateDishPicPath(dishId,fileName);
-            }catch(Exception e){
+                menuDao.updateDishPicPath(dishId, fileName);
+            } catch (Exception e) {
                 e.printStackTrace();
                 return "{\"success\":false}";
             }
@@ -135,13 +136,39 @@ public class MenuController {
         return "{\"success\":true}";
     }
 
-    @RequestMapping(value = "searchDish")
+    @RequestMapping(value = "/search")
+    public String search() {
+        return "menu/search";
+    }
+
+    @RequestMapping(value = "/searchDish")
+    public String searchDish(@RequestParam(required = false) String keyWord, @RequestParam(required = false) int keywordId, Model model) {
+
+        String searchKeyword = null;
+        //检查是否从已有的关键词列表里面选取的，否则直接查库
+        if (keywordId > 0) {
+            Map<String, Object> keywordMap = menuDao.getKeywordById(keywordId);
+            if (keywordMap != null) {
+                searchKeyword = keywordMap.get("keyword").toString();
+            }
+        }
+
+        if (!StringUtils.isEmpty(keyWord) && StringUtils.isEmpty(searchKeyword)) {
+            searchKeyword = keyWord;
+        }
+
+        model.addAttribute("dishes", menuDao.searchDish(searchKeyword));
+        model.addAttribute("searchKeyword", searchKeyword);
+        return "menu/customer-category";
+    }
+
+    @RequestMapping(value = "/searchKeyword")
     public
     @ResponseBody
-    String searchDish(@RequestParam String keyWord) {
+    String searchKeyword(@RequestParam String keyWord) {
         Map<String, Object> result = new HashMap<String, Object>();
         try {
-            result.put("dishes", menuDao.searchDish(keyWord));
+            result.put("keywordList", menuDao.getKeywordList(keyWord));
             result.put("success", true);
             return jsonUtil.transToJsonStrByGson(result);
         } catch (Exception e) {

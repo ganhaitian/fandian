@@ -3,6 +3,7 @@ package com.fandian.dao;
 import com.fandian.bean.Dish;
 import com.fandian.bean.DishCategory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -14,6 +15,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by gan on 14-7-21.
@@ -148,11 +150,23 @@ public class MenuDao extends JdbcTemplate {
     }
 
     public List<Dish> searchDish(String keyWord){
-        return query("select * from dish where name like %?%",BeanPropertyRowMapper.newInstance(Dish.class),keyWord);
+        return query("select * from dish where name like '%"+keyWord+"%' ",BeanPropertyRowMapper.newInstance(Dish.class));
     }
 
     public void updateDishPicPath(int dishId,String picPath){
         update("update dish set pic_path = ? where id = ?",picPath,dishId);
+    }
+
+    public List<Map<String,Object>> getKeywordList(String keyword){
+        return query("select * from search_keyword where keyword like '%"+keyword+"%' ",new ColumnMapRowMapper());
+    }
+
+    public Map<String,Object> getKeywordById(int keywordId){
+        try{
+            return queryForObject("select * from search_keyword where id = ?", new ColumnMapRowMapper(), keywordId);
+        }catch(Exception e){
+            return null;
+        }
     }
 
 }

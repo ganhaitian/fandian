@@ -306,13 +306,18 @@
         });
     }
 
+    $(document).on('focus','#search-input',function(){
+        window.location.href = '<s:url value="/menu/search"></s:url>';
+    });
+
     $(function(){
+
+        <c:if test="${searchKeyword != null}">
+            $("input#search-input").val('${searchKeyword}');
+        </c:if>
+
         $('.btn-add-to-cart').click(function(e){
             var btn = $(this);
-
-            $(docuemnt).on('focus','#search-input',function(){
-               alert('a');
-            });
 
             $.ajax({
                 url:"<s:url value="/order/customer/addDish"></s:url>",
