@@ -42,6 +42,15 @@
 
         .keyword-item{
             cursor: pointer;
+            background-color: #f4f5f0;
+        }
+
+        .list-group-item{
+            border-bottom: 1px solid #ddd;
+        }
+
+        .list-group-item:nth-child(1){
+            border-top:0px;
         }
 
     </style>
@@ -57,69 +66,26 @@
 
 <div class="container">
     <nav class="navbar navbar-orange navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-md-12">
-                    <div class="text-center">
-                        <div class="navbar-text" style="float: none;">
-                            <h4>
-                                <s:choose>
-                                    <s:when test="${rootcategory != null && rootcategory.parentId == 0}">
-                                    <span class="pull-left">
-                                        <a href="<s:url value="/menu/customer/category"></s:url> ">
-                                            <i class="fa fa-chevron-left"></i>
-                                        </a>
-                                    </span>
-                                        <strong>${rootcategory.name}</strong>
-                                        <div class="pull-right">
-                                            <div class="dropdown">
-
-                                                <i class="fa fa-list" data-toggle="dropdown"></i>
-                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="typemenu" id="dishMenuContainer">
-                                                    <s:forEach items="${rootCategories}" var="tmp">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">${tmp.name}</a></li>
-                                                        <li class="divider"></li>
-                                                    </s:forEach>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </s:when>
-                                    <s:when test="${rootcategory != null && rootcategory.parentId > 0}">
-
-                                    <span class="pull-left">
-                                       <a href="<s:url value="/menu/customer/category/${rootcategory.parentId}"></s:url> ">
-                                           <i class="fa fa-chevron-left"></i>
-                                       </a>
-                                    </span>
-                                        <strong>${rootcategory.name}</strong>
-                                        <div class="pull-right">
-                                            <div class="dropdown">
-
-
-                                                <i class="fa fa-list" data-toggle="dropdown"></i>
-
-                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="typemenu" id="dishMenuContainer">
-                                                    <s:forEach items="${rootCategories}" var="tmp">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">${tmp.name}</a></li>
-                                                        <li class="divider"></li>
-                                                    </s:forEach>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </s:when>
-                                    <s:otherwise>
-                                        <strong>石山乳羊第一家</strong>
-                                    </s:otherwise>
-                                </s:choose>
-
-                            </h4>
-                        </div>
-                    </div>
-                </div>
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Brand</a>
             </div>
-
-
-
+                <div class="collapse navbar-collapse">
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <label class="control-label sr-only" for="search-input">Hidden label</label>
+                            <span class="glyphicon glyphicon-search form-control-feedback inner-icon"></span>
+                            <input type="text" class="form-control" id="search-input" placeholder="搜索">
+                        </div>
+                        <button class="btn btn-default" type="button" id="search-btn" >搜索</button>
+                    </form>
+                </div>
         </div>
     </nav>
 
@@ -152,11 +118,9 @@
     <div class="row search-input-container">
         <div class="container">
             <div class="input-group has-feedback">
-                <label class="control-label sr-only" for="search-input">Hidden label</label>
-                <input type="text" class="form-control" id="search-input" placeholder="搜索">
-                <span class="glyphicon glyphicon-search form-control-feedback inner-icon"></span>
+
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" id="search-btn" >搜索</button>
+
                 </span>
             </div>
         </div>
