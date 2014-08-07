@@ -155,12 +155,12 @@
                             <div class="row">
 
                                 <div class="text-center">
-                                    <div style="display: block; position: absolute;top: 3;right: 25;z-index: 999;">
+                                    <div style="display: block; position: absolute;top: 3;right: 12;z-index: 999;">
                                         <%--<span class="label label-warning">26</span>--%>
                                         <img src="<c:url value="/holder.js/25x20/bright/text:${tmp.dish_count}"></c:url> "  class="img-rounded">
                                     </div>
                                     <div class="row">
-                                        <img style="border:3px solid #a6a5a3;" src="<s:url value="/resources/img/icon/category/${tmp.id}.png?${timestamp}"></s:url>" width="50%" alt="" class="img-circle"/>
+                                        <img style="border:3px solid #a6a5a3;" src="<s:url value="/resources/img/icon/category/${tmp.id}.png?${timestamp}"></s:url>" width="60%" alt="" class="img-circle"/>
                                     </div>
 
                                     <p style="margin-top: 5px;">${tmp.name}</p>
