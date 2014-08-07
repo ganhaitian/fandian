@@ -80,6 +80,10 @@ public class MenuDao extends JdbcTemplate {
     }
 
     public void deleteDish(int dishId){
+        Dish dish = queryForObject("select * from dish where id="+dishId, new BeanPropertyRowMapper<Dish>(Dish.class));
+        if (dish != null){
+            updateDishCategoryDishCount(dish.getCategoryId());
+        }
         update("delete from dish where id = ?", dishId);
     }
 
@@ -100,7 +104,21 @@ public class MenuDao extends JdbcTemplate {
             }
         }, keyHolder);
 
+        updateDishCategoryDishCount(dish.getCategoryId());
+
         return keyHolder.getKey().intValue();
+    }
+
+    /**
+     * 更新菜品分类的菜品数量统计数据
+     * @param categoryId
+     */
+    public void updateDishCategoryDishCount(int categoryId){
+        update("update dish_category set dish_count=(dish_count+1) where id = " + categoryId);
+        DishCategory category = getDishCategory(categoryId);
+        if (category != null && category.getParentId() != 0){
+            updateDishCategoryDishCount(category.getParentId());
+        }
     }
 
     public int insertDishCategory(final DishCategory dishCategory){

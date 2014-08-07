@@ -14,6 +14,15 @@ public class DishCategory {
     private List<DishCategory> childCategories;
 
     private int parentId;
+    private int dish_count;
+
+    public int getDish_count() {
+        return dish_count;
+    }
+
+    public void setDish_count(int dish_count) {
+        this.dish_count = dish_count;
+    }
 
     public int getParentId() {
         return parentId;
