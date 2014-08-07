@@ -73,8 +73,12 @@ public class OrderDishController {
                     if (dishOrderInfo.getDish().getId() == dish.getId() && dishOrderInfo.getNumber()>0){
 
                         dishOrderInfo.setNumber(dishOrderInfo.getNumber()-1);
+                        if (dishOrderInfo.getNumber() == 0){
+                            DISH_ORDER_CACHE.get(username).remove(dishOrderInfo);
+                        }
                         break;
                     }
+
                 }
             }
 

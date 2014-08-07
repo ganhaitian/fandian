@@ -9,6 +9,9 @@
 <%@ taglib prefix="s" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%
+    request.setAttribute("timestamp",System.currentTimeMillis());
+%>
 <html>
 <head>
     <meta charset="utf-8">
@@ -25,7 +28,7 @@
     <link rel="stylesheet" href="<s:url value="/resources/css/basic.css"></s:url> ">
 
     <style type="text/css">
-        body {padding-bottom: 70px;padding-top: 70px;}
+        body {padding-top: 70px;}
         a {color: inherit;}
     </style>
 
@@ -34,6 +37,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
     <script src="<s:url value="/resources/js/jquery.loadTemplate-1.4.4.min.js"></s:url>"></script>
+    <script src="<s:url value="/resources/js/holder.js"></s:url>"></script>
 </head>
 <body>
 
@@ -131,7 +135,7 @@
         </div>
     </nav>
 
-    <div class="search-input-container">
+    <div class="row search-input-container">
         <div class="container">
             <div class="form-group has-feedback">
                 <label class="control-label sr-only" for="inputSuccess5">Hidden label</label>
@@ -141,41 +145,37 @@
         </div>
     </div>
     <s:if test="${fn:length(categories) > 0}">
-        <div class="">
+        <div class="row" >
 
-
-            <%--<div class="col-xs-12">
-                <div class="list-group">
-                    <s:forEach items="${categories}" var="tmp">
-                        <a href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>" class="list-group-item">
-                            ${tmp.name}
-                            <span class="pull-right"><i class="fa fa-chevron-right"></i></span>
-                        </a>
-                    </s:forEach>
-
-                </div>
-            </div>--%>
-            <s:forEach items="${categories}" var="tmp">
-                <div class="col-xs-4">
-                    <a href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">
+            <div class="container" id="category-item-container">
+                <s:forEach items="${categories}" var="tmp">
+                    <div class="col-xs-4 category-item">
+                        <a href="<s:url value="/menu/customer/category/${tmp.id}"></s:url>">
 
                             <div class="row">
 
                                 <div class="text-center">
+                                    <div style="display: block; position: absolute;top: 3;right: 25;z-index: 999;">
+                                        <%--<span class="label label-warning">26</span>--%>
+                                        <img src="<c:url value="/holder.js/20x20/bright/text:26"></c:url> "  class="img-rounded">
+                                    </div>
                                     <div class="row">
-                                        <img src="<s:url value="/resources/img/icon/category/${tmp.id}.png"></s:url>" width="50%" alt="" class="img-circle"/>
+                                        <img style="border:3px solid #a6a5a3;" src="<s:url value="/resources/img/icon/category/${tmp.id}.png?${timestamp}"></s:url>" width="50%" alt="" class="img-circle"/>
                                     </div>
 
-                                    <h4>${tmp.name}</h4>
+                                    <p style="margin-top: 5px;">${tmp.name}</p>
 
                                 </div>
 
                             </div>
 
-                    </a>
-                </div>
+                        </a>
+                    </div>
 
-            </s:forEach>
+                </s:forEach>
+
+            </div>
+
         </div>
     </s:if>
 
@@ -224,11 +224,16 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="pull-right">
+                                        <button class="hide btn btn-inverse btn-del-from-cart" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
+                                            <i class="fa fa-minus"></i>
+
+                                        </button>
+                                        &nbsp;&nbsp;
                                         <span class="badge text-primary" id="sub_number_${dish.id}"></span>
                                         &nbsp;&nbsp;
-                                        <button class="btn btn-inverse btn-add-to-cart" title="点击加入餐车" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
-                                            <i class="fa fa-shopping-cart"></i>
-                                            <span>我要点</span>
+                                        <button class="btn btn-inverse btn-add-to-cart" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
+                                            <i class="fa fa-plus"></i>
+
                                         </button>
                                     </div>
 
@@ -246,7 +251,7 @@
 
 </div>
 <script type="application/javascript">
-
+    Holder.add_theme("bright", { background: "#a6a5a3", foreground: "white", size: 12 });
     function updateUserOrderDetails(){
         $.ajax({
             url:"<s:url value="/order/customer/getDishes"></s:url>",
@@ -254,7 +259,12 @@
             headers:{
                 Accept : "application/json; charset=utf-8"
             },
+            error:function(){
+                var mainHeight = $(window).height() - $('#category-item-container').offset()['top'];
 
+
+                $('.category-item').height(mainHeight/3);
+            },
             success:function(result){
                 if (!result.dishes || !$.isArray(result.dishes)){
                     result['dishes'] = [];
@@ -267,6 +277,7 @@
                     dishFee += v.number* v.dish.price;
                     popoverHtml += "<li class=\"list-group-item\"><span class=\"badge\">"+ v.number +"</span>"+ v.dish.name+"</li>";
                     $('#sub_number_' + v.dish.id).text(v.number);
+                    $('#sub_number_' + v.dish.id).prev('button').removeClass('hide');
                 });
 
                 $('#summary_info_number').text(dishCount);
@@ -279,30 +290,83 @@
 
                 if (dishCount > 0){
                     $('#nav_order_summary').removeClass('hide');
+
+                    $("body").css({"padding-bottom":"70px"});
+
                 }
+
+                var mainHeight = $(window).height() - $('#category-item-container').offset()['top'];
+
+                if (!$('#nav_order_summary').hasClass('hide')){
+                    mainHeight -= 70;
+                }
+
+                $('.category-item').height(mainHeight/3);
             }
         });
     }
 
-    $('.btn-add-to-cart').click(function(e){
-        var btn = $(this);
-        $.ajax({
-            url:"<s:url value="/order/customer/addDish"></s:url>",
-            method:'POST',
-            data:{id:btn.attr('data-id'),name:btn.attr('data-name'),price:btn.attr('data-price')},
-            success:function(data){
-                updateUserOrderDetails();
-                $('#'+btn.attr('data-sub-number-id')).text(parseInt($('#'+btn.attr('data-sub-number-id')).text())+1);
-            },
-            error:function(){
-                alert('err');
-            }
+    $(function(){
+        $('.btn-add-to-cart').click(function(e){
+            var btn = $(this);
+
+            $.ajax({
+                url:"<s:url value="/order/customer/addDish"></s:url>",
+                method:'POST',
+                data:{id:btn.attr('data-id'),name:btn.attr('data-name'),price:btn.attr('data-price')},
+                success:function(data){
+                    updateUserOrderDetails();
+                    $('#'+btn.attr('data-sub-number-id')).text(parseInt($('#'+btn.attr('data-sub-number-id')).text())+1);
+                    if ($('#'+btn.attr('data-sub-number-id')).text()){
+                        btn.siblings('button').removeClass('hide');
+                    }else{
+                        btn.siblings('button').addClass('hide');
+                    }
+                },
+                error:function(){
+                    alert('err');
+                }
+            });
+
+
         });
+
+        $('.btn-del-from-cart').click(function(e){
+            var btn = $(this);
+
+            $.ajax({
+                url:"<s:url value="/order/customer/delDish"></s:url>",
+                method:'POST',
+                data:{id:btn.attr('data-id')},
+                success:function(data){
+                    updateUserOrderDetails();
+                    var order_dish_num = parseInt($('#'+btn.attr('data-sub-number-id')).text())-1;
+                    if (order_dish_num == 0){
+                        $('#'+btn.attr('data-sub-number-id')).text("");
+                        btn.addClass('hide');
+                    }else{
+                        $('#'+btn.attr('data-sub-number-id')).text(""+order_dish_num);
+                    }
+
+                },
+                error:function(){
+                    alert('err');
+                }
+            });
+
+
+        });
+
+        updateUserOrderDetails();
+
+
+
 
 
     });
 
-    updateUserOrderDetails();
+
+
 
 
 

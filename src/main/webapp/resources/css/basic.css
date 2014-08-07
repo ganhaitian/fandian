@@ -23,3 +23,5 @@ td.center-td{
 .table tbody tr:hover td,.table tbody tr:hover th{
     background-color: #FFFF00;
 }
+.category-item-container {}
+.category-item {float: left; display: block;}

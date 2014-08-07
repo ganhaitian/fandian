@@ -155,14 +155,17 @@ public class BillController {
         try {
             String username = null;
             Bill existedBill = null;
+            String tableNo = request.getParameter("tableNo");
             if (UserTypeJudger.isCustomer(SecurityContextHolder.getContext().getAuthentication())){
                 username = SecurityContextHolder.getContext().getAuthentication().getName();
                 existedBill = billDao.getCommonBillByUsername(username);
                 model.addAttribute("isCustomer",true);
 
-            }else{
-                existedBill = billDao.getBillByTableNo((Integer.parseInt(request.getParameter("tableNo"))));
+            }else if(tableNo != null){
+                existedBill = billDao.getBillByTableNo((Integer.parseInt(tableNo)));
                 model.addAttribute("isCustomer",false);
+            }else{
+
             }
 
             List<BillDetail> savedBillDetails = null;
