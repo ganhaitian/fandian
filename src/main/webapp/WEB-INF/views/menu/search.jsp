@@ -84,8 +84,18 @@
 
         .navbar .input-group-addon{
             border:0px;
-            background-color: #f4f5f0;
+            background-color: #F5F4F2;
             color: #c05950;
+        }
+
+        .navbar-orange{
+            background-color: #F5F4F2;
+        }
+
+        .search-btn{
+            background-color: #b6b1b2;
+            color: #fff;
+            font-weight: 700;
         }
 
     </style>
@@ -112,7 +122,7 @@
                     </span>
                     <input style="padding-left:10px;" type="text" class="form-control" id="search-input" placeholder="搜索">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">搜索</button>
+                        <button class="btn search-btn" type="button">搜索</button>
                     </span>
                 </div>
             </div>
