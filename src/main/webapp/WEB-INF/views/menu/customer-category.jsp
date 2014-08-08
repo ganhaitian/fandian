@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="<s:url value="/resources/css/basic.css"></s:url> ">
 
     <style type="text/css">
-        body {padding-top: 70px;}
+        body {padding-top: 58px;}
         a {color: inherit;}
     </style>
 
