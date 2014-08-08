@@ -49,6 +49,8 @@
 
         .list-group-item{
             border-bottom: 1px solid #ddd;
+            padding:10 15 10 25;
+            font-size: 13;
         }
 
         .list-group-item:nth-child(1){
@@ -168,8 +170,10 @@
 
         $(document).on('input propertychange',"#search-input",function(){
             var keyWord = $(this).val();
-            if(!keyWord)
+            if(!keyWord) {
+                $("#keyword-list ul").html("");
                 return;
+            }
 
             //判断是否是中文
            var reg = /^[\u4E00-\u9FA5]+$/;
@@ -190,7 +194,10 @@
                         $("#keyword-list ul").html("");
                         $.each(result.keywordList,function(index,keyword){
                             $("#keyword-list ul").append(
-                                "<li class='list-group-item keyword-item' data-id='"+keyword.id+"' >"+keyword.keyword+"</li>");
+                                "<li class='list-group-item keyword-item' data-id='"+keyword.id+"' >"
+                                    + "<i class='fa fa-search'></i>        "
+                                    + "<span style = 'margin-left:3px;' >" + keyword.keyword + "</span>"+
+                                "</li>");
                         });
                     }
                 }
