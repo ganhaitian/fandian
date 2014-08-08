@@ -111,7 +111,7 @@
 
 <div class="container">
     <nav class="navbar navbar-default navbar-orange" role="navigation">
-        <div class="container-fluid">
+        <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header navbar-orange">
                 <div class="form-group has-feedback input-group search-input-container">
@@ -122,7 +122,7 @@
                     </span>
                     <input style="padding-left:10px;" type="text" class="form-control" id="search-input" placeholder="搜索">
                     <span class="input-group-btn">
-                        <button class="btn search-btn" type="button">搜索</button>
+                        <button class="btn search-btn" id = "search-btn" type="button">搜索</button>
                     </span>
                 </div>
             </div>
@@ -175,10 +175,16 @@
     $(function(){
 
         $("#search-btn").click(function(){
-
+            var keyword = $("#search-input").val();
+            if(!keyword) {
+                $("#keyword-list ul").html("");
+                return;
+            }
+            var url = encodeURI('<s:url value="/menu/searchDish"></s:url>?keyWord='+keyword);
+            window.location.replace(url);
         });
 
-        $(document).on('input propertychange',"#search-input",function(){
+        $(document).on('input',"#search-input",function(){
             var keyWord = $(this).val();
             if(!keyWord) {
                 $("#keyword-list ul").html("");

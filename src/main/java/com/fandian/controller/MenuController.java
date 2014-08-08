@@ -22,6 +22,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -142,24 +143,29 @@ public class MenuController {
     }
 
     @RequestMapping(value = "/searchDish")
-    public String searchDish(@RequestParam(required = false) String keyWord, @RequestParam(required = false) int keywordId, Model model) {
+    public String searchDish(@RequestParam(required = false) String keyWord, @RequestParam(required = false) Integer keywordId, Model model) {
 
-        String searchKeyword = null;
-        //检查是否从已有的关键词列表里面选取的，否则直接查库
-        if (keywordId > 0) {
-            Map<String, Object> keywordMap = menuDao.getKeywordById(keywordId);
-            if (keywordMap != null) {
-                searchKeyword = keywordMap.get("keyword").toString();
+        try{
+            String searchKeyword = null;
+            //检查是否从已有的关键词列表里面选取的，否则直接查库
+            if (keywordId != null && keywordId > 0) {
+                Map<String, Object> keywordMap = menuDao.getKeywordById(keywordId);
+                if (keywordMap != null) {
+                    searchKeyword = keywordMap.get("keyword").toString();
+                }
             }
-        }
 
-        if (!StringUtils.isEmpty(keyWord) && StringUtils.isEmpty(searchKeyword)) {
-            searchKeyword = keyWord;
-        }
+            if (!StringUtils.isEmpty(keyWord) && StringUtils.isEmpty(searchKeyword)) {
+                //searchKeyword = new String(keyWord.getBytes("iso-8859-1"),"utf-8");
+                searchKeyword = keyWord;
+            }
 
-        model.addAttribute("dishes", menuDao.searchDish(searchKeyword));
-        model.addAttribute("searchKeyword", searchKeyword);
-        return "menu/customer-category";
+            model.addAttribute("dishes", menuDao.searchDish(searchKeyword));
+            model.addAttribute("searchKeyword", searchKeyword);
+            return "menu/customer-category";
+        }catch(Exception e){
+            return "";
+        }
     }
 
     @RequestMapping(value = "/searchKeyword")
