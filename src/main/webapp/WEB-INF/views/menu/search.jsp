@@ -58,7 +58,7 @@
         }
 
         .navbar-header{
-            float:left;
+            width:100%;
         }
 
         .container{
@@ -112,49 +112,27 @@
 <div class="container">
     <nav class="navbar navbar-default navbar-orange" role="navigation">
         <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header navbar-orange">
-                <div class="form-group has-feedback input-group search-input-container">
-                    <span class="input-group-addon">
-                        <a href="<s:url value="/menu/customer/category"></s:url> ">
-                            <i class="fa fa-chevron-left"></i>
-                        </a>
-                    </span>
-                    <input style="padding-left:10px;" type="text" class="form-control" id="search-input" placeholder="搜索">
-                    <span class="input-group-btn">
-                        <button class="btn search-btn" id = "search-btn" type="button">搜索</button>
-                    </span>
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header navbar-orange">
+                        <div class="form-group has-feedback input-group search-input-container">
+                            <span class="input-group-addon">
+                                <a href="<s:url value="/menu/customer/category"></s:url> ">
+                                    <i class="fa fa-chevron-left"></i>
+                                </a>
+                            </span>
+                            <input style="padding-left:10px;" type="text" class="form-control" id="search-input" placeholder="搜索">
+                            <span class="input-group-btn">
+                                <button class="btn search-btn" id = "search-btn" type="button">搜索</button>
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div><!-- /.container-fluid -->
     </nav>
 
-
-    <nav class="navbar navbar-inverse navbar-fixed-bottom hide" role="navigation" id="nav_order_summary">
-        <!-- We use the fluid option here to avoid overriding the fixed width of a normal container within the narrow content columns. -->
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="pull-left">
-                        <p class="navbar-text" id="billSummaryTrigger" data-html="true" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
-                            <i class="fa fa-cutlery"></i>&nbsp;&nbsp;<strong id="summary_info_number"></strong>&nbsp;&nbsp;例&nbsp;&nbsp;
-                            <i class="fa fa-rmb"></i>&nbsp;&nbsp;<strong id="summary_info_fee"></strong>
-                        </p>
-
-                    </div>
-                    <div class="pull-right">
-                        <%--<form action="<s:url value="/bill/view"></s:url>" method="post" enctype="application/x-www-form-urlencoded">--%>
-                            <%--<input type="hidden" name="param" id="billInfoParam"/>--%>
-                            <%--<button id="submitBillBtn" class="btn btn-danger navbar-btn">去下单</button>--%>
-                        <%--</form>--%>
-                        <a href="<s:url value="/bill/view"></s:url>" class="btn btn-danger navbar-btn">去下单</a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </nav>
 
 
     <div class="row" id="keyword-list" >

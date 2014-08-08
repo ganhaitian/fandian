@@ -37,7 +37,7 @@ public class MenuDao extends JdbcTemplate {
 
     public List<DishCategory> getRootDishCategories() {
         List<DishCategory> dishCategories = super.query(
-            "select * from dish_category where parent_id=0",
+            "select * from dish_category where parent_id=0 order by display_order",
             new BeanPropertyRowMapper<DishCategory>(DishCategory.class)
         );
 
@@ -56,7 +56,7 @@ public class MenuDao extends JdbcTemplate {
 
     public List<DishCategory> getChildDishCategories(int categoryId) {
         List<DishCategory> dishCategories = super.query(
-            "select * from dish_category where parent_id=?",
+            "select * from dish_category where parent_id=? order by display_order",
             new BeanPropertyRowMapper<DishCategory>(DishCategory.class), categoryId
         );
         for (DishCategory category : dishCategories) {
