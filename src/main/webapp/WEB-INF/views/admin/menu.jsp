@@ -205,6 +205,7 @@
                                     <th style="text-align: center">星级</th>
                                     <th style="text-align: left">销售量</th>
                                     <th>详细</th>
+                                    <th>单位</th>
                                     <th style="text-align:center;">操作</th>
                                 </tr>
                                 </thead>
@@ -259,6 +260,14 @@
                     <div class="form-group">
                         <label>详细</label>
                         <input name="detail" class="form-control" data-dv="">
+                    </div>
+                    <div class="form-group">
+                        <label>单位</label>
+                        <select name="unitId" data-dv="1">
+                            <c:forEach items="${units}" var="unit">
+                                <option value = "${unit.id}">${unit.name}</option>
+                            </c:forEach>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>图片</label>
@@ -510,7 +519,11 @@
                 { "data": "sales",
                   "className":"left-td"
                 },
-                { "data": "detail" },
+                { "data": "detail"
+                },
+                {
+                    "data": "unitName"
+                },
                 {
                    className:"center-td",
                    "render": function ( data, type, full, meta ) {

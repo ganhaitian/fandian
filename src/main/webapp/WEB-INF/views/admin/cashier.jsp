@@ -90,6 +90,10 @@
             font-size: 85%;
         }
 
+        div.toolbar{
+            float:left;
+        }
+
     </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -346,11 +350,23 @@ $(document).ready(function () {
     var dt = $("#bill_table").DataTable({
         "oLanguage":defaultDataTableOLanguage,
         ajax: {
-            "url": "<c:url value="/bill/getAllBills"></c:url>",
+            "url": "<c:url value="/bill/getBills"></c:url>",
             headers: {
                 Accept: "application/json; charset=utf-8"
             },
-            async: false
+            async: false,
+            "data":function(d){
+                var areaVal = $("select[name=area]").val();
+                if(!areaVal)
+                    areaVal = 0;
+
+                var tableVal = $("select[name=tables]").val();
+                if(!tableVal)
+                    tableVal = 0;
+
+                d.area = areaVal;
+                d.table = tableVal;
+            }
         },
         "columns": [
             {
@@ -446,7 +462,48 @@ $(document).ready(function () {
         "order": [
             [4, 'desc']
         ],
-        "pageLength": 25
+        "pageLength": 25,
+        "dom": '<"toolbar">frtip'
+    });
+
+    $("div.toolbar").html(
+        '区号: ' +
+            '<select name = "area" class="form-control" >' +
+                '<option value = "0">全部</option>' +
+                '<option value = "3">3区</option>' +
+                '<option value = "5">5区</option>' +
+                '<option value = "6">包厢</option>' +
+            '</select>   ' +
+        '桌号: '+
+            '<select name = "tables" class="form-control" >' +
+                '<option value = "0">全部</option>' +
+            '</select>'
+    );
+
+    $("select[name=area]").change(function(){
+        //每次区号一变，桌号就重置下
+        $("select[name=tables]").html('');
+       var newAreaVal = $(this).val();
+        $("select[name=tables]").append('<option value = "0">全部</option>');
+       if(newAreaVal == 3 || newAreaVal == 5){
+           for(var i = 1 ; i <= 23 ; i++){
+               if( i % 10 == 4 || i % 10 == 7)
+                continue;
+               $("select[name=tables]").append("<option value = '"+i+"' >"+i+"桌</option>")
+           }
+       }else if(newAreaVal == 6){
+           for(var i = 1 ; i <= 33 ; i++){
+               if( i % 10 == 4 || i % 10 == 7)
+                   continue;
+               $("select[name=tables]").append("<option value = '"+i+"' >"+i+"桌</option>")
+           }
+       }
+       $("select[name=tables]").val(0);
+       dt.ajax.reload();
+    });
+
+    $("select[name=tables]").change(function(){
+        dt.ajax.reload();
     });
 
     var currentBillId = null;

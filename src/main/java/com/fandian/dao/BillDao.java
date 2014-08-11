@@ -47,9 +47,26 @@ public class BillDao extends JdbcTemplate {
         }
     }
 
-    public Bill getBillByTableNo(int tableNo) {
+    public Bill getBillByTableNo(int tableNo,int status) {
         try {
-            return queryForObject("select * from bill where table_no = ? and status=0", BeanPropertyRowMapper.newInstance(Bill.class), tableNo);
+            return queryForObject("select * from bill where table_no = ? and status=?", BeanPropertyRowMapper.newInstance(Bill.class),
+                tableNo,status);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<Bill> getBillByTableNo(int tableNo) {
+        try {
+            return query("select * from bill where table_no = ? ", BeanPropertyRowMapper.newInstance(Bill.class),tableNo);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<Bill> getBillByArea(int area){
+        try {
+            return query("select * from bill where table_area = ?", BeanPropertyRowMapper.newInstance(Bill.class), area);
         } catch (Exception e) {
             return null;
         }

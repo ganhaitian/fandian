@@ -37,6 +37,7 @@ public class AdminController {
     @RequestMapping("/menu")
     public String getMenuView(Model model){
         model.addAttribute("categories", menuDao.getDishCategories());
+        model.addAttribute("units", menuDao.getAllUnits());
         return "admin/menu";
     }
 

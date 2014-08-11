@@ -106,6 +106,24 @@ public class BillController {
         result.put("data",billDao.getAllBills());
         return jsonUtil.transToJsonStrByGson(result);
     }
+
+    @RequestMapping("/getBills")
+    @ResponseBody
+    public String getBills(@RequestParam int area,@RequestParam int table){
+        Map<String,Object> result = new HashMap<String,Object>();
+        if(area == 0){
+            result.put("data",billDao.getAllBills());
+        }else{
+            if(table != 0){
+                String tableNo = "" + area + (table < 10 ? "0" : "") + table;
+                result.put("data",billDao.getBillByTableNo(Integer.parseInt(tableNo)));
+            }else{
+                result.put("data",billDao.getBillByArea(area));
+            }
+        }
+        return jsonUtil.transToJsonStrByGson(result);
+    }
+
     @Secured(value={"ROLE_WAITOR","ROLE_MANAGER"})
     @RequestMapping("/desk/active")
     public String getActiveDesk(Model model){
@@ -162,7 +180,7 @@ public class BillController {
                 model.addAttribute("isCustomer",true);
 
             }else if(tableNo != null){
-                existedBill = billDao.getBillByTableNo((Integer.parseInt(tableNo)));
+                existedBill = billDao.getBillByTableNo((Integer.parseInt(tableNo)),0);
                 model.addAttribute("isCustomer",false);
             }else{
 

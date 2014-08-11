@@ -169,4 +169,8 @@ public class MenuDao extends JdbcTemplate {
         }
     }
 
+    public List<Map<String,Object>> getAllUnits(){
+        return query("select * from unit",new ColumnMapRowMapper());
+    }
+
 }
