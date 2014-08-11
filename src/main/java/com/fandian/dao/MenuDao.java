@@ -82,7 +82,7 @@ public class MenuDao extends JdbcTemplate {
     }
 
     public void deleteDish(int dishId){
-        Dish dish = queryForObject("select * from dish where id="+dishId, new BeanPropertyRowMapper<Dish>(Dish.class));
+        Dish dish = queryForObject("select * from dish where id=" + dishId, new BeanPropertyRowMapper<Dish>(Dish.class));
         if (dish != null){
             updateDishCategoryDishCount(dish.getCategoryId());
         }
@@ -90,17 +90,23 @@ public class MenuDao extends JdbcTemplate {
     }
 
     public int insertDish(final Dish dish){
+
+        final Map<String,Object> unit = this.getUnit(dish.getUnitId());
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         update(new PreparedStatementCreator() {
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 
                 PreparedStatement ps = connection.prepareStatement(
-                    "insert into dish (name,price,stars,detail,category_id) values(?,?,?,?,?) ", Statement.RETURN_GENERATED_KEYS);
+                    "insert into dish (name,price,stars,detail,category_id,weight_code,unit_id,unit_name) values(?,?,?,?,?,?,?,?) ", Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, dish.getName());
                 ps.setInt(2, dish.getPrice());
                 ps.setInt(3, dish.getStars());
                 ps.setString(4,dish.getDetail());
                 ps.setInt(5,dish.getCategoryId());
+                ps.setString(6,dish.getWeightCode());
+                ps.setInt(7,dish.getUnitId());
+                ps.setString(8,unit.get("name").toString());
 
                 return ps;
             }
@@ -109,6 +115,10 @@ public class MenuDao extends JdbcTemplate {
         updateDishCategoryDishCount(dish.getCategoryId());
 
         return keyHolder.getKey().intValue();
+    }
+
+    public Map<String,Object> getUnit(int unitId){
+        return queryForObject("select * from unit where id = ?",new ColumnMapRowMapper(),unitId);
     }
 
     /**

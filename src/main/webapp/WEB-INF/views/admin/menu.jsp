@@ -120,6 +120,10 @@
            border:1px solid;
         }
 
+        p.star{
+            margin:0px;
+        }
+
     </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -526,7 +530,7 @@
                 { "data": "stars",
                   className:"center-td",
                   "render":function(data){
-                      var starHtml = "<p class='text-warning'>";
+                      var starHtml = "<p class='text-warning star'>";
                       for(var i = 0;i < data;i++){
                           starHtml += "<i class='fa fa-star'></i>";
                       }
@@ -551,8 +555,8 @@
                 {
                    className:"center-td",
                    "render": function ( data, type, full, meta ) {
-                    return '<button name="edit-dish" data-toggle="modal" data-target="#editDishModal" class="btn btn-sm btn-primary">修改</button>  '+
-                           '<button name="del-dish" data-toggle="modal" data-target="#confirmDelModal" class="btn btn-sm btn-danger">删除</button>';
+                    return '<button name="edit-dish" data-toggle="modal" data-target="#editDishModal" class="btn btn-xs btn-primary">修改</button>  '+
+                           '<button name="del-dish" data-toggle="modal" data-target="#confirmDelModal" class="btn btn-xs btn-danger">删除</button>';
                 }}
             ],
             "ajax":{
@@ -590,6 +594,7 @@
                 dt.ajax.reload(function(json){
                     $('#menu_panel div[class^="ol_loading"]').css('display','none');
                 });
+
                 $(this).parents("ul").find("li.active a").each(function(){
                    if($(this).data("categoryid") != categoryId)
                         $(this).parent().removeClass("active");
@@ -621,6 +626,8 @@
             $("#editDishModal input,#editDishModal select").each(function(index,input){
                 $(input).val($(input).data("dv"));
             });
+
+            tasteSelect.select2("val",null);
 
         });
 
@@ -756,6 +763,8 @@
             // Get the BootstrapValidator instance
             var bv = $form.data('bootstrapValidator');
 
+
+
            /* var params = {};
             $("#editDishModal input,#editDishModal select").each(function(index,input){
                 if($(input).val() == "")
@@ -764,6 +773,14 @@
             });
             params["categoryId"] = $(".menu-list li.active a").data("categoryid");*/
             var categoryId = $(".menu-list li.active a").data("categoryid");
+            var params = {"categoryId":categoryId,"picEdited":picEdited};
+
+            var tasteList = tasteSelect.select2("val");
+
+            $.each(tasteList,function(index,taste){
+                params["tasteList["+index+"]"] = parseInt(taste);
+            });
+
             $("#editDishForm").ajaxSubmit({
                 url:"<%=realPath %>/menu/updateDish",
                 dataType:"json",
@@ -772,7 +789,7 @@
                 headers:{
                     Accept : "application/json; charset=utf-8"
                 },
-                data: {"categoryId":categoryId,"picEdited":picEdited},
+                data:params,
                 beforeSerialize:function($form,options){
                     var picInput = $form.find("input[name=pic]")
                     if(picEdited == 0)
@@ -799,7 +816,7 @@
 
         });
 
-        $("select[name=taste]").select2({
+        var tasteSelect = $("select[name=taste]").select2({
 
         });
 

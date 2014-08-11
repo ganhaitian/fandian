@@ -1,6 +1,7 @@
 package com.fandian.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by gan on 14-7-21.
@@ -31,12 +32,25 @@ public class Dish implements Serializable{
 
     private String weightCode;
 
+    private List<Integer> tasteList;
+
+    public List<Integer> getTasteList() {
+        return tasteList;
+    }
+
+    public void setTasteList(List<Integer> tasteList) {
+        this.tasteList = tasteList;
+    }
+
     public String getWeightCode() {
         return weightCode;
     }
 
     public void setWeightCode(String weightCode) {
-        this.weightCode = weightCode;
+        if(weightCode == null)
+            this.weightCode = "none";
+        else
+            this.weightCode = weightCode;
     }
 
     public int getUnitId() {
