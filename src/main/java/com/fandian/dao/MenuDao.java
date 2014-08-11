@@ -173,4 +173,16 @@ public class MenuDao extends JdbcTemplate {
         return query("select * from unit",new ColumnMapRowMapper());
     }
 
+    public List<Map<String,Object>> getAllTastes(){
+        return query("select * from taste",new ColumnMapRowMapper());
+    }
+
+    public List<Map<String,Object>> getAllWeights(){
+        return query("select distinct code from weight",new ColumnMapRowMapper());
+    }
+
+    public List<String> getSubWeight(String weightCode){
+        return queryForList("select name from weight where code = ?",String.class,weightCode);
+    }
+
 }

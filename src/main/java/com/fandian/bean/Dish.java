@@ -29,6 +29,16 @@ public class Dish implements Serializable{
 
     private String unitName;
 
+    private String weightCode;
+
+    public String getWeightCode() {
+        return weightCode;
+    }
+
+    public void setWeightCode(String weightCode) {
+        this.weightCode = weightCode;
+    }
+
     public int getUnitId() {
         return unitId;
     }

@@ -37,6 +37,8 @@
 
     <link href="<%=realPath %>/resources/css/plugins/jquery.dataTables.min.css" rel="stylesheet">
     <link href="<%=realPath %>/resources/css/basic.css" rel="stylesheet">
+    <link href="<%=realPath %>/resources/css/plugins/select2/select2.css" rel="stylesheet">
+    <link href="<%=realPath %>/resources/css/plugins/select2/select2-bootstrap.css" rel="stylesheet">
 
     <style type="text/css">
 
@@ -206,6 +208,7 @@
                                     <th style="text-align: left">销售量</th>
                                     <th>详细</th>
                                     <th>单位</th>
+                                    <th>份量</th>
                                     <th style="text-align:center;">操作</th>
                                 </tr>
                                 </thead>
@@ -263,9 +266,26 @@
                     </div>
                     <div class="form-group">
                         <label>单位</label>
-                        <select name="unitId" data-dv="1">
+                        <select class="form-control" name="unitId" data-dv="1">
                             <c:forEach items="${units}" var="unit">
                                 <option value = "${unit.id}">${unit.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>口味</label>
+                        <select multiple class="form-control" name="taste" data-dv="1">
+                            <c:forEach items="${tastes}" var="taste">
+                                <option value = "${taste.id}">${taste.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>份量</label>
+                        <select class="form-control" name="weightCode" data-dv="1">
+                            <option value = "none">无</option>
+                            <c:forEach items="${weights}" var="weight">
+                                <option value = "${weight.code}">${weight.name}</option>
                             </c:forEach>
                         </select>
                     </div>
@@ -404,6 +424,7 @@
 <script src="<%=realPath %>/resources/js/fandian.js"></script>
 <script src="<%=realPath %>/resources/js/plugins/validator/bootstrapValidator.js"></script>
 <script src="<%=realPath %>/resources/js/plugins/form/jquery.form.min.js"></script>
+<script src="<%=realPath %>/resources/js/plugins/select2/select2.min.js"></script>
 
 <script>
 
@@ -523,6 +544,9 @@
                 },
                 {
                     "data": "unitName"
+                },
+                {
+                    "data": "weightCode"
                 },
                 {
                    className:"center-td",
@@ -772,6 +796,10 @@
 
             //关闭窗口
             $("#editDishModal button.close").trigger('click');
+
+        });
+
+        $("select[name=taste]").select2({
 
         });
 

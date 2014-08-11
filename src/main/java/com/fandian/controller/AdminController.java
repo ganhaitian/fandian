@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.inject.Inject;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by gan on 14-7-22.
@@ -38,6 +40,20 @@ public class AdminController {
     public String getMenuView(Model model){
         model.addAttribute("categories", menuDao.getDishCategories());
         model.addAttribute("units", menuDao.getAllUnits());
+        model.addAttribute("tastes",menuDao.getAllTastes());
+
+        //生成
+        List<Map<String,Object>> weights = menuDao.getAllWeights();
+        for(Map<String,Object> weight:weights){
+            String name = weight.get("code").toString() + "(";
+            for(String subweight:menuDao.getSubWeight(weight.get("code").toString())){
+                name += subweight + ",";
+            }
+            name += ")";
+            weight.put("name",name);
+        }
+        model.addAttribute("weights",weights);
+
         return "admin/menu";
     }
 
