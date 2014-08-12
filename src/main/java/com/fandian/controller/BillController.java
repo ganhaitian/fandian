@@ -69,6 +69,10 @@ public class BillController {
         //更新账单结账状态
         float actualFee = bill.getFee() - discount;
         billDao.updateCheckoutInfo(billId, BillStatus.SETTLED.value(), discount, actualFee, paymentType,username);
+
+        //结账成功后，清除缓存
+        OrderDishController.DISH_ORDER_CACHE.remove(bill.getUserName());
+
         return "{\"success\":true}";
     }
 
