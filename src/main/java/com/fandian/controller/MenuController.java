@@ -71,6 +71,16 @@ public class MenuController {
         return jsonUtil.transToJsonStrByGson(result);
     }
 
+    /**
+     * 获得菜对应的口味
+     * @param dishId
+     * @return
+     */
+    @RequestMapping(value = "/getDishTaste")
+    public @ResponseBody String getDishTaste(@RequestParam int dishId){
+        return jsonUtil.transToJsonStrByGson(menuDao.getDishTaste(dishId));
+    }
+
     @Secured("ROLE_MANAGER")
     @RequestMapping(value = "updateDish")
     public

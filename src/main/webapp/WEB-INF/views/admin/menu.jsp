@@ -612,6 +612,20 @@
                 $(input).val(rowData[$(input).attr('name')]);
             });
 
+            $.ajax({
+                url:"<%=realPath %>/menu/getDishTaste",
+                type:"POST",
+                dataType:"json",
+                headers:{
+                    Accept : "application/json; charset=utf-8"
+                },
+                data:{"dishId":rowData.id},
+                async:false,
+                success:function(data){
+                    tasteSelect.select2("val",data);
+                }
+            });
+
             var validator = $("#editDishForm").data('bootstrapValidator');
             validator.resetForm();
         });

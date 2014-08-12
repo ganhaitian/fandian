@@ -9,11 +9,14 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -77,8 +80,17 @@ public class MenuDao extends JdbcTemplate {
     }
 
     public void updateDish(Dish dish) {
-        update("update dish set name = ?,price = ?,stars = ?,detail = ? where id = ?",
-            dish.getName(), dish.getPrice(), dish.getStars(), dish.getDetail(), dish.getId());
+        //查询单位
+        Map<String,Object> unit = this.getUnit(dish.getUnitId());
+
+        update("update dish set name = ?,price = ?,stars = ?,detail = ?,weight_code = ?,unit_id = ?,unit_name = ? where id = ?",
+            dish.getName(), dish.getPrice(), dish.getStars(), dish.getDetail(),
+            dish.getWeightCode(),dish.getUnitId(),unit.get("name"),dish.getId());
+        //如果菜的口味不为空，则先删除旧的，再插入新的
+        if(!CollectionUtils.isEmpty(dish.getTasteList())){
+            deleteDishTasteMap(dish.getId());
+            insertDishTasteMap(dish.getId(),dish.getTasteList());
+        }
     }
 
     public void deleteDish(int dishId){
@@ -113,8 +125,25 @@ public class MenuDao extends JdbcTemplate {
         }, keyHolder);
 
         updateDishCategoryDishCount(dish.getCategoryId());
+        int dishId = keyHolder.getKey().intValue();
 
-        return keyHolder.getKey().intValue();
+        //如果有口味的话，维护对照表
+        if(!CollectionUtils.isEmpty(dish.getTasteList())){
+            insertDishTasteMap(dishId,dish.getTasteList());
+        }
+
+        return dishId;
+    }
+
+
+    public void insertDishTasteMap(int dishId,List<Integer> tasteList){
+        for(Integer tasteId:tasteList){
+            update("insert into dish_taste (dish_id,taste_id) values(?,?)",dishId,tasteId);
+        }
+    }
+
+    public void deleteDishTasteMap(int dishId){
+        update("delete from dish_taste where dish_id = ?",dishId);
     }
 
     public Map<String,Object> getUnit(int unitId){
@@ -195,4 +224,11 @@ public class MenuDao extends JdbcTemplate {
         return queryForList("select name from weight where code = ?",String.class,weightCode);
     }
 
+    public List<Integer> getDishTaste(int dishId) {
+        try{
+            return queryForList("select taste_id from dish_taste where dish_id = ? ",Integer.class,dishId);
+        }catch (Exception e){
+            return Collections.emptyList();
+        }
+    }
 }
