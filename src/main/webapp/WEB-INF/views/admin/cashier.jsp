@@ -518,24 +518,24 @@ $(document).ready(function () {
         });
     });
 
-    $("button[name='confirmCheckout']").each(function () {
-        var oldConfirmCheckHandler = $(this).onclick;
-        $(this).onclick = null;
+
+    function attackConfirmCheckoutBtnEvent(){
+
+    }
+
+    $(document).on('click',"button[name='confirmCheckout']",function(){
         //var fee = $(this).parent("td").siblings("td[name=fee]").html().substring(2);
         var rowData = dt.row($(this).closest("tr")).data();
         var fee = rowData.fee;
 
-        $(this).click(function () {
-            var tableNo = rowData.tableNo;
-            $("div#confirmCheckModal div.modal-body p.confirm-msg").html(tableNo + "号桌确认结账?");
-            currentBillId = rowData.id;
-            //折扣初始化为1.0
-            var a = $("div#confirmCheckModal div.modal-body input[name=discount]").val(0);
-            a.data("originfee", fee);
-            $("div#confirmCheckModal div.modal-body div.checkout-msg").html("<strong>实付金额:" + fee + "元</strong>");
-        });
+        var tableNo = rowData.tableNo;
+        $("div#confirmCheckModal div.modal-body p.confirm-msg").html(tableNo + "号桌确认结账?");
+        currentBillId = rowData.id;
+        //折扣初始化为1.0
+        var a = $("div#confirmCheckModal div.modal-body input[name=discount]").val(0);
+        a.data("originfee", fee);
+        $("div#confirmCheckModal div.modal-body div.checkout-msg").html("<strong>实付金额:" + fee + "元</strong>");
 
-        $(this).click(oldConfirmCheckHandler);
     });
 
     $("button[name='finalConfirmLosses']").click(function(){

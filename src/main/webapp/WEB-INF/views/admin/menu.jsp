@@ -124,6 +124,10 @@
             margin:0px;
         }
 
+        td .label {
+            font-size: 85%;
+        }
+
     </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -207,12 +211,13 @@
                                     <th>#</th>
                                     <th style="text-align: center;">圖片</th>
                                     <th>菜名</th>
+                                    <th style="text-align: center">状态</th>
                                     <th style="text-align: right">价格</th>
                                     <th style="text-align: center">星级</th>
                                     <th style="text-align: left">销售量</th>
                                     <th>详细</th>
-                                    <th>单位</th>
-                                    <th>份量</th>
+                                    <th style="text-align: center">单位</th>
+                                    <th style="text-align: center">份量</th>
                                     <th style="text-align:center;">操作</th>
                                 </tr>
                                 </thead>
@@ -265,8 +270,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>详细</label>
-                        <input name="detail" class="form-control" data-dv="">
+                        <label>状态</label>
+                        <select name="status" class="form-control" data-dv="0">
+                            <option value = "0">普通</option>
+                            <option value = "1">估清</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>单位</label>
@@ -348,7 +356,7 @@
                 <h4 class="modal-title" id="addCategoryModalLabel">增加分类</h4>
             </div>
             <div class="modal-body">
-                <form role="form">
+                <form role="form" id="updateCategoryForm">
                     <div class="form-group" style="display: none">
                         <label>ID</label>
                         <input data-dv=0 name="id" class="form-control">
@@ -366,13 +374,13 @@
                             </c:forEach>
                         </select>
                     </div>
+
+                    <div class="form-group" style="padding:15px;text-align:right;border-top: 1px solid #e5e5e5;">
+                        <button name="confirmAddCategory" type="submit" class="btn btn-primary">确认
+                        </button>
+                    </div>
+
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button name="confirmAddCategory" type="button" data-dismiss="modal"
-                        class="btn btn-primary">确认
-                </button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -520,6 +528,17 @@
                 },
                 {
                     "data": "name"
+                },{
+                    "data": "status",
+                    "width": 35,
+                    className:"center-td",
+                    "render": function (data, type, full, meta) {
+                        if (data == 0) {
+                            return '<span class="label label-success">普通</span>';
+                        } else if (data == 1) {
+                            return '<span class="label label-danger">沽清</span>';
+                        }
+                    }
                 },
                 { "data": "price",
                   "className":"right-td",
@@ -547,10 +566,13 @@
                 { "data": "detail"
                 },
                 {
-                    "data": "unitName"
+                    "data": "unitName",
+                    className:"center-td",
+                    "width": 35
                 },
                 {
-                    "data": "weightCode"
+                    "data": "weightCode",
+                    className:"center-td"
                 },
                 {
                    className:"center-td",
@@ -669,7 +691,7 @@
             $("#confirmAddCategory select").val(parentId);
         });
 
-        $("button[name=confirmAddCategory]").click(function(){
+        /*$("button[name=confirmAddCategory]").click(function(){
             var categoryId = $("#confirmAddCategory input[name=id]").val();
             if(categoryId == "")
                 categoryId = 0;
@@ -688,7 +710,7 @@
                        location.reload();
                }
             });
-        });
+        });*/
 
         $("button[name=confirmCategoryDel]").click(function(){
             var categoryId = $("div.menu-list ul li.active a").data("categoryid");
@@ -727,6 +749,53 @@
 
         $(document).on("change","#editDishForm input[name=pic]",function(){
             picEdited = 1;
+        });
+
+        var updateCategoryValidator = $("#updateCategoryForm").bootstrapValidator({
+            excluded:[':disabled'],
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: '分类名非空'
+                        }
+                    }
+                }
+            }
+        }).on('success.form.bv', function(e) {
+
+            // Get the form instance
+            var $form = $(e.target);
+
+            var categoryId = $("input[name=id]",$form).val();
+            if(categoryId == "")
+                categoryId = 0;
+            var categoryName = $("input[name=name]",$form).val();
+            var parentCategoryId = $("select",$form).val();
+
+            $.ajax({
+                url:"<%=realPath %>/menu/updateCategory",
+                type:"POST",
+                dataType:"json",
+                headers:{
+                    Accept : "application/json; charset=utf-8"
+                },
+                async:false,
+                data:{"param":JSON.stringify({"id":categoryId,"name":categoryName,"parentId":parentCategoryId})},
+                success:function(result){
+                    if(result.success)
+                        location.reload();
+                }
+            });
+
+            //关闭窗口
+            $("#confirmAddCategory button.close").trigger('click');
+
         });
 
         var editDishFormValidator = $("#editDishForm").bootstrapValidator({

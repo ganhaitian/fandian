@@ -83,9 +83,9 @@ public class MenuDao extends JdbcTemplate {
         //查询单位
         Map<String,Object> unit = this.getUnit(dish.getUnitId());
 
-        update("update dish set name = ?,price = ?,stars = ?,detail = ?,weight_code = ?,unit_id = ?,unit_name = ? where id = ?",
+        update("update dish set name = ?,price = ?,stars = ?,detail = ?,weight_code = ?,unit_id = ?,unit_name = ?,status=? where id = ?",
             dish.getName(), dish.getPrice(), dish.getStars(), dish.getDetail(),
-            dish.getWeightCode(),dish.getUnitId(),unit.get("name"),dish.getId());
+            dish.getWeightCode(),dish.getUnitId(),unit.get("name"),dish.getStatus(),dish.getId());
         //如果菜的口味不为空，则先删除旧的，再插入新的
         if(!CollectionUtils.isEmpty(dish.getTasteList())){
             deleteDishTasteMap(dish.getId());
@@ -110,7 +110,9 @@ public class MenuDao extends JdbcTemplate {
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 
                 PreparedStatement ps = connection.prepareStatement(
-                    "insert into dish (name,price,stars,detail,category_id,weight_code,unit_id,unit_name) values(?,?,?,?,?,?,?,?) ", Statement.RETURN_GENERATED_KEYS);
+                    "insert into dish (name,price,stars,detail,category_id,weight_code,unit_id,unit_name,status) values(?,?,?,?,?,?,?,?,?) ",
+                    Statement.RETURN_GENERATED_KEYS);
+
                 ps.setString(1, dish.getName());
                 ps.setInt(2, dish.getPrice());
                 ps.setInt(3, dish.getStars());
@@ -119,6 +121,7 @@ public class MenuDao extends JdbcTemplate {
                 ps.setString(6,dish.getWeightCode());
                 ps.setInt(7,dish.getUnitId());
                 ps.setString(8,unit.get("name").toString());
+                ps.setInt(9,dish.getStatus());
 
                 return ps;
             }

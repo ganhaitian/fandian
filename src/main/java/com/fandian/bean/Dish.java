@@ -14,6 +14,8 @@ public class Dish implements Serializable{
 
     private String name;
 
+    private int status;
+
     private int price;
 
     private String detail;
@@ -31,6 +33,14 @@ public class Dish implements Serializable{
     private String unitName;
 
     private String weightCode;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     private List<Integer> tasteList;
 
