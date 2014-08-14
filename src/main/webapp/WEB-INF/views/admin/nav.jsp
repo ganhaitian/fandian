@@ -15,7 +15,7 @@
         <a class="" href="<%=realPath%>/admin/cashier"><i class="fa fa-dollar fa-fw"></i> 收银</a>
     </li>
     <li name="bcustomer">
-        <a class="" href="<%=realPath%>/admin/bcustomer"><i class="fa fa-male fa-fw"></i> 大客户</a>
+        <a class="" href="<%=realPath%>/admin/bcustomer"><i class="fa fa-gavel fa-fw"></i> 大客户</a>
     </li>
     <li name="menu">
         <a class="" href="<%=realPath%>/admin/menu"><i class="fa fa-book fa-fw"></i> 菜单</a>
