@@ -180,6 +180,56 @@
     </s:if>
 
     <s:if test="${fn:length(dishes) > 0}">
+        <div class="dish-detail-row hide" id="dish-detail-panel">
+
+            <div class="dish-detail-container">
+
+                    <div class="" style="background-color: white;">
+                        <strong id="detail_dishName">红焖羊蹄</strong>
+                        <button type="button" class="close pull-right" id="dish-detail-btn-close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <div class="dish-detail-divider"></div>
+                        <small>口味</small>
+
+
+                        <div class="btn-group" data-toggle="buttons" id="detail_tastes">
+
+                        </div>
+
+                        <div class="dish-detail-divider"></div>
+                        <small>份量</small>
+                        <div class="btn-group" data-toggle="buttons" id="detail_weights">
+
+                        </div>
+
+                        <div class="dish-detail-divider"></div>
+                        <small>数量</small>
+                        <div class="row">
+                            <div class="col-xs-10">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default btn-sm btn-minus-order-num" type="button">&nbsp;<i class="fa fa-minus"></i>&nbsp;</button>
+                                    </span>
+                                    <input class="form-control input-sm" type="text" id="detail-order-num" value="1"/>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default btn-sm btn-plus-order-num" type="button">&nbsp;<i class="fa fa-plus"></i>&nbsp;</button>
+                                    </span>
+                                    <span class="input-group-addon" id="detail-unit-name" style="background-color: #ffffff; border: none; font-weight:bolder;">份</span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="dish-detail-divider"></div>
+
+                        <div class="row">
+                            <div class="text-center">
+                                <button class="button btn-primary btn-sm" id="btn-dish-order-sure"><i class="fa fa-shopping-cart"></i> 确定</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+        </div>
         <div class="row">
 
             <s:forEach items="${dishes}" var="dish">
@@ -252,6 +302,7 @@
 </div>
 <script type="application/javascript">
     Holder.add_theme("bright", { background: "#a6a5a3", foreground: "white", size: 12 });
+    var order_dish_num_step = 1;
     function updateUserOrderDetails(){
         $.ajax({
             url:"<s:url value="/order/customer/getDishes"></s:url>",
@@ -306,6 +357,68 @@
         });
     }
 
+    function initTastePanel(tastes){
+
+        if ($.isArray(tastes) && tastes.length > 0){
+            $('#detail_tastes').html("");
+            $.each(tastes,function(i,v){
+                if(i==0){
+                    $("<label class=\"btn btn-default btn-sm active\"><input type=\"radio\" name=\"taste\" value=\""+ v.id+"\">"+ v.name+"</label>").appendTo($('#detail_tastes'));
+                }else{
+                    $("<label class=\"btn btn-default btn-sm\"><input type=\"radio\" name=\"taste\" value=\""+ v.id+"\">"+ v.name+"</label>").appendTo($('#detail_tastes'));
+                }
+
+            });
+        }else{
+            $('#detail_tastes').html("<label class=\"btn btn-default btn-sm active\"><input type=\"radio\" name=\"taste\" value=\"0\" checked>默认</label>");
+        }
+    }
+
+    function initWeightPanel(weights){
+
+        if ($.isArray(weights) && weights.length > 0){
+            $('#detail_weights').html("");
+            $.each(weights,function(i,v){
+                if (i == 0){
+                    $("<label class=\"btn btn-default btn-sm active\"><input type=\"radio\" name=\"weight\" value=\""+ v.id+"\">"+ v.name+"</label>").appendTo($('#detail_weights'));
+                }else{
+                    $("<label class=\"btn btn-default btn-sm\"><input type=\"radio\" name=\"weight\" value=\""+ v.id+"\">"+ v.name+"</label>").appendTo($('#detail_weights'));
+                }
+
+            });
+        }else{
+            $('#detail_weights').html("<label class=\"btn btn-default btn-sm active\"><input type=\"radio\" name=\"weight\" value=\"0\" checked>默认</label>");
+        }
+    }
+
+    function showDishMetaPanel(){
+        $('#dish-detail-panel').removeClass('hide');
+    }
+
+    function hideDishMetaPanel(){
+        $('#dish-detail-panel').addClass('hide');
+    }
+
+    function fetchDishMetaInfo(dishId){
+        $.ajax({
+            url:"<s:url value="/menu/customer/dish/meta/"></s:url>"+dishId,
+            dataType:"json",
+            headers:{
+                Accept : "application/json; charset=utf-8"
+            },
+            error:function(){
+                alert("对不起，请稍后再试~");
+            },
+            success:function(result){
+
+                initTastePanel(result["taste"]);
+                initWeightPanel(result["weight"]);
+                showDishMetaPanel();
+
+            }
+        });
+    }
+
     $(document).on('focus','#search-input',function(){
         window.location.href = '<s:url value="/menu/search"></s:url>';
     });
@@ -316,26 +429,72 @@
             $("input#search-input").val('${searchKeyword}');
         </c:if>
 
+
+        $('#dish-detail-btn-close').click(function(){
+            $('#dish-detail-panel').addClass('hide');
+        });
+
+        $('.btn-plus-order-num').click(function(){
+            var num = parseFloat($('#detail-order-num').val()) + order_dish_num_step;
+            num = num.toFixed(1);
+            if (order_dish_num_step == 1){
+                num = parseInt(num);
+            }
+            $('#detail-order-num').val(num);
+        });
+
+        $('.btn-minus-order-num').click(function(){
+            var num = parseFloat($('#detail-order-num').val()) - order_dish_num_step;
+            if (num < 0){
+                num = 0;
+            }
+            num = num.toFixed(1);
+            if (order_dish_num_step == 1){
+                num = parseInt(num);
+            }
+            $('#detail-order-num').val(num);
+        });
+
+        //确定按钮
+        $('#btn-dish-order-sure').click(function(){
+            var btn = $(this);
+            $.ajax({
+             url:"<s:url value="/order/customer/addDish"></s:url>",
+             method:'POST',
+             data:{dishId:btn.attr('data-id'),dishName:btn.attr('data-name'),price:btn.attr('data-price'),
+                 tasteId:$("#detail_tastes").find("input:checked").val(),
+                 weightId:$("#detail_weights").find("input:checked").val(),
+                 weightNum:$('#detail-order-num').val()
+             },
+             success:function(data){
+                 updateUserOrderDetails();
+                 $('#'+btn.attr('data-sub-number-id')).text(parseInt($('#'+btn.attr('data-sub-number-id')).text())+1);
+                 if ($('#'+btn.attr('data-sub-number-id')).text()){
+                    btn.siblings('button').removeClass('hide');
+                 }else{
+                    btn.siblings('button').addClass('hide');
+                 }
+             },
+             error:function(){
+                alert('err');
+             }
+             });
+        });
+
         $('.btn-add-to-cart').click(function(e){
             var btn = $(this);
+            $('#detail-order-num').val(1);
+            $('#detail-unit-name').text($(this).attr('data-unit-name'));
+            $('#btn-dish-order-sure').attr("data-id",btn.attr("data-id"));
+            $('#btn-dish-order-sure').attr("data-name",btn.attr("data-name"));
+            $('#btn-dish-order-sure').attr("data-price",btn.attr("data-price"));
+            fetchDishMetaInfo($(this).attr('data-id'));
+            if ($(this).attr('data-unit-id') == '2'){
+                order_dish_num_step = 0.1;
+            }else{
+                order_dish_num_step = 1;
+            }
 
-            $.ajax({
-                url:"<s:url value="/order/customer/addDish"></s:url>",
-                method:'POST',
-                data:{id:btn.attr('data-id'),name:btn.attr('data-name'),price:btn.attr('data-price')},
-                success:function(data){
-                    updateUserOrderDetails();
-                    $('#'+btn.attr('data-sub-number-id')).text(parseInt($('#'+btn.attr('data-sub-number-id')).text())+1);
-                    if ($('#'+btn.attr('data-sub-number-id')).text()){
-                        btn.siblings('button').removeClass('hide');
-                    }else{
-                        btn.siblings('button').addClass('hide');
-                    }
-                },
-                error:function(){
-                    alert('err');
-                }
-            });
 
 
         });

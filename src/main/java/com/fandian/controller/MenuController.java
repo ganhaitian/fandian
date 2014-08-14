@@ -225,6 +225,15 @@ public class MenuController {
         return "menu/customer-category";
     }
 
+    @RequestMapping("/customer/dish/meta/{dishId}")
+    @ResponseBody
+    public String getDishMetaDetails(@PathVariable int dishId) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("taste",menuDao.getDishTastes(dishId));
+        result.put("weight",menuDao.getDishWeights(dishId));
+        return jsonUtil.transToJsonStrByGson(result);
+    }
+
     @RequestMapping("/customer/side")
     public String getCustomerView() {
         return "menu/customer-view";

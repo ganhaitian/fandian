@@ -2,6 +2,8 @@ package com.fandian.dao;
 
 import com.fandian.bean.Dish;
 import com.fandian.bean.DishCategory;
+import com.fandian.bean.Taste;
+import com.fandian.bean.Weight;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -110,15 +112,15 @@ public class MenuDao extends JdbcTemplate {
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 
                 PreparedStatement ps = connection.prepareStatement(
-                    "insert into dish (name,price,stars,detail,category_id,weight_code,unit_id,unit_name) values(?,?,?,?,?,?,?,?) ", Statement.RETURN_GENERATED_KEYS);
+                        "insert into dish (name,price,stars,detail,category_id,weight_code,unit_id,unit_name) values(?,?,?,?,?,?,?,?) ", Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, dish.getName());
                 ps.setInt(2, dish.getPrice());
                 ps.setInt(3, dish.getStars());
-                ps.setString(4,dish.getDetail());
-                ps.setInt(5,dish.getCategoryId());
-                ps.setString(6,dish.getWeightCode());
-                ps.setInt(7,dish.getUnitId());
-                ps.setString(8,unit.get("name").toString());
+                ps.setString(4, dish.getDetail());
+                ps.setInt(5, dish.getCategoryId());
+                ps.setString(6, dish.getWeightCode());
+                ps.setInt(7, dish.getUnitId());
+                ps.setString(8, unit.get("name").toString());
 
                 return ps;
             }
@@ -227,6 +229,22 @@ public class MenuDao extends JdbcTemplate {
     public List<Integer> getDishTaste(int dishId) {
         try{
             return queryForList("select taste_id from dish_taste where dish_id = ? ",Integer.class,dishId);
+        }catch (Exception e){
+            return Collections.emptyList();
+        }
+    }
+
+    public List<Taste> getDishTastes(int dishId){
+        try{
+            return query("select t2.* from dish_taste t1,taste t2 where t1.taste_id=t2.id and t1.dish_id = ? ", new Object[]{dishId}, BeanPropertyRowMapper.newInstance(Taste.class));
+        }catch (Exception e){
+            return Collections.emptyList();
+        }
+    }
+
+    public List<Weight> getDishWeights(int dishId){
+        try{
+            return query("select t2.* from dish t1,weight t2 where t1.weight_code=t2.code and t1.id = ? ", new Object[]{dishId}, BeanPropertyRowMapper.newInstance(Weight.class));
         }catch (Exception e){
             return Collections.emptyList();
         }

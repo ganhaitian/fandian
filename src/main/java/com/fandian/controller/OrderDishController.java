@@ -1,5 +1,6 @@
 package com.fandian.controller;
 
+import com.fandian.bean.BillDetail;
 import com.fandian.bean.Dish;
 import com.fandian.model.DishListOfCustomerView;
 import com.fandian.model.DishOrderInfo;
@@ -34,7 +35,7 @@ public class OrderDishController {
 
     @RequestMapping("/customer/addDish")
     @ResponseBody
-    public String addDish(Dish dish){
+    public String addDish(BillDetail billDetail){
         Map<String,Object> result = new HashMap<String, Object>();
         result.put("success",true);
         try {
