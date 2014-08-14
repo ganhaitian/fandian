@@ -254,4 +254,16 @@ public class MenuDao extends JdbcTemplate {
             return Collections.emptyList();
         }
     }
+
+    public Dish getDish(int id){
+        return super.queryForObject("select * from dish where id=?", new BeanPropertyRowMapper<Dish>(Dish.class), new Object[] {id});
+    }
+
+    public Taste getTaste(int id){
+        return super.queryForObject("select * from taste where id=?", new BeanPropertyRowMapper<Taste>(Taste.class), new Object[] {id});
+    }
+
+    public Weight getWeight(int id){
+        return super.queryForObject("select * from weight where id=?", new BeanPropertyRowMapper<Weight>(Weight.class), new Object[] {id});
+    }
 }

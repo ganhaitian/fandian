@@ -321,17 +321,17 @@
                     result['dishes'] = [];
                 }
 
-                var dishCount = 0, dishFee = 0, popoverHtml = "";
+                var dishFee = 0, popoverHtml = "";
 
                 $.each(result.dishes,function(i,v){
-                    dishCount += v.number;
+
                     dishFee += v.number* v.dish.price;
                     popoverHtml += "<li class=\"list-group-item\"><span class=\"badge\">"+ v.number +"</span>"+ v.dish.name+"</li>";
                     $('#sub_number_' + v.dish.id).text(v.number);
                     $('#sub_number_' + v.dish.id).prev('button').removeClass('hide');
                 });
 
-                $('#summary_info_number').text(dishCount);
+                $('#summary_info_number').text(result.dishes.length);
                 $('#summary_info_fee').text(dishFee);
 
 
@@ -339,7 +339,7 @@
 
                 $('#billSummaryTrigger').popover();
 
-                if (dishCount > 0){
+                if (result.dishes.length > 0){
                     $('#nav_order_summary').removeClass('hide');
 
                     $("body").css({"padding-bottom":"70px"});
@@ -462,13 +462,13 @@
              url:"<s:url value="/order/customer/addDish"></s:url>",
              method:'POST',
              data:{dishId:btn.attr('data-id'),dishName:btn.attr('data-name'),price:btn.attr('data-price'),
-                 tasteId:$("#detail_tastes").find("input:checked").val(),
-                 weightId:$("#detail_weights").find("input:checked").val(),
-                 weightNum:$('#detail-order-num').val()
+                 taste:$("#detail_tastes").find("input:checked").val(),
+                 weight:$("#detail_weights").find("input:checked").val(),
+                 amount:$('#detail-order-num').val()
              },
              success:function(data){
                  updateUserOrderDetails();
-                 $('#'+btn.attr('data-sub-number-id')).text(parseInt($('#'+btn.attr('data-sub-number-id')).text())+1);
+                 hideDishMetaPanel();
                  if ($('#'+btn.attr('data-sub-number-id')).text()){
                     btn.siblings('button').removeClass('hide');
                  }else{

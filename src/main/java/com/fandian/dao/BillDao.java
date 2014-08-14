@@ -82,7 +82,7 @@ public class BillDao extends JdbcTemplate {
                     "insert into bill (table_no,status,fee,user_name,create_time) values(?,?,?,?,?) ", Statement.RETURN_GENERATED_KEYS);
                 ps.setInt(1, bill.getTableNo());
                 ps.setInt(2, bill.getStatus());
-                ps.setInt(3, bill.getFee());
+                ps.setFloat(3, bill.getFee());
                 ps.setString(4, bill.getUserName());
                 //ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
                 ps.setDate(5,new Date(System.currentTimeMillis()));

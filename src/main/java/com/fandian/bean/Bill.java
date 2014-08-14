@@ -15,7 +15,7 @@ public class Bill {
 
     private int status;
 
-    private int fee;
+    private float fee;
 
     private float actualFee;
 
@@ -113,11 +113,11 @@ public class Bill {
         this.billDetails = billDetails;
     }
 
-    public int getFee() {
+    public float getFee() {
         return fee;
     }
 
-    public void setFee(int fee) {
+    public void setFee(float fee) {
         this.fee = fee;
     }
 

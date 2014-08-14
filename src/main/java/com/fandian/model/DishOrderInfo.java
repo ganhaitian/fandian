@@ -1,20 +1,27 @@
 package com.fandian.model;
 
 import com.fandian.bean.Dish;
+import com.fandian.bean.Taste;
+import com.fandian.bean.Weight;
 
 /**
  * Created by zhijieliu on 2014/7/25.
  */
 public class DishOrderInfo {
     private Dish dish;
-    private int number;
+    private Taste taste;
+    private Weight weight;
+    private float number;
+    private float fee;
 
     public DishOrderInfo() {
     }
 
-    public DishOrderInfo(Dish dish, int number) {
-        this.dish = dish;
-        this.number = number;
+    public DishOrderInfo(Dish dish, Taste taste, Weight weight, float number) {
+        setDish(dish);
+        setTaste(taste);
+        setWeight(weight);
+        setNumber(number);
     }
 
     public Dish getDish() {
@@ -25,11 +32,32 @@ public class DishOrderInfo {
         this.dish = dish;
     }
 
-    public int getNumber() {
+    public float getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(float number) {
         this.number = number;
+        if (weight != null && weight.getPrice_relate()){
+            this.fee = this.dish.getPrice()*this.number*this.weight.getPrice_ratio();
+        }else{
+            this.fee = this.dish.getPrice()*this.number;
+        }
+    }
+
+    public Taste getTaste() {
+        return taste;
+    }
+
+    public void setTaste(Taste taste) {
+        this.taste = taste;
+    }
+
+    public Weight getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Weight weight) {
+        this.weight = weight;
     }
 }

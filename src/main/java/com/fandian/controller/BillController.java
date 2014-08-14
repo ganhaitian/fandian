@@ -259,7 +259,7 @@ public class BillController {
                 Dish dish = new Dish();
                 dish.setId(billDetail.getDishId());
                 dish.setName(billDetail.getDishName());
-                dish.setPrice(billDetail.getPrice()/billDetail.getAmount());
+                dish.setPrice(billDetail.getPrice());
                 tmp.setDish(dish);
                 cacheDishOrderInfos.add(tmp);
             }

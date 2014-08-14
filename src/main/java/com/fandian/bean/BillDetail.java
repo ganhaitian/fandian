@@ -19,9 +19,12 @@ public class BillDetail implements Serializable {
 
     private String dishName;
 
-    private int amount;
+    private float amount;
 
     private int price;
+
+    private int weight;
+    private int taste;
 
     public BillDetail(){
 
@@ -59,11 +62,11 @@ public class BillDetail implements Serializable {
         this.dishName = dishName;
     }
 
-    public int getAmount() {
+    public float getAmount() {
         return amount;
     }
 
-    public void setAmount(int amout) {
+    public void setAmount(float amout) {
         this.amount = amout;
     }
 
@@ -73,5 +76,21 @@ public class BillDetail implements Serializable {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public int getTaste() {
+        return taste;
+    }
+
+    public void setTaste(int taste) {
+        this.taste = taste;
     }
 }

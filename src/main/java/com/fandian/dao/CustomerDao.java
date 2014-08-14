@@ -55,7 +55,7 @@ public class CustomerDao extends JdbcTemplate {
         update("update customer set unsettle_fee = 0 where id = ?", customerId);
     }
 
-    public void updateCustomerFee(int customerId, int fee) {
+    public void updateCustomerFee(int customerId, float fee) {
         update("update customer set unsettle_fee = unsettle_fee + ?,last_settle_time = ? where id = ?", fee, new Date(), customerId);
     }
 }

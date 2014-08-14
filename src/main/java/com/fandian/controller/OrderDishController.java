@@ -2,6 +2,9 @@ package com.fandian.controller;
 
 import com.fandian.bean.BillDetail;
 import com.fandian.bean.Dish;
+import com.fandian.bean.Taste;
+import com.fandian.bean.Weight;
+import com.fandian.dao.MenuDao;
 import com.fandian.model.DishListOfCustomerView;
 import com.fandian.model.DishOrderInfo;
 import com.fandian.util.JSONUtil;
@@ -33,6 +36,9 @@ public class OrderDishController {
     @Resource
     private JSONUtil jsonUtil;
 
+    @Resource
+    private MenuDao menuDao;
+
     @RequestMapping("/customer/addDish")
     @ResponseBody
     public String addDish(BillDetail billDetail){
@@ -45,14 +51,18 @@ public class OrderDishController {
             }
             boolean hasDishInfo = false;
             for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(username)){
-                if (dishOrderInfo.getDish().getId() == dish.getId()){
+                if (dishOrderInfo.getDish().getId() == billDetail.getDishId() &&
+                        dishOrderInfo.getTaste().getId() == billDetail.getTaste() &&
+                        dishOrderInfo.getWeight().getId() == billDetail.getWeight()){
                     hasDishInfo = true;
-                    dishOrderInfo.setNumber(dishOrderInfo.getNumber()+1);
+                    dishOrderInfo.setNumber(dishOrderInfo.getNumber()+billDetail.getAmount());
                 }
             }
             if (!hasDishInfo){
-
-                DISH_ORDER_CACHE.get(username).add(new DishOrderInfo(dish,1));
+                Dish dish = menuDao.getDish(billDetail.getDishId());
+                Taste taste = menuDao.getTaste(billDetail.getTaste());
+                Weight weight = menuDao.getWeight(billDetail.getWeight());
+                DISH_ORDER_CACHE.get(username).add(new DishOrderInfo(dish,taste,weight,billDetail.getAmount()));
             }
         } catch (Exception e) {
             logger.error("添加菜品信息至桌单缓存失败", e);
