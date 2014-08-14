@@ -93,8 +93,8 @@ public class BillDao extends JdbcTemplate {
 
         int billId = keyHolder.getKey().intValue();
         for (BillDetail billDetail : bill.getBillDetails()) {
-            update("insert into bill_detail (bill_id,dish_id,dish_name,amount,price) values(?,?,?,?,?)",
-                billId, billDetail.getDishId(), billDetail.getDishName(), billDetail.getAmount(), billDetail.getPrice());
+            update("insert into bill_detail (bill_id,dish_id,dish_name,amount,price,taste,weight) values(?,?,?,?,?,?,?)",
+                billId, billDetail.getDishId(), billDetail.getDishName(), billDetail.getAmount(), billDetail.getPrice(), billDetail.getTaste(), billDetail.getWeight());
         }
     }
 
