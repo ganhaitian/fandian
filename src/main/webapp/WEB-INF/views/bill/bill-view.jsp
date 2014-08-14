@@ -65,17 +65,20 @@
     <div class="row">
         <ul class="list-group">
             <c:forEach items="${list}" var="dish">
-                <li id="dish_${dish.dish.id}" class="list-group-item dish-entry" data-id="${dish.dish.id}" data-name="${dish.dish.name}" data-count="${dish.number}" data-fee="${dish.dish.price*dish.number}">
+                <li id="dish_${dish.dish.id}_${dish.taste.id}_${dish.weight.id}" class="list-group-item dish-entry" data-id="${dish.dish.id}" data-name="${dish.dish.name}" data-count="${dish.number}" data-fee="${dish.dish.price*dish.number}">
                     <span class="dish-name"><h4><i class="fa fa-angle-down"></i>&nbsp;&nbsp;${dish.dish.name}
-                        <span class="pull-right badge" id="dish_number_${dish.dish.id}">${dish.number}</span></h4>
+                        <span class="pull-right badge" id="dish_number_${dish.dish.id}_${dish.taste.id}_${dish.weight.id}">${dish.number}</span></h4>
                     </span>
                     <p class="tools-bar hide">
+                        <strong>口味：</strong>${dish.taste.name}
+                        &nbsp;&nbsp;
+                        <strong>份量：</strong>${dish.weight.name}
                         &nbsp;
-                    <span class="pull-right">
-                        <button class="btn btn-default btn-oper-minus" data-id="${dish.dish.id}" data-price="${dish.dish.price}"><i class="fa fa-minus-circle"></i></button>
-                        <button class="btn btn-default btn-oper-plus" data-id="${dish.dish.id}" data-price="${dish.dish.price}"><i class="fa fa-plus-circle"></i></button>
-                        <button class="btn btn-default  btn-oper-remove" data-id="${dish.dish.id}" data-price="${dish.dish.price}"><i class="fa fa-trash-o"></i></button>
-                    </span>
+                        <span class="pull-right">
+                            <button class="btn btn-default btn-oper-minus" data-id="${dish.dish.id}" data-price="${dish.dish.price}" data-taste="${dish.taste.id}" data-weight="${dish.weight.id}"><i class="fa fa-minus-circle"></i></button>
+                            <button class="btn btn-default btn-oper-plus" data-id="${dish.dish.id}" data-price="${dish.dish.price}" data-taste="${dish.taste.id}" data-weight="${dish.weight.id}"><i class="fa fa-plus-circle"></i></button>
+                            <button class="btn btn-default  btn-oper-remove" data-id="${dish.dish.id}" data-price="${dish.dish.price}" data-taste="${dish.taste.id}" data-weight="${dish.weight.id}"><i class="fa fa-trash-o"></i></button>
+                        </span>
                     </p>
                 </li>
             </c:forEach>
@@ -155,17 +158,19 @@
         $('.btn-oper-minus').click(function(){
             var dish_id = $(this).data('id');
             var dish_price = $(this).data('price');
-            var dish_number = parseInt($('#dish_number_'+dish_id).text());
-            var sum_fee = parseInt($('#bill_sum_fee').text());
+            var dish_taste = $(this).data('taste');
+            var dish_weight = $(this).data('weight');
+            var dish_number = parseFloat($('#dish_number_'+dish_id+'_'+dish_taste+'_'+dish_weight).text());
+            var sum_fee = parseFloat($('#bill_sum_fee').text());
             if (dish_number > 1){
                 $.ajax({
                     url:"<c:url value="/order/customer/delDish"></c:url>",
                     type:"POST",
                     dataType:"JSON",
-                    data: {"id":dish_id},
+                    data: {"dishId":dish_id,"taste":dish_taste,"weight":dish_weight},
                     success:function(data){
                         if(data.success){
-                            $('#dish_number_'+dish_id).text(dish_number-1);
+                            $('#dish_number_'+dish_id+'_'+dish_taste+'_'+dish_weight).text(dish_number-1);
                             $('#bill_sum_fee').text(sum_fee-dish_price);
                         }
                     }
@@ -175,10 +180,10 @@
                     url:"<c:url value="/order/customer/removeDish"></c:url>",
                     type:"POST",
                     dataType:"JSON",
-                    data: {"id":dish_id},
+                    data: {"dishId":dish_id,"taste":dish_taste,"weight":dish_weight},
                     success:function(data){
                         if(data.success){
-                            $('#dish_'+dish_id).fadeOut();
+                            $('#dish_'+dish_id+'_'+dish_taste+'_'+dish_weight).fadeOut();
                             $('#bill_sum_fee').text(sum_fee-dish_price);
                         }
                     }
@@ -190,17 +195,19 @@
         $('.btn-oper-plus').click(function(){
             var dish_id = $(this).data('id');
             var dish_price = $(this).data('price');
-            var dish_number = parseInt($('#dish_number_'+dish_id).text());
-            var sum_fee = parseInt($('#bill_sum_fee').text());
+            var dish_taste = $(this).data('taste');
+            var dish_weight = $(this).data('weight');
+            var dish_number = parseFloat($('#dish_number_'+dish_id+'_'+dish_taste+'_'+dish_weight).text());
+            var sum_fee = parseFloat($('#bill_sum_fee').text());
 
             $.ajax({
                 url:"<c:url value="/order/customer/addDish"></c:url>",
                 type:"POST",
                 dataType:"JSON",
-                data: {"id":dish_id},
+                data: {"dishId":dish_id,"taste":dish_taste,"weight":dish_weight,"amount":1},
                 success:function(data){
                     if(data.success){
-                        $('#dish_number_'+dish_id).text(dish_number+1);
+                        $('#dish_number_'+dish_id+'_'+dish_taste+'_'+dish_weight).text(dish_number+1);
                         $('#bill_sum_fee').text(sum_fee+dish_price);
                     }
                 }
@@ -212,17 +219,19 @@
         $('.btn-oper-remove').click(function(){
             var dish_id = $(this).data('id');
             var dish_price = $(this).data('price');
-            var dish_number = parseInt($('#dish_number_'+dish_id).text());
-            var sum_fee = parseInt($('#bill_sum_fee').text());
+            var dish_taste = $(this).data('taste');
+            var dish_weight = $(this).data('weight');
+            var dish_number = parseFloat($('#dish_number_'+dish_id+'_'+dish_taste+'_'+dish_weight).text());
+            var sum_fee = parseFloat($('#bill_sum_fee').text());
 
             $.ajax({
                 url:"<c:url value="/order/customer/removeDish"></c:url>",
                 type:"POST",
                 dataType:"JSON",
-                data: {"id":dish_id},
+                data: {"dishId":dish_id,"taste":dish_taste,"weight":dish_weight},
                 success:function(data){
                     if(data.success){
-                        $('#dish_'+dish_id).fadeOut();
+                        $('#dish_'+dish_id+'_'+dish_taste+'_'+dish_weight).fadeOut();
                         $('#bill_sum_fee').text(sum_fee-dish_price*dish_number);
                     }
                 }

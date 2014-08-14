@@ -13,6 +13,8 @@ public class DishOrderInfo {
     private Weight weight;
     private float number;
     private float fee;
+    //去除口味、分量因素的总数量
+    private float totalNumber;
 
     public DishOrderInfo() {
     }
@@ -22,6 +24,7 @@ public class DishOrderInfo {
         setTaste(taste);
         setWeight(weight);
         setNumber(number);
+        setTotalNumber(number);
     }
 
     public Dish getDish() {
@@ -59,5 +62,13 @@ public class DishOrderInfo {
 
     public void setWeight(Weight weight) {
         this.weight = weight;
+    }
+
+    public float getTotalNumber() {
+        return totalNumber;
+    }
+
+    public void setTotalNumber(float totalNumber) {
+        this.totalNumber = totalNumber;
     }
 }

@@ -187,7 +187,8 @@ public class BillController {
                 existedBill = billDao.getBillByTableNo((Integer.parseInt(tableNo)),0);
                 model.addAttribute("isCustomer",false);
             }else{
-
+                username = SecurityContextHolder.getContext().getAuthentication().getName();
+                existedBill = billDao.getCommonBillByUsername(username);
             }
 
             List<BillDetail> savedBillDetails = null;

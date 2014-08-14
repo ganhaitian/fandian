@@ -4,6 +4,7 @@ import com.fandian.bean.Dish;
 import com.fandian.bean.DishCategory;
 import com.fandian.bean.Taste;
 import com.fandian.bean.Weight;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -260,10 +261,27 @@ public class MenuDao extends JdbcTemplate {
     }
 
     public Taste getTaste(int id){
-        return super.queryForObject("select * from taste where id=?", new BeanPropertyRowMapper<Taste>(Taste.class), new Object[] {id});
+        try {
+            return super.queryForObject("select * from taste where id=?", new BeanPropertyRowMapper<Taste>(Taste.class), new Object[] {id});
+        } catch (DataAccessException e) {
+            Taste normal = new Taste();
+            normal.setId(0);
+            normal.setName("默认");
+            return normal;
+        }
     }
 
     public Weight getWeight(int id){
-        return super.queryForObject("select * from weight where id=?", new BeanPropertyRowMapper<Weight>(Weight.class), new Object[] {id});
+        try {
+            return super.queryForObject("select * from weight where id=?", new BeanPropertyRowMapper<Weight>(Weight.class), new Object[] {id});
+        } catch (DataAccessException e) {
+            Weight normal = new Weight();
+            normal.setId(0);
+            normal.setName("默认");
+            normal.setPrice_ratio(1);
+            normal.setPrice_relate(true);
+            return normal;
+        }
+
     }
 }

@@ -321,17 +321,22 @@
                     result['dishes'] = [];
                 }
 
-                var dishFee = 0, popoverHtml = "";
+                var dishCount= 0, dishFee = 0, popoverHtml = "";
+                $('span[id^=sub_number_]').text('').prev('button').addClass("hide");
 
                 $.each(result.dishes,function(i,v){
 
                     dishFee += v.number* v.dish.price;
-                    popoverHtml += "<li class=\"list-group-item\"><span class=\"badge\">"+ v.number +"</span>"+ v.dish.name+"</li>";
-                    $('#sub_number_' + v.dish.id).text(v.number);
+                    if (popoverHtml.indexOf(v.dish.name)<0){
+                        popoverHtml += "<li class=\"list-group-item\"><span class=\"badge\">"+ v.totalNumber +"</span>"+ v.dish.name+"</li>";
+                        dishCount += v.totalNumber;
+                    }
+
+                    $('#sub_number_' + v.dish.id).text(v.totalNumber);
                     $('#sub_number_' + v.dish.id).prev('button').removeClass('hide');
                 });
 
-                $('#summary_info_number').text(result.dishes.length);
+                $('#summary_info_number').text(dishCount);
                 $('#summary_info_fee').text(dishFee);
 
 
@@ -363,7 +368,7 @@
             $('#detail_tastes').html("");
             $.each(tastes,function(i,v){
                 if(i==0){
-                    $("<label class=\"btn btn-default btn-sm active\"><input type=\"radio\" name=\"taste\" value=\""+ v.id+"\">"+ v.name+"</label>").appendTo($('#detail_tastes'));
+                    $("<label class=\"btn btn-default btn-sm active\"><input type=\"radio\" name=\"taste\" value=\""+ v.id+"\" checked>"+ v.name+"</label>").appendTo($('#detail_tastes'));
                 }else{
                     $("<label class=\"btn btn-default btn-sm\"><input type=\"radio\" name=\"taste\" value=\""+ v.id+"\">"+ v.name+"</label>").appendTo($('#detail_tastes'));
                 }
@@ -380,7 +385,7 @@
             $('#detail_weights').html("");
             $.each(weights,function(i,v){
                 if (i == 0){
-                    $("<label class=\"btn btn-default btn-sm active\"><input type=\"radio\" name=\"weight\" value=\""+ v.id+"\">"+ v.name+"</label>").appendTo($('#detail_weights'));
+                    $("<label class=\"btn btn-default btn-sm active\"><input type=\"radio\" name=\"weight\" value=\""+ v.id+"\" checked>"+ v.name+"</label>").appendTo($('#detail_weights'));
                 }else{
                     $("<label class=\"btn btn-default btn-sm\"><input type=\"radio\" name=\"weight\" value=\""+ v.id+"\">"+ v.name+"</label>").appendTo($('#detail_weights'));
                 }

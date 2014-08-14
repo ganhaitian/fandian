@@ -50,6 +50,8 @@ public class OrderDishController {
                 DISH_ORDER_CACHE.put(username,new ArrayList<DishOrderInfo>());
             }
             boolean hasDishInfo = false;
+            //同dishid的已点数量
+            float existNumber = 0;
             for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(username)){
                 if (dishOrderInfo.getDish().getId() == billDetail.getDishId() &&
                         dishOrderInfo.getTaste().getId() == billDetail.getTaste() &&
@@ -57,13 +59,21 @@ public class OrderDishController {
                     hasDishInfo = true;
                     dishOrderInfo.setNumber(dishOrderInfo.getNumber()+billDetail.getAmount());
                 }
+                if (dishOrderInfo.getDish().getId() == billDetail.getDishId()){
+                    existNumber = dishOrderInfo.getTotalNumber();
+                    dishOrderInfo.setTotalNumber(dishOrderInfo.getTotalNumber() + billDetail.getAmount());
+                }
             }
             if (!hasDishInfo){
                 Dish dish = menuDao.getDish(billDetail.getDishId());
                 Taste taste = menuDao.getTaste(billDetail.getTaste());
                 Weight weight = menuDao.getWeight(billDetail.getWeight());
-                DISH_ORDER_CACHE.get(username).add(new DishOrderInfo(dish,taste,weight,billDetail.getAmount()));
+                DishOrderInfo tmpOrderInfo = new DishOrderInfo(dish,taste,weight,billDetail.getAmount());
+                tmpOrderInfo.setTotalNumber(tmpOrderInfo.getTotalNumber() + existNumber);
+                DISH_ORDER_CACHE.get(username).add(tmpOrderInfo);
+
             }
+
         } catch (Exception e) {
             logger.error("添加菜品信息至桌单缓存失败", e);
             result.put("success",false);
@@ -91,6 +101,15 @@ public class OrderDishController {
                     }
 
                 }
+                for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(username)){
+                    if (dishOrderInfo.getDish().getId() == dish.getId()){
+
+                        dishOrderInfo.setTotalNumber(dishOrderInfo.getTotalNumber()-1);
+
+
+                    }
+
+                }
             }
 
         } catch (Exception e) {
@@ -103,18 +122,29 @@ public class OrderDishController {
 
     @RequestMapping("/customer/removeDish")
     @ResponseBody
-    public String removeDish(Dish dish){
+    public String removeDish(BillDetail billDetail){
         Map<String,Object> result = new HashMap<String, Object>();
         result.put("success",true);
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             if (DISH_ORDER_CACHE.containsKey(username)){
+                //同dishid的已点数量
+                float existNumber = 0;
                 for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(username)){
-                    if (dishOrderInfo.getDish().getId() == dish.getId()){
+                    if (dishOrderInfo.getDish().getId() == billDetail.getDishId() &&
+                            dishOrderInfo.getTaste().getId() == billDetail.getTaste() &&
+                            dishOrderInfo.getWeight().getId() == billDetail.getWeight()){
+                        existNumber = dishOrderInfo.getNumber();
                         DISH_ORDER_CACHE.get(username).remove(dishOrderInfo);
                         break;
                     }
                 }
+                for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(username)){
+                    if (dishOrderInfo.getDish().getId() == billDetail.getDishId()){
+                        dishOrderInfo.setTotalNumber(dishOrderInfo.getTotalNumber()-existNumber);
+                    }
+                }
+
             }
 
         } catch (Exception e) {
