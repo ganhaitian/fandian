@@ -30,6 +30,11 @@
     <style type="text/css">
         body {padding-top: 58px;}
         a {color: inherit;}
+
+        .navbar-inverse .navbar-text {
+            color: #f7f8f8;
+        }
+
     </style>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
