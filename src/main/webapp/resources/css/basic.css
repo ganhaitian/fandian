@@ -30,8 +30,8 @@ td.center-td{
     display: none;
     z-index: 9998;
     background-color: #000000;
-    filter: alpha(opacity=75);
-    opacity:0.75;
+    filter: alpha(opacity=55);
+    opacity:0.55;
     position:absolute;
     top:0px;
     left:0px;
