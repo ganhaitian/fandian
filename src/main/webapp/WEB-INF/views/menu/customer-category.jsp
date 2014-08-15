@@ -406,11 +406,13 @@
 
     function showDishMetaPanel(){
         $('#dish-detail-mask-container').fadeIn().height($(window).height());
-        $('#dish-detail-panel').show('slide',{direction :"down"});
+        $('#dish-detail-panel').fadeIn();
+                //width($(window).width()).show('slide',{direction :"down"},1000);
     }
 
     function hideDishMetaPanel(){
-        $('#dish-detail-panel').hide('slide',{direction :"down"});
+        $('#dish-detail-panel').fadeOut();
+                //hide('slide',{direction :"down"});
         $('#dish-detail-mask-container').fadeOut()
     }
 
