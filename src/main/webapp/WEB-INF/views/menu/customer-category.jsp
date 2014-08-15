@@ -35,7 +35,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-
+    <script src="<s:url value="/resources/js/plugins/jquery-ui/jquery-ui.min.js"></s:url>"></script>
     <script src="<s:url value="/resources/js/jquery.loadTemplate-1.4.4.min.js"></s:url>"></script>
     <script src="<s:url value="/resources/js/holder.js"></s:url>"></script>
 </head>
@@ -180,7 +180,10 @@
     </s:if>
 
     <s:if test="${fn:length(dishes) > 0}">
-        <div class="dish-detail-row hide" id="dish-detail-panel">
+        <div id="dish-detail-mask-container">
+
+        </div>
+        <div class="dish-detail-row" id="dish-detail-panel">
 
             <div class="dish-detail-container">
 
@@ -397,11 +400,13 @@
     }
 
     function showDishMetaPanel(){
-        $('#dish-detail-panel').removeClass('hide');
+        $('#dish-detail-mask-container').fadeIn().height($(window).height());
+        $('#dish-detail-panel').show('slide',{direction :"down"});
     }
 
     function hideDishMetaPanel(){
-        $('#dish-detail-panel').addClass('hide');
+        $('#dish-detail-panel').hide('slide',{direction :"down"});
+        $('#dish-detail-mask-container').fadeOut()
     }
 
     function fetchDishMetaInfo(dishId){
@@ -436,7 +441,7 @@
 
 
         $('#dish-detail-btn-close').click(function(){
-            $('#dish-detail-panel').addClass('hide');
+            hideDishMetaPanel();
         });
 
         $('.btn-plus-order-num').click(function(){
@@ -489,6 +494,7 @@
         $('.btn-add-to-cart').click(function(e){
             var btn = $(this);
             $('#detail-order-num').val(1);
+            $('#detail_dishName').text(btn.attr('data-name'));
             $('#detail-unit-name').text($(this).attr('data-unit-name'));
             $('#btn-dish-order-sure').attr("data-id",btn.attr("data-id"));
             $('#btn-dish-order-sure').attr("data-name",btn.attr("data-name"));
