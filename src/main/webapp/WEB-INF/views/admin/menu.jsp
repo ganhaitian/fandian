@@ -520,7 +520,7 @@
                     "className": "center-td",
                     "render" :function(data, type, row){
                         if(row.picPath)
-                            return "<img class='pic-path' name = 'pic-path' src = '<%=realPath %>/resources/img/icon/dish/"+row.picPath+"' height = 48 width = 80 />";
+                            return "<img class='pic-path' name = 'pic-path' src = '<%=realPath %>/resources/img/icon/dish/"+row.picPath+"' height = '100%' width = 80 />";
                         else
                             return "";
                     }
@@ -599,12 +599,12 @@
 
         $(document).on('mouseover','#dish_table tr td:nth-child(2)',function(){
             var tr = $(this).closest("tr");
-            $("td img[name='pic-path']",tr).css("width",200).css("height",122);
+            $("td img[name='pic-path']",tr).css("width",200).css("height","100%");
         });
 
         $(document).on('mouseout','#dish_table tr td:nth-child(2)',function(){
             var tr = $(this).closest("tr");
-            $("td img[name='pic-path']",tr).css("width",80).css("height",48);
+            $("td img[name='pic-path']",tr).css("width",80).css("height","100%");
         });
 
         $("div.toolbar").html('<button name="add-dish" data-toggle="modal" data-target="#editDishModal" class="btn btn-sm btn-primary">增加</button>');
