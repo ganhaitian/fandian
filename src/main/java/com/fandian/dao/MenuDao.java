@@ -118,7 +118,7 @@ public class MenuDao extends JdbcTemplate {
                     Statement.RETURN_GENERATED_KEYS);
 
                 ps.setString(1, dish.getName());
-                ps.setInt(2, dish.getPrice());
+                ps.setFloat(2, dish.getPrice());
                 ps.setInt(3, dish.getStars());
                 ps.setString(4,dish.getDetail());
                 ps.setInt(5,dish.getCategoryId());

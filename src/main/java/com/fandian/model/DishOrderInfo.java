@@ -20,6 +20,8 @@ public class DishOrderInfo {
     }
 
     public DishOrderInfo(Dish dish, Taste taste, Weight weight, float number) {
+        //默认值是单价，如果后面有份量和口味，则再更新
+        this.fee = (dish.getPrice());
         setDish(dish);
         setTaste(taste);
         setWeight(weight);
@@ -62,6 +64,9 @@ public class DishOrderInfo {
 
     public void setWeight(Weight weight) {
         this.weight = weight;
+        if(weight != null && weight.getPrice_relate()){
+            this.fee = this.fee * weight.getPrice_ratio();
+        }
     }
 
     public float getTotalNumber() {

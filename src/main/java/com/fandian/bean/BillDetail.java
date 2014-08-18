@@ -21,7 +21,7 @@ public class BillDetail implements Serializable {
 
     private float amount;
 
-    private int price;
+    private float price;
 
     private int weight;
     private int taste;
@@ -70,11 +70,11 @@ public class BillDetail implements Serializable {
         this.amount = amout;
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 

@@ -334,7 +334,7 @@
 
                 $.each(result.dishes,function(i,v){
 
-                    dishFee += v.number* v.dish.price;
+                    dishFee += v.number* v.fee;
                     if (popoverHtml.indexOf(v.dish.name)<0){
                         popoverHtml += "<li class=\"list-group-item\"><span class=\"badge\">"+ v.totalNumber +"</span>"+ v.dish.name+"</li>";
                         dishCount += v.totalNumber;

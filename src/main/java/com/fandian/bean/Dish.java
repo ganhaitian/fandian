@@ -16,7 +16,7 @@ public class Dish implements Serializable{
 
     private int status;
 
-    private int price;
+    private float price;
 
     private String detail;
 
@@ -122,11 +122,11 @@ public class Dish implements Serializable{
         this.name = name;
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 

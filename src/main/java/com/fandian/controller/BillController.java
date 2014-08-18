@@ -72,7 +72,7 @@ public class BillController {
 
         //更新账单结账状态
         float actualFee = bill.getFee() - discount;
-        billDao.updateCheckoutInfo(billId, BillStatus.SETTLED.value(), discount, actualFee, paymentType,username);
+        billDao.updateCheckoutInfo(billId, BillStatus.SETTLED.value(), discount, actualFee, paymentType, username);
 
         //结账成功后，清除缓存
         OrderDishController.DISH_ORDER_CACHE.remove(bill.getUserName());
@@ -82,19 +82,19 @@ public class BillController {
 
     @RequestMapping("/losses")
     @ResponseBody
-    public String lossesBill(@RequestParam int billId,@RequestParam int customerId){
+    public String lossesBill(@RequestParam int billId, @RequestParam int customerId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Map<String, Object> result = new HashMap<String, Object>();
 
         Customer customer = customerDao.getCustomerById(customerId);
         Bill bill = billDao.getBillById(billId);
-        if(customer != null){
-            billDao.updateBillLossesInfo(billId,customerId,customer.getName(),username);
-            customerDao.updateCustomerFee(customerId,bill.getFee());
-            result.put("success",true);
-        }else{
-            result.put("success",false);
-            result.put("errMsg","客户不存在!");
+        if (customer != null) {
+            billDao.updateBillLossesInfo(billId, customerId, customer.getName(), username);
+            customerDao.updateCustomerFee(customerId, bill.getFee());
+            result.put("success", true);
+        } else {
+            result.put("success", false);
+            result.put("errMsg", "客户不存在!");
         }
 
         return jsonUtil.transToJsonStrByGson(result);
@@ -109,43 +109,43 @@ public class BillController {
 
     @RequestMapping("/getAllBills")
     @ResponseBody
-    public String getAllBills(){
-        Map<String,Object> result = new HashMap<String,Object>();
-        result.put("data",billDao.getAllBills());
+    public String getAllBills() {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("data", billDao.getAllBills());
         return jsonUtil.transToJsonStrByGson(result);
     }
 
     @RequestMapping("/getBills")
     @ResponseBody
-    public String getBills(@RequestParam int area,@RequestParam int table){
-        Map<String,Object> result = new HashMap<String,Object>();
-        if(area == 0){
-            result.put("data",billDao.getAllBills());
-        }else{
-            if(table != 0){
+    public String getBills(@RequestParam int area, @RequestParam int table) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        if (area == 0) {
+            result.put("data", billDao.getAllBills());
+        } else {
+            if (table != 0) {
                 String tableNo = "" + area + (table < 10 ? "0" : "") + table;
-                result.put("data",billDao.getBillByTableNo(Integer.parseInt(tableNo)));
-            }else{
-                result.put("data",billDao.getBillByArea(area));
+                result.put("data", billDao.getBillByTableNo(Integer.parseInt(tableNo)));
+            } else {
+                result.put("data", billDao.getBillByArea(area));
             }
         }
         return jsonUtil.transToJsonStrByGson(result);
     }
 
-    @Secured(value={"ROLE_WAITOR","ROLE_MANAGER"})
+    @Secured(value = {"ROLE_WAITOR", "ROLE_MANAGER"})
     @RequestMapping("/desk/active")
-    public String getActiveDesk(Model model){
+    public String getActiveDesk(Model model) {
         try {
             model.addAttribute("bills", billDao.getActiveBills());
         } catch (Exception e) {
-            log.error("查询桌单异常",e);
+            log.error("查询桌单异常", e);
         }
         return "bill/bill-desk-list";
     }
 
-    @Secured(value={"ROLE_WAITOR","ROLE_MANAGER"})
+    @Secured(value = {"ROLE_WAITOR", "ROLE_MANAGER"})
     @RequestMapping("/desk/active/{billId}")
-    public String getActiveDesk(Model model,@PathVariable int billId){
+    public String getActiveDesk(Model model, @PathVariable int billId) {
         try {
             model.addAttribute("bills", billDao.getActiveBills());
         } catch (Exception e) {
@@ -168,12 +168,13 @@ public class BillController {
         newBill.setUserName(username);
 
         for (BillDetail billDetail : billDetails) {
-            if(billDetail.getWeight() > 0){
+            if (billDetail.getWeight() > 0) {
                 Weight weight = menuDao.getWeight(billDetail.getWeight());
-                if(weight.getPrice_relate()){
+                if (weight.getPrice_relate()) {
                     newBill.setFee(newBill.getFee() + billDetail.getPrice() * billDetail.getAmount() * weight.getPrice_ratio());
+                    billDetail.setPrice(billDetail.getPrice() * weight.getPrice_ratio());
                 }
-             }else{
+            } else {
                 newBill.setFee(newBill.getFee() + billDetail.getPrice() * billDetail.getAmount());
             }
         }
@@ -190,15 +191,15 @@ public class BillController {
             String username = null;
             Bill existedBill = null;
             String tableNo = request.getParameter("tableNo");
-            if (UserTypeJudger.isCustomer(SecurityContextHolder.getContext().getAuthentication())){
+            if (UserTypeJudger.isCustomer(SecurityContextHolder.getContext().getAuthentication())) {
                 username = SecurityContextHolder.getContext().getAuthentication().getName();
                 existedBill = billDao.getCommonBillByUsername(username);
-                model.addAttribute("isCustomer",true);
+                model.addAttribute("isCustomer", true);
 
-            }else if(tableNo != null){
-                existedBill = billDao.getBillByTableNo((Integer.parseInt(tableNo)),0);
-                model.addAttribute("isCustomer",false);
-            }else{
+            } else if (tableNo != null) {
+                existedBill = billDao.getBillByTableNo((Integer.parseInt(tableNo)), 0);
+                model.addAttribute("isCustomer", false);
+            } else {
                 username = SecurityContextHolder.getContext().getAuthentication().getName();
                 existedBill = billDao.getCommonBillByUsername(username);
             }
@@ -208,7 +209,7 @@ public class BillController {
             if (existedBill != null) {
                 model.addAttribute("existedBill", true);
                 model.addAttribute("tableNo", existedBill.getTableNo());
-                model.addAttribute("areaNo",(existedBill.getTableNo()+"").substring(0,1));
+                model.addAttribute("areaNo", (existedBill.getTableNo() + "").substring(0, 1));
                 savedBillDetails = billDao.getBillDetails(existedBill.getId());
                 username = existedBill.getUserName();
 
@@ -219,24 +220,28 @@ public class BillController {
 
 
             if (!OrderDishController.DISH_ORDER_CACHE.containsKey(username)) {
-                OrderDishController.DISH_ORDER_CACHE.put(username,new ArrayList<DishOrderInfo>());
+                OrderDishController.DISH_ORDER_CACHE.put(username, new ArrayList<DishOrderInfo>());
             }
 
             boolean hasDiff = mergeDBAndCacheDishInfo(OrderDishController.DISH_ORDER_CACHE.get(username), savedBillDetails);
 
-            model.addAttribute("hasDiff",hasDiff);
+            model.addAttribute("hasDiff", hasDiff);
 
             int sumfee = 0;
             model.addAttribute("list", OrderDishController.DISH_ORDER_CACHE.get(username));
 
             for (DishOrderInfo dishOrderInfo : OrderDishController.DISH_ORDER_CACHE.get(username)) {
-                sumfee += dishOrderInfo.getNumber() * dishOrderInfo.getDish().getPrice();
+                if (dishOrderInfo.getWeight() != null && dishOrderInfo.getWeight().getPrice_relate()) {
+                    sumfee += dishOrderInfo.getNumber() * dishOrderInfo.getDish().getPrice()
+                        * dishOrderInfo.getWeight().getPrice_ratio();
+                } else
+                    sumfee += dishOrderInfo.getNumber() * dishOrderInfo.getDish().getPrice();
             }
 
             model.addAttribute("sumfee", sumfee);
 
         } catch (Exception e) {
-            log.error("获取桌单异常",e);
+            log.error("获取桌单异常", e);
         }
 
         return "bill/bill-view";
@@ -247,27 +252,28 @@ public class BillController {
      * 核对cache中的菜品数量与已保存桌单中数量
      * 如果cache中的数量大，则该桌单已被修改
      * 页面需进行提示，并显示提交按钮
+     *
      * @param cacheDishOrderInfos 缓存中的菜品订购信息
-     * @param savedBillDetails 数据库中保存的菜品订购信息
+     * @param savedBillDetails    数据库中保存的菜品订购信息
      * @return 是否存在差异
      */
-    private boolean mergeDBAndCacheDishInfo(List<DishOrderInfo> cacheDishOrderInfos, List<BillDetail> savedBillDetails){
+    private boolean mergeDBAndCacheDishInfo(List<DishOrderInfo> cacheDishOrderInfos, List<BillDetail> savedBillDetails) {
         boolean hasDiff = false;
-        if (savedBillDetails == null){
+        if (savedBillDetails == null) {
             return true;
         }
-        for (BillDetail billDetail : savedBillDetails){
+        for (BillDetail billDetail : savedBillDetails) {
 
             boolean existInCache = false;
-            for (DishOrderInfo dishOrderInfo : cacheDishOrderInfos){
-                if (billDetail.getDishId() == dishOrderInfo.getDish().getId()){
+            for (DishOrderInfo dishOrderInfo : cacheDishOrderInfos) {
+                if (billDetail.getDishId() == dishOrderInfo.getDish().getId()) {
                     existInCache = true;
-                    if (billDetail.getAmount() != dishOrderInfo.getNumber()){
+                    if (billDetail.getAmount() != dishOrderInfo.getNumber()) {
                         hasDiff = true;
                     }
                 }
             }
-            if (!existInCache){
+            if (!existInCache) {
                 DishOrderInfo tmp = new DishOrderInfo();
                 tmp.setNumber(billDetail.getAmount());
                 Dish dish = new Dish();
@@ -278,7 +284,7 @@ public class BillController {
                 cacheDishOrderInfos.add(tmp);
             }
         }
-        if (cacheDishOrderInfos.size() != savedBillDetails.size()){
+        if (cacheDishOrderInfos.size() != savedBillDetails.size()) {
             hasDiff = true;
         }
         return hasDiff;
