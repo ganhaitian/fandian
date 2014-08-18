@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%
     String realPath= application.getContextPath();
 %>
@@ -45,16 +46,35 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="text-center">
-                <div class="col-xs-12 col-md-12">
+                <div class="col-xs-6 col-md-6">
+                    <select name="area" class="form-control input-lg">
+                        <c:choose>
+                            <c:when test="${existedBill}">
+                                <c:choose>
+                                    <c:when test="${areaNo == '4'}">
+                                        <option value="4">包厢</option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value="${areaNo}">${areaNo} 区</option>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:when>
+                            <c:otherwise>
+                                <option value = "3">3区</option>
+                                <option value = "5">5区</option>
+                                <option value = "4">包厢</option>
+                            </c:otherwise>
+                        </c:choose>
+
+                    </select>
+                </div>
+                <div class="col-xs-6 col-md-6">
                     <select name="desknumber" id="" class="form-control input-lg">
                         <c:if test="${existedBill}">
                             <option value="${tableNo}">${tableNo}桌</option>
                         </c:if>
                         <c:if test="${!existedBill}">
-                            <option value="0" selected="selected">请选择桌号</option>
-                            <option value="1">1桌</option>
-                            <option value="2">2桌</option>
-                            <option value="3">3桌</option>
+
                         </c:if>
                     </select>
                 </div>
@@ -154,6 +174,30 @@
 
         });
 
+        $("select[name=area]").change(function(){
+            //每次区号一变，桌号就重置下
+            $("select[name=desknumber]").html('');
+            var newAreaVal = $(this).val();
+            $("select[name=desknumber]").append('<option value = "0">全部</option>');
+            if(newAreaVal == 3 || newAreaVal == 5){
+                for(var i = 1 ; i <= 23 ; i++){
+                    if( i % 10 == 4 || i % 10 == 7)
+                        continue;
+                    $("select[name=desknumber]").append("<option value = '"+i+"' >"+i+"桌</option>")
+                }
+            }else if(newAreaVal == 4){
+                for(var i = 1 ; i <= 33 ; i++){
+                    if( i % 10 == 4 || i % 10 == 7)
+                        continue;
+                    $("select[name=desknumber]").append("<option value = '"+i+"' >"+i+"桌</option>")
+                }
+            }
+            $("select[name=desknumber]").val(0);
+
+        });
+
+        $("select[name=area]").trigger("change");
+
         //minus btn  click
         $('.btn-oper-minus').click(function(){
             var dish_id = $(this).data('id');
@@ -242,6 +286,7 @@
         $("#confirm-bill").click(function(){
 
             var tableNo = $("select[name='desknumber']").val();
+            var areaNo = $("select[name='area']").val();
             if(tableNo == 0){
                 noty({"text":"请输入桌单号!","layout":"topCenter","type":"error"});
                 return;
@@ -264,7 +309,7 @@
                 url:"confirm",
                 type:"POST",
                 dataType:"JSON",
-                data: {"param":JSON.stringify(billDetails),"tableNo":tableNo},
+                data: {"param":JSON.stringify(billDetails),"tableNo":areaNo+""+tableNo},
                 success:function(data){
                     if(data.success){
                         $("div.confirm-panel").html(

@@ -196,6 +196,7 @@ public class BillController {
             if (existedBill != null) {
                 model.addAttribute("existedBill", true);
                 model.addAttribute("tableNo", existedBill.getTableNo());
+                model.addAttribute("areaNo",(existedBill.getTableNo()+"").substring(0,1));
                 savedBillDetails = billDao.getBillDetails(existedBill.getId());
                 username = existedBill.getUserName();
 
