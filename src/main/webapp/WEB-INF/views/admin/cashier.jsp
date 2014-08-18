@@ -475,6 +475,7 @@ $(document).ready(function () {
     });
 
     $("div.toolbar").html(
+        '<i class="fa fa-filter" style="border-right: 2px solid #e4e4e4">筛选</i>'+
         '区号: ' +
             '<select name = "area" class="form-control" >' +
                 '<option value = "0">全部</option>' +
