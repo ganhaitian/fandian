@@ -179,6 +179,15 @@ public class BillController {
             }
         }
 
+        //补充口味和份量的中文描述，方便以后显示和打印
+        for(BillDetail billDetail:billDetails){
+            if(billDetail.getWeight() > 0)
+                billDetail.setWeightName(menuDao.getWeight(billDetail.getWeight()).getName());
+
+            if(billDetail.getTaste() > 0)
+                billDetail.setTasteName(menuDao.getTaste(billDetail.getTaste()).getName());
+        }
+
         newBill.setBillDetails(billDetails);
 
         billDao.saveNewBill(newBill);

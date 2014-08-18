@@ -84,8 +84,8 @@ public class BillDao extends JdbcTemplate {
                 ps.setInt(2, bill.getStatus());
                 ps.setFloat(3, bill.getFee());
                 ps.setString(4, bill.getUserName());
-                //ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-                ps.setDate(5,new Date(System.currentTimeMillis()));
+                ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+                //ps.setDate(5,new Date(System.currentTimeMillis()));
 
                 return ps;
             }
@@ -93,8 +93,10 @@ public class BillDao extends JdbcTemplate {
 
         int billId = keyHolder.getKey().intValue();
         for (BillDetail billDetail : bill.getBillDetails()) {
-            update("insert into bill_detail (bill_id,dish_id,dish_name,amount,price,taste,weight) values(?,?,?,?,?,?,?)",
-                billId, billDetail.getDishId(), billDetail.getDishName(), billDetail.getAmount(), billDetail.getPrice(), billDetail.getTaste(), billDetail.getWeight());
+            update("insert into bill_detail (bill_id,dish_id,dish_name,amount,price,taste,weight,taste_name,weight_name) values(?,?,?,?,?,?,?,?,?)",
+                billId, billDetail.getDishId(), billDetail.getDishName(), billDetail.getAmount(),
+                billDetail.getPrice(), billDetail.getTaste(), billDetail.getWeight(),
+                billDetail.getTasteName(),billDetail.getWeightName());
         }
     }
 

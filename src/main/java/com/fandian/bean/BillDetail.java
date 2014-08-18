@@ -24,10 +24,31 @@ public class BillDetail implements Serializable {
     private float price;
 
     private int weight;
+
+    private String weightName;
+
     private int taste;
+
+    private String tasteName;
 
     public BillDetail(){
 
+    }
+
+    public String getWeightName() {
+        return weightName;
+    }
+
+    public void setWeightName(String weightName) {
+        this.weightName = weightName;
+    }
+
+    public String getTasteName() {
+        return tasteName;
+    }
+
+    public void setTasteName(String tasteName) {
+        this.tasteName = tasteName;
     }
 
     public int getId() {

@@ -334,7 +334,15 @@ function format(d) {
             $.each(billDetails, function (index, billDetail) {
                 childContent += "<tr>";
                 childContent += "<td>" + billDetail.dishName + "</td>";
-                childContent += "<td>" + billDetail.amount + " × " + billDetail.price + "</td>";
+                var dishDetail = "<td>" + billDetail.amount + " × " + billDetail.price ;;
+                if(billDetail.weightName){
+                    dishDetail += " (" + billDetail.weightName;
+                    if(billDetail.tasteName){
+                        dishDetail += "," + billDetail.tasteName;
+                    }
+                    dishDetail += ")";
+                }
+                childContent += dishDetail + "</td>";
                 childContent += "</tr>";
             });
         }
@@ -460,7 +468,7 @@ $(document).ready(function () {
             }
         ],
         "order": [
-            [4, 'desc'],[11,'desc']
+            [4, 'desc'],[11,'desc'],[2,'asc']
         ],
         "pageLength": 25,
         "dom": '<"toolbar">frtip'
