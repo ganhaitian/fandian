@@ -3,6 +3,7 @@ package com.fandian.controller;
 import com.fandian.bean.*;
 import com.fandian.dao.BillDao;
 import com.fandian.dao.CustomerDao;
+import com.fandian.dao.MenuDao;
 import com.fandian.model.DishOrderInfo;
 import com.fandian.util.JSONUtil;
 import com.fandian.util.UserTypeJudger;
@@ -39,6 +40,9 @@ public class BillController {
 
     @Inject
     private CustomerDao customerDao;
+
+    @Inject
+    private MenuDao menuDao;
 
     @RequestMapping("/new")
     public String toNewBillView() {
@@ -164,8 +168,16 @@ public class BillController {
         newBill.setUserName(username);
 
         for (BillDetail billDetail : billDetails) {
-            newBill.setFee(newBill.getFee() + billDetail.getPrice() * billDetail.getAmount());
+            if(billDetail.getWeight() > 0){
+                Weight weight = menuDao.getWeight(billDetail.getWeight());
+                if(weight.getPrice_relate()){
+                    newBill.setFee(newBill.getFee() + billDetail.getPrice() * billDetail.getAmount() * weight.getPrice_ratio());
+                }
+             }else{
+                newBill.setFee(newBill.getFee() + billDetail.getPrice() * billDetail.getAmount());
+            }
         }
+
         newBill.setBillDetails(billDetails);
 
         billDao.saveNewBill(newBill);

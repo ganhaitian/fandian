@@ -85,7 +85,7 @@
     <div class="row">
         <ul class="list-group">
             <c:forEach items="${list}" var="dish">
-                <li id="dish_${dish.dish.id}_${dish.taste.id}_${dish.weight.id}" class="list-group-item dish-entry" data-id="${dish.dish.id}" data-name="${dish.dish.name}" data-count="${dish.number}" data-fee="${dish.dish.price*dish.number}" data-taste="${dish.taste.id}" data-weight="${dish.weight.id}">
+                <li id="dish_${dish.dish.id}_${dish.taste.id}_${dish.weight.id}" class="list-group-item dish-entry" data-id="${dish.dish.id}" data-name="${dish.dish.name}" data-count="${dish.number}" data-fee="${dish.dish.price}" data-taste="${dish.taste.id}" data-weight="${dish.weight.id}">
                     <span class="dish-name"><h4><i class="fa fa-angle-down"></i>&nbsp;&nbsp;${dish.dish.name}
                         <span class="pull-right badge" id="dish_number_${dish.dish.id}_${dish.taste.id}_${dish.weight.id}">${dish.number}</span></h4>
                     </span>

@@ -152,7 +152,7 @@ public class Bill {
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
         if(createTime != null){
-            this.createTimeStr = new SimpleDateFormat("yyyy-MM-dd H:m:s").format(createTime);
+            this.createTimeStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(createTime);
         }
     }
 }

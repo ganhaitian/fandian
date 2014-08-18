@@ -3,6 +3,7 @@ package com.fandian.controller;
 import com.fandian.dao.BillDao;
 import com.fandian.dao.CustomerDao;
 import com.fandian.dao.MenuDao;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,7 @@ public class AdminController {
      * @param model
      * @return
      */
+    @Secured("ROLE_MANAGER")
     @RequestMapping(value = {"/cashier","/main"})
     public String getCashierView(Model model){
         //model.addAttribute("bills",billDao.getAllBills());
@@ -36,6 +38,7 @@ public class AdminController {
         return "admin/cashier";
     }
 
+    @Secured("ROLE_MANAGER")
     @RequestMapping("/menu")
     public String getMenuView(Model model){
         model.addAttribute("categories", menuDao.getDishCategories());
@@ -57,11 +60,13 @@ public class AdminController {
         return "admin/menu";
     }
 
+    @Secured("ROLE_MANAGER")
     @RequestMapping("/user")
     public String getUserView(){
         return "admin/user";
     }
 
+    @Secured("ROLE_MANAGER")
     @RequestMapping("/bcustomer")
     public String getBCustomerView(){
         return "admin/bcustomer";

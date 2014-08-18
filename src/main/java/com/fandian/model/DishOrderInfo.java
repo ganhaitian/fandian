@@ -41,11 +41,11 @@ public class DishOrderInfo {
 
     public void setNumber(float number) {
         this.number = number;
-        if (weight != null && weight.getPrice_relate()){
+        /*if (weight != null && weight.getPrice_relate()){
             this.fee = this.dish.getPrice()*this.number*this.weight.getPrice_ratio();
         }else{
             this.fee = this.dish.getPrice()*this.number;
-        }
+        }*/
     }
 
     public Taste getTaste() {
