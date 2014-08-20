@@ -286,6 +286,7 @@
 <script src="<%=realPath%>/resources/js/plugins/noty/jquery.noty.packaged.min.js"></script>
 <script src="<%=realPath %>/resources/js/fandian.js"></script>
 <script src="<%=realPath %>/resources/js/plugins/validator/bootstrapValidator.min.js"></script>
+<script src="<%=realPath %>/resources/js/plugins/date/date.js"></script>
 
 <script>
 

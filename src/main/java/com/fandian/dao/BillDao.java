@@ -100,6 +100,18 @@ public class BillDao extends JdbcTemplate {
         }
     }
 
+    /**
+     * 获得date那一天，status状态下,area区的账单
+     * @param date
+     * @return
+     */
+    public List<Bill> getBills(String date,int status,int area){
+        return query("select * from bill where up_time >= ? and up_time <=? and status = ? and table_no like ?",
+            BeanPropertyRowMapper.newInstance(Bill.class),
+            date + " 00:00:00",date + " 23:59:59",status,area + "%"
+        );
+    }
+
     public List<Bill> getAllBills() {
         List<Bill> bills = query("select * from bill", new BeanPropertyRowMapper<Bill>(Bill.class));
         for (Bill bill : bills) {

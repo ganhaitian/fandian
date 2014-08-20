@@ -67,6 +67,12 @@ public class AdminController {
     }
 
     @Secured("ROLE_MANAGER")
+    @RequestMapping("/book")
+    public String getBookView(){
+        return "admin/book";
+    }
+
+    @Secured("ROLE_MANAGER")
     @RequestMapping("/bcustomer")
     public String getBCustomerView(){
         return "admin/bcustomer";

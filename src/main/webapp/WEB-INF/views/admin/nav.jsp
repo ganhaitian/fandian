@@ -11,6 +11,9 @@
         </div>
         <!-- /input-group -->
     </li>
+    <li name="book">
+        <a class="" href="<%=realPath%>/admin/book"><i class="fa fa-phone fa-fw"></i> 预定</a>
+    </li>
     <li name="cashier">
         <a class="" href="<%=realPath%>/admin/cashier"><i class="fa fa-dollar fa-fw"></i> 收银</a>
     </li>
