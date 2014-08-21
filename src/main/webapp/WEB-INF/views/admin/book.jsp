@@ -65,6 +65,10 @@
             z-index:1100;
         }
 
+        div.toolbar{
+            float:left;
+        }
+
     </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -269,6 +273,15 @@
                 "url":"<c:url value="/book/list"></c:url>",
                 headers:{
                     Accept : "application/json; charset=utf-8"
+                },
+                async:false,
+                "data":function(d){
+                    var date = $("#book-date-search").val();
+                    if(!date){
+                        d.date = Date.today().toString("yyyy-MM-dd");
+                    }else{
+                        d.date = date;
+                    }
                 }
             },
             "columns":[
@@ -291,8 +304,13 @@
                     }
                 }
             ],
-            "order":[[0,'asc']]
+            "order":[[0,'asc']],
+            "dom": '<"toolbar">frtip'
         });
+
+        $("div.toolbar").html(
+            '日期:<input type="text" id="book-date-search" value="'+ Date.today().toString("yyyy-MM-dd") +'" >'
+        );
 
         var currentBillId = null;
 
@@ -351,6 +369,16 @@
 
         $("input[name=bookDate]").datepicker({
             format:"yyyy-mm-dd"
+        });
+
+        $("input#book-date-search").datepicker({
+            format:"yyyy-mm-dd"
+        }).on('changeDate', function(ev){
+            dt.ajax.reload();
+        });
+
+        $(document).on('input',"#book-date-search",function(){
+            dt.ajax.reload();
         });
 
         $("select[name=area]").change(function(e,param){

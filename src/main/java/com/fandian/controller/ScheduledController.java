@@ -6,6 +6,7 @@ import com.fandian.dao.BillDao;
 import com.fandian.dao.ScheduledDao;
 import com.fandian.util.JSONUtil;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,12 +34,17 @@ public class ScheduledController {
 
     @RequestMapping("/list")
     @ResponseBody
-    public String getBookRecords(){
+    public String getBookRecords(@RequestParam(required = false) String date){
         Map<String, Object> result = new HashMap<String, Object>();
         Date today =new Date();
 
-        result.put("data",scheduledDao.getBookRecords(new SimpleDateFormat("yyyy-MM-dd").format(today)));
+        String queryDate = null;
+        if(StringUtils.isEmpty(date))
+            queryDate = new SimpleDateFormat("yyyy-MM-dd").format(today);
+        else
+            queryDate = date;
 
+        result.put("data",scheduledDao.getBookRecords(queryDate));
         return jsonUtil.transToJsonStrByGson(result);
     }
 
