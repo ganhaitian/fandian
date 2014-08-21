@@ -35,6 +35,9 @@ import java.util.Map;
 @RequestMapping("/menu")
 public class MenuController {
 
+    public static final String SESSION_USER_BOOK_PHONE_KEY = "_fandian_user_book_phone";
+    public static final String SESSION_USER_BOOK_PHONE_VAL_NONE = "_fandian_user_book_phone_none";
+
     @Inject
     private MenuDao menuDao;
 
@@ -207,17 +210,26 @@ public class MenuController {
             return "redirect:/bill/view";
         }
 
+        if (request.getSession().getAttribute(SESSION_USER_BOOK_PHONE_KEY) == null){
+            return "menu/book-valid";
+        }
+
         List<DishCategory> rootCategories = menuDao.getRootDishCategories();
         model.addAttribute("categories", rootCategories);
         return "menu/customer-category";
     }
 
     @RequestMapping("/customer/category/{categoryId}")
-    public String getCustomerMenuSubView(Model model, @PathVariable int categoryId) {
+    public String getCustomerMenuSubView(Model model, @PathVariable int categoryId, HttpServletRequest request) {
         List<DishCategory> rootCategories = menuDao.getChildDishCategories(categoryId);
         if (rootCategories.size() == 0) {
             List<Dish> dishes = menuDao.getDishesInCategory(categoryId);
             model.addAttribute("dishes", dishes);
+            if (!request.getSession().getAttribute(SESSION_USER_BOOK_PHONE_KEY).equals(SESSION_USER_BOOK_PHONE_VAL_NONE)) {
+                model.addAttribute("showOrderBtn", true);
+            }else{
+                model.addAttribute("showOrderBtn", false);
+            }
         }
         model.addAttribute("rootcategory", menuDao.getDishCategory(categoryId));
         model.addAttribute("categories", rootCategories);

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -82,4 +83,39 @@ public class ScheduledController {
         return "{\"success\":true}";
     }
 
+    /**
+     * 校验手机号码是否存在预约信息
+     * @param mobile
+     * @return
+     */
+    @RequestMapping("/validSchedule")
+    @ResponseBody
+    public String validSchedule(@RequestParam String mobile, HttpServletRequest request){
+        Map<String,Object> result = new HashMap<String, Object>();
+        try {
+            List<Schedule> schedules = scheduledDao.getBookRecords(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+            if (schedules != null && schedules.size() > 0){
+                for (Schedule schedule : schedules){
+                    if (schedule.getPhoneNum().equals(mobile)){
+                        result.put("success",true);
+                        request.getSession().setAttribute(MenuController.SESSION_USER_BOOK_PHONE_KEY,schedule.getPhoneNum());
+                        break;
+                    }
+                }
+            }
+
+            if (result.get("success") == null){
+                result.put("success",false);
+            }
+        } catch (Exception e) {
+            result.put("success", false);
+        }
+        return jsonUtil.transToJsonStrByGson(result);
+    }
+
+    @RequestMapping("noSchedule")
+    public String noSchedule(HttpServletRequest request){
+        request.getSession().setAttribute(MenuController.SESSION_USER_BOOK_PHONE_KEY,MenuController.SESSION_USER_BOOK_PHONE_VAL_NONE);
+        return "redirect:/menu/customer/category";
+    }
 }

@@ -278,26 +278,29 @@
                             </div>
 
                         </div>
-                        <div class="panel-footer">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="pull-right">
-                                        <button class="hide btn btn-inverse btn-del-from-cart" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
-                                            <i class="fa fa-minus"></i>
+                        <c:if test="${showOrderBtn}">
+                            <div class="panel-footer">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="pull-right">
+                                            <button class="hide btn btn-inverse btn-del-from-cart" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
+                                                <i class="fa fa-minus"></i>
 
-                                        </button>
-                                        &nbsp;&nbsp;
-                                        <span class="badge text-primary" id="sub_number_${dish.id}"></span>
-                                        &nbsp;&nbsp;
-                                        <button class="btn btn-inverse btn-add-to-cart" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
-                                            <i class="fa fa-plus"></i>
+                                            </button>
+                                            &nbsp;&nbsp;
+                                            <span class="badge text-primary" id="sub_number_${dish.id}"></span>
+                                            &nbsp;&nbsp;
+                                            <button class="btn btn-inverse btn-add-to-cart" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
+                                                <i class="fa fa-plus"></i>
 
-                                        </button>
+                                            </button>
+                                        </div>
+
                                     </div>
-
                                 </div>
                             </div>
-                        </div>
+                        </c:if>
+
                     </div>
 
                 </div>
