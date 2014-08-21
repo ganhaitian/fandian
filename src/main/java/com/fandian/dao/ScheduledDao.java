@@ -23,4 +23,18 @@ public class ScheduledDao extends JdbcTemplate{
             BeanPropertyRowMapper.newInstance(Schedule.class),date);
     }
 
+    public void insertSchedule(Schedule schedule) {
+        update("insert into scheduled (customer_name,book_date,table_no,phone_num,meals_num) values(?,?,?,?,?)",
+        schedule.getCustomerName(),schedule.getBookDate(),schedule.getTableNo(),schedule.getPhoneNum(),schedule.getMealsNum());
+    }
+
+    public void updateSchedule(Schedule schedule) {
+        update("update scheduled set customer_name = ?,book_date=?,table_no=?,phone_num=?,meals_num=? where id = ?",
+            schedule.getCustomerName(),schedule.getBookDate(),schedule.getTableNo(),
+            schedule.getPhoneNum(),schedule.getMealsNum(),schedule.getId());
+    }
+
+    public void delSchedule(int scheduleId){
+        update("delete from scheduled where id = ?",scheduleId);
+    }
 }

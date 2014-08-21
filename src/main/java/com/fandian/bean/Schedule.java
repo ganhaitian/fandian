@@ -11,7 +11,27 @@ public class Schedule {
 
     private String bookDate;
 
-    private int talbeNo;
+    private int area;
+
+    private int tables;
+
+    public int getArea() {
+        return area;
+    }
+
+    public void setArea(int area) {
+        this.area = area;
+    }
+
+    public int getTables() {
+        return tables;
+    }
+
+    public void setTables(int tables) {
+        this.tables = tables;
+    }
+
+    private int tableNo;
 
     private String phoneNum;
 
@@ -41,12 +61,15 @@ public class Schedule {
         this.bookDate = bookDate;
     }
 
-    public int getTalbeNo() {
-        return talbeNo;
+    public int getTableNo() {
+        if(this.tableNo > 0)
+            return this.tableNo;
+        else
+            return area * 100 + tables;
     }
 
-    public void setTalbeNo(int talbeNo) {
-        this.talbeNo = talbeNo;
+    public void setTableNo(int tableNo) {
+        this.tableNo = tableNo;
     }
 
     public String getPhoneNum() {

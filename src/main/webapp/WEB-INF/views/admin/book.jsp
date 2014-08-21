@@ -178,21 +178,21 @@
     <!-- /.modal-dialog -->
 </div>
 
-<div class="modal fade" id="confirmDelUser" tabindex="-1" role="dialog"
+<div class="modal fade" id="confirmCancelBook" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
                 </button>
-                <h4 class="modal-title" id="delCategoryModalLabel">删除用户</h4>
+                <h4 class="modal-title" id="delCategoryModalLabel">取消预定</h4>
             </div>
             <div class="modal-body">
-                是否确认删除用户?
+                是否确认取消预定?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button name="confirmDelUser" type="button" data-dismiss="modal"
+                <button name="confirmCancelBook" type="button" data-dismiss="modal"
                         class="btn btn-primary">确认
                 </button>
             </div>
@@ -226,6 +226,8 @@
 <script src="<%=realPath %>/resources/js/fandian.js"></script>
 <script src="<%=realPath %>/resources/js/plugins/validator/bootstrapValidator.js"></script>
 <script src="<%=realPath %>/resources/js/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="<%=realPath %>/resources/js/plugins/date/date.js"></script>
+<script src="<%=realPath %>/resources/js/plugins/form/jquery.form.min.js"></script>
 
 <script>
 
@@ -284,77 +286,62 @@
                     "data":"mealsNum",
                 },{
                     "render": function ( data, type, full, meta ) {
-                        return '<button name="edit-user" data-toggle="modal" data-target="#confirmUpdateUser" class="btn btn-sm btn-primary">修改</button>  '+
-                               '<button name="del-user" data-toggle="modal" data-target="#confirmDelUser" class="btn btn-sm btn-danger">删除</button>  ';
+                        return '<button name="edit-schedule" data-toggle="modal" data-target="#confirmBook" class="btn btn-sm btn-primary">修改</button>  '+
+                               '<button name="cancel-schedule" data-toggle="modal" data-target="#confirmCancelBook" class="btn btn-sm btn-danger">删除</button>  ';
                     }
                 }
             ],
-            "order":[[1,'asc']]
+            "order":[[0,'asc']]
         });
 
         var currentBillId = null;
 
         $("button[name=book]").click(function(){
+            $("#confirmBook div.modal-header h4").html("录入预定");
             //清空
             $("#confirmBook form").find("input,select").val("");
-
+            $("#confirmBook input[name=bookDate]").val(Date.today().toString("yyyy-MM-dd"));
+            $("#confirmBook input[name=mealsNum]").val(0);
+            $("#confirmBook input[name=id]").val(0);
         });
 
-        $(document).on("click",'button[name=edit-user]', function (){
-            $("#confirmUpdateUser div.modal-header h4").html("修改用户");
+        $(document).on("click",'button[name=edit-schedule]', function (){
+            $("#confirmBook div.modal-header h4").html("修改预定");
             var tr = $(this).closest("tr");
             var row = dt.row(tr);
             var data = row.data();
-            $("#confirmUpdateUser input,#confirmUpdateUser select").each(function(index,input){
+            $("#confirmBook input,#confirmBook select").each(function(index,input){
                 $(input).val(data[$(input).attr("name")]);
             });
+
+            var tableNo = data.tableNo;
+            var tables = tableNo % 100;
+
+            $("#confirmBook select[name=area]").val((tableNo - tables)/100).trigger("change",{needValidate:0});
+            $("#confirmBook select[name=tables]").val(parseInt(tables));
+
         });
 
-        $(document).on("click",'button[name=del-user]', function (){
+        $(document).on("click",'button[name=cancel-schedule]', function (){
             var tr = $(this).closest("tr");
             var row = dt.row(tr);
             var rowData = row.data();
-            $("#confirmUpdateUser div.modal-body").data("username",rowData.username);
+            $("#confirmBook div.modal-body").data("id",rowData.id);
         });
 
-        $("button[name=confirmDelUser]").click(function(){
-            var username = $("#confirmUpdateUser div.modal-body").data("username");
+        $("button[name=confirmCancelBook]").click(function(){
+            var scheduleId = $("#confirmBook div.modal-body").data("id");
             $.ajax({
-                url:"<%=realPath %>/user/delUser",
+                url:"<%=realPath %>/book/cancelSchedule",
                 dataType:"json",
                 headers:{
                     Accept : "application/json; charset=utf-8"
                 },
-                data:{"username":username},
+                data:{"scheduleId":scheduleId},
                 success:function(result){
                     if(result.success){
                         dt.ajax.reload();
                         noty({"text":"删除成功!","layout":"topCenter","type":"success"});
-                    }
-                }
-            });
-        });
-
-        $("button[name=confirmUpdateUser]").click(function(){
-            var params = {};
-            $("#confirmUpdateUser input,#confirmUpdateUser select").each(function(index,input){
-                params[$(input).attr("name")] = $(input).val();
-            });
-            $.ajax({
-                url:"<%=realPath %>/user/updateUser",
-                dataType:"json",
-                type:"POST",
-                headers:{
-                    Accept : "application/json; charset=utf-8"
-                },
-                data: {"param":JSON.stringify(params)},
-                success:function(result){
-                    if(result.success){
-                        var curPageNo = dt.page();
-                        dt.ajax.reload(function(json){
-                            dt.page(curPageNo).draw(false);
-                        });
-                        noty({"text":"修改成功!","layout":"topCenter","type":"success"});
                     }
                 }
             });
@@ -366,7 +353,7 @@
             format:"yyyy-mm-dd"
         });
 
-        $("select[name=area]").change(function(){
+        $("select[name=area]").change(function(e,param){
 
             var newAreaVal = $(this).val();
             var bookDate = $("#bookForm").find("input[name=bookDate]").val();
@@ -375,18 +362,19 @@
             for(var i = 0;i < 50;i++)
                 scheduledTable.push(0);
 
-            $.ajax({
-                url:"<%=realPath %>/book/getScheduledTableList",
-                dataType:"json",
-                async:false,
-                data:{"date":bookDate,"area":newAreaVal},
-                success:function(data){
-                    $.each(data,function(index,table){
-                        var tableNo = table.tableNo;
-                        scheduledTable[tableNo % 100]  = 1;
-                    });
-                }
-            });
+            if(!param || param.needValidate == 1)
+                $.ajax({
+                    url:"<%=realPath %>/book/getScheduledTableList",
+                    dataType:"json",
+                    async:false,
+                    data:{"date":bookDate,"area":newAreaVal},
+                    success:function(data){
+                        $.each(data,function(index,table){
+                            var tableNo = table.tableNo;
+                            scheduledTable[tableNo % 100]  = 1;
+                        });
+                    }
+                });
 
             //每次区号一变，桌号就重置下
             $("select[name=tables]").html('');
@@ -427,8 +415,60 @@
                             message: '预定日期非空'
                         }
                     }
+                },
+                area:{
+                    validators: {
+                        notEmpty: {
+                            message: '区号非空'
+                        }
+                    }
+                },
+                tables:{
+                    validators: {
+                        notEmpty: {
+                            message: '桌号非空'
+                        }
+                    }
+                },
+                phoneNum:{
+                    validators: {
+                        notEmpty: {
+                            message: '手机号码非空'
+                        },
+                        numeric: {
+                            message: '手机号码必须为数字'
+                        }
+                    }
                 }
             }
+        }).on('success.form.bv', function(e) {
+            // Prevent form submission
+            e.preventDefault();
+
+            // Get the form instance
+            var $form = $(e.target);
+
+            // Get the BootstrapValidator instance
+            var bv = $form.data('bootstrapValidator');
+
+            $form.ajaxSubmit({
+                url:"<%=realPath %>/book/updateSchedule",
+                dataType:"json",
+                type:"POST",
+                async:false,
+                headers:{
+                    Accept : "application/json; charset=utf-8"
+                },
+                success:function(result){
+                    if(result.success){
+                        dt.ajax.reload();
+                    }
+                }
+            });
+
+            //关闭窗口
+            $("#confirmBook button.close").trigger('click');
+
         });
 
     });

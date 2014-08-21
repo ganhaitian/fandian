@@ -6,6 +6,7 @@ import com.fandian.dao.BillDao;
 import com.fandian.dao.ScheduledDao;
 import com.fandian.util.JSONUtil;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -54,6 +55,25 @@ public class ScheduledController {
         result.addAll(existedBills);
 
         return jsonUtil.transToJsonStrByGson(result);
+    }
+
+    @RequestMapping("/updateSchedule")
+    @ResponseBody
+    public String updateSchedule(@ModelAttribute Schedule schedule){
+        int scheduleId = schedule.getId();
+        if(scheduleId == 0){
+            scheduledDao.insertSchedule(schedule);
+        }else{
+            scheduledDao.updateSchedule(schedule);
+        }
+        return "{\"success\":true}";
+    }
+
+    @RequestMapping("/cancelSchedule")
+    @ResponseBody
+    public String cancelSchedule(@RequestParam int scheduleId){
+        scheduledDao.delSchedule(scheduleId);
+        return "{\"success\":true}";
     }
 
 }
