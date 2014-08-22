@@ -422,10 +422,10 @@
         $('#dish-detail-mask-container').fadeOut()
     }
 
-    function showValidBookMobilePanel(){
+    function showValidBookMobilePanel(btn){
         noty({
             text: '请输入您预约登记的手机号码:',
-            type:'information',
+            type:'confirm',
             layout:'topCenter',
             modal:true,
             template: '<div class="noty_message"><span class="noty_text"></span><input id="book-mobile" type="text" class="form-control input-lg"/><div class="noty_close"></div></div>',
@@ -449,8 +449,10 @@
                             success:function(data){
                                 if (data.success){
                                     $noty.close();
-                                    noty({text: '验证通过~', type: 'information', timeout:2000,layout:'topCenter'});
-
+//                                    noty({text: '验证通过~', type: 'information', timeout:2000,layout:'topCenter'});
+                                    if (btn){
+                                        $(btn).trigger('click');
+                                    }
                                 }else{
                                     noty({text: '未找到预约记录', type: 'information', timeout:2000,layout:'topCenter'});
                                 }
@@ -472,7 +474,7 @@
         });
     }
 
-    function fetchDishMetaInfo(dishId){
+    function fetchDishMetaInfo(dishId,btn){
         $.ajax({
             url:"<s:url value="/menu/customer/dish/meta/"></s:url>"+dishId,
             dataType:"json",
@@ -484,7 +486,7 @@
             },
             success:function(result){
                 if (result.nobook){
-                    showValidBookMobilePanel();
+                    showValidBookMobilePanel(btn);
                 }else{
                     initTastePanel(result["taste"]);
                     initWeightPanel(result["weight"]);
@@ -566,7 +568,7 @@
             $('#btn-dish-order-sure').attr("data-id",btn.attr("data-id"));
             $('#btn-dish-order-sure').attr("data-name",btn.attr("data-name"));
             $('#btn-dish-order-sure').attr("data-price",btn.attr("data-price"));
-            fetchDishMetaInfo($(this).attr('data-id'));
+            fetchDishMetaInfo($(this).attr('data-id'), btn);
             if ($(this).attr('data-unit-id') == '2'){
                 order_dish_num_step = 0.1;
             }else{
