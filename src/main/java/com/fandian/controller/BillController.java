@@ -4,6 +4,7 @@ import com.fandian.bean.*;
 import com.fandian.dao.BillDao;
 import com.fandian.dao.CustomerDao;
 import com.fandian.dao.MenuDao;
+import com.fandian.dao.ScheduledDao;
 import com.fandian.model.DishOrderInfo;
 import com.fandian.util.JSONUtil;
 import com.fandian.util.UserTypeJudger;
@@ -20,8 +21,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.*;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by gan on 14-7-15.
@@ -43,6 +47,9 @@ public class BillController {
 
     @Inject
     private MenuDao menuDao;
+
+    @Inject
+    private ScheduledDao scheduledDao;
 
     @RequestMapping("/new")
     public String toNewBillView() {
@@ -213,6 +220,16 @@ public class BillController {
                 existedBill = billDao.getCommonBillByUsername(username);
             }
 
+            //获取预约桌号
+            List<Schedule> schedules = scheduledDao.getBookRecords(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+            for (Schedule schedule : schedules){
+                if (schedule.getPhoneNum().equals(request.getSession().getAttribute(MenuController.SESSION_USER_BOOK_PHONE_KEY))){
+                    model.addAttribute("tableNo", Integer.parseInt((schedule.getTableNo()+"").substring(1)));
+                    model.addAttribute("areaNo", (schedule.getTableNo()+"").substring(0,1));
+                    break;
+                }
+            }
+
             List<BillDetail> savedBillDetails = null;
             //存在未结付的订单时
             if (existedBill != null) {
@@ -248,6 +265,8 @@ public class BillController {
             }
 
             model.addAttribute("sumfee", sumfee);
+
+
 
         } catch (Exception e) {
             log.error("获取桌单异常", e);

@@ -49,20 +49,11 @@
                 <div class="col-xs-6 col-md-6">
                     <select name="area" class="form-control input-lg">
                         <c:choose>
-                            <c:when test="${existedBill}">
-                                <c:choose>
-                                    <c:when test="${areaNo == '4'}">
-                                        <option value="4">包厢</option>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <option value="${areaNo}">${areaNo} 区</option>
-                                    </c:otherwise>
-                                </c:choose>
+                            <c:when test="${areaNo == '4'}">
+                                <option value="4">包厢</option>
                             </c:when>
                             <c:otherwise>
-                                <option value = "3">3区</option>
-                                <option value = "5">5区</option>
-                                <option value = "4">包厢</option>
+                                <option value="${areaNo}">${areaNo} 区</option>
                             </c:otherwise>
                         </c:choose>
 
@@ -70,12 +61,7 @@
                 </div>
                 <div class="col-xs-6 col-md-6">
                     <select name="desknumber" id="" class="form-control input-lg">
-                        <c:if test="${existedBill}">
-                            <option value="${tableNo}">${tableNo}桌</option>
-                        </c:if>
-                        <c:if test="${!existedBill}">
-
-                        </c:if>
+                        <option value="${tableNo}">${tableNo}桌</option>
                     </select>
                 </div>
             </div>
@@ -174,7 +160,7 @@
 
         });
 
-        $("select[name=area]").change(function(){
+        /*$("select[name=area]").change(function(){
             //每次区号一变，桌号就重置下
             $("select[name=desknumber]").html('');
             var newAreaVal = $(this).val();
@@ -196,7 +182,7 @@
 
         });
 
-        $("select[name=area]").trigger("change");
+        $("select[name=area]").trigger("change");*/
 
         //minus btn  click
         $('.btn-oper-minus').click(function(){

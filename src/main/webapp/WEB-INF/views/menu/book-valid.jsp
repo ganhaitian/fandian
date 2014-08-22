@@ -65,21 +65,22 @@
 
             <div class="text-center">
 
-                <div class="input-group">
+                <%--<div class="input-group">
                   <input type="text" class="form-control input-lg" id="mobile">
                   <span class="input-group-btn">
                     <button class="btn btn-inverse btn-lg" type="button" id="btn-submit">确定</button>
                   </span>
-                </div><!-- /input-group -->
+                </div>--%>
+                <input type="text" class="form-control input-lg" id="mobile">
 
                 <div id="valid-info-container" class="alert alert-warning text-left" style="display: none;"><i class="fa fa-info"></i> 手机号码格式不正确</div>
 
                 <div id="noschecule-info-container" class="alert alert-info text-left" style="display: none;"><i class="fa fa-info"></i> 未找到预约信息</div>
 
                 <br/>
-
+                <button class="btn btn-primary btn-lg btn-block" type="button" id="btn-submit">确定</button>
             </div>
-
+            <br/>
             <a href="<c:url value="/book/noSchedule"></c:url>"><strong>暂未预约，去看看菜单</strong></a>
         </div>
     </div>
