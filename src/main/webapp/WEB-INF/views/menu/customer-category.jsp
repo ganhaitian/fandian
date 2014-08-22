@@ -42,6 +42,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="<s:url value="/resources/js/plugins/jquery-ui/jquery-ui.min.js"></s:url>"></script>
     <script src="<s:url value="/resources/js/jquery.loadTemplate-1.4.4.min.js"></s:url>"></script>
+    <script src="<s:url value="/resources/js/plugins/noty/jquery.noty.packaged.min.js"></s:url>"></script>
     <script src="<s:url value="/resources/js/holder.js"></s:url>"></script>
 </head>
 <body>
@@ -278,28 +279,28 @@
                             </div>
 
                         </div>
-                        <c:if test="${showOrderBtn}">
-                            <div class="panel-footer">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <div class="pull-right">
-                                            <button class="hide btn btn-inverse btn-del-from-cart" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
-                                                <i class="fa fa-minus"></i>
 
-                                            </button>
-                                            &nbsp;&nbsp;
-                                            <span class="badge text-primary" id="sub_number_${dish.id}"></span>
-                                            &nbsp;&nbsp;
-                                            <button class="btn btn-inverse btn-add-to-cart" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
-                                                <i class="fa fa-plus"></i>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="pull-right">
+                                        <button class="hide btn btn-inverse btn-del-from-cart" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
+                                            <i class="fa fa-minus"></i>
 
-                                            </button>
-                                        </div>
+                                        </button>
+                                        &nbsp;&nbsp;
+                                        <span class="badge text-primary" id="sub_number_${dish.id}"></span>
+                                        &nbsp;&nbsp;
+                                        <button class="btn btn-inverse btn-add-to-cart" data-id="${dish.id}" data-name="${dish.name}" data-price="${dish.price}" data-sub-number-id="sub_number_${dish.id}">
+                                            <i class="fa fa-plus"></i>
 
+                                        </button>
                                     </div>
+
                                 </div>
                             </div>
-                        </c:if>
+                        </div>
+
 
                     </div>
 
@@ -310,9 +311,11 @@
         </div>
     </s:if>
 
+
 </div>
 <script type="application/javascript">
     Holder.add_theme("bright", { background: "#a6a5a3", foreground: "white", size: 12 });
+
     var order_dish_num_step = 1;
     function updateUserOrderDetails(){
         $.ajax({
@@ -419,6 +422,56 @@
         $('#dish-detail-mask-container').fadeOut()
     }
 
+    function showValidBookMobilePanel(){
+        noty({
+            text: '请输入您预约登记的手机号码:',
+            type:'information',
+            layout:'topCenter',
+            modal:true,
+            template: '<div class="noty_message"><span class="noty_text"></span><input id="book-mobile" type="text" class="form-control input-lg"/><div class="noty_close"></div></div>',
+            buttons: [
+                {addClass: 'btn btn-primary', text: '确定', onClick: function($noty) {
+                    var mobile = $('#book-mobile').val();
+                    if (!/^\d{11}$/.test(mobile)){
+                        noty({text: '您输入的手机号码格式不正确', type: 'warning', timeout:2000,layout:'topCenter'});
+                        return;
+                    }else{
+                        $.ajax({
+                            url:"<c:url value="/book/validSchedule"></c:url>",
+                            dataType:"json",
+                            headers:{
+                                Accept : "application/json; charset=utf-8"
+                            },
+                            method:'POST',
+                            data:{
+                                "mobile": mobile
+                            },
+                            success:function(data){
+                                if (data.success){
+                                    $noty.close();
+                                    noty({text: '验证通过~', type: 'information', timeout:2000,layout:'topCenter'});
+
+                                }else{
+                                    noty({text: '未找到预约记录', type: 'information', timeout:2000,layout:'topCenter'});
+                                }
+                            },
+                            error:function(){
+                                noty({text: '请稍后再试~', type: 'error', timeout:2000,layout:'topCenter'});
+                            }
+                        });
+                    }
+
+                }
+                },
+                {addClass: 'btn btn-default', text: '取消', onClick: function($noty) {
+                    $noty.close();
+
+                }
+                }
+            ]
+        });
+    }
+
     function fetchDishMetaInfo(dishId){
         $.ajax({
             url:"<s:url value="/menu/customer/dish/meta/"></s:url>"+dishId,
@@ -430,10 +483,14 @@
                 alert("对不起，请稍后再试~");
             },
             success:function(result){
+                if (result.nobook){
+                    showValidBookMobilePanel();
+                }else{
+                    initTastePanel(result["taste"]);
+                    initWeightPanel(result["weight"]);
+                    showDishMetaPanel();
+                }
 
-                initTastePanel(result["taste"]);
-                initWeightPanel(result["weight"]);
-                showDishMetaPanel();
 
             }
         });

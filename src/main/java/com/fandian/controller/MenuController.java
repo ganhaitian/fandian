@@ -210,10 +210,6 @@ public class MenuController {
             return "redirect:/bill/view";
         }
 
-        if (request.getSession().getAttribute(SESSION_USER_BOOK_PHONE_KEY) == null){
-            return "menu/book-valid";
-        }
-
         List<DishCategory> rootCategories = menuDao.getRootDishCategories();
         model.addAttribute("categories", rootCategories);
         return "menu/customer-category";
@@ -225,11 +221,6 @@ public class MenuController {
         if (rootCategories.size() == 0) {
             List<Dish> dishes = menuDao.getDishesInCategory(categoryId);
             model.addAttribute("dishes", dishes);
-            if (!request.getSession().getAttribute(SESSION_USER_BOOK_PHONE_KEY).equals(SESSION_USER_BOOK_PHONE_VAL_NONE)) {
-                model.addAttribute("showOrderBtn", true);
-            }else{
-                model.addAttribute("showOrderBtn", false);
-            }
         }
         model.addAttribute("rootcategory", menuDao.getDishCategory(categoryId));
         model.addAttribute("categories", rootCategories);
@@ -239,10 +230,17 @@ public class MenuController {
 
     @RequestMapping("/customer/dish/meta/{dishId}")
     @ResponseBody
-    public String getDishMetaDetails(@PathVariable int dishId) {
+    public String getDishMetaDetails(@PathVariable int dishId,HttpServletRequest request) {
+
         Map<String, Object> result = new HashMap<String, Object>();
-        result.put("taste",menuDao.getDishTastes(dishId));
-        result.put("weight",menuDao.getDishWeights(dishId));
+        if (request.getSession().getAttribute(SESSION_USER_BOOK_PHONE_KEY) == null){
+            result.put("nobook",true);
+        }else{
+            result.put("nobook",false);
+            result.put("taste",menuDao.getDishTastes(dishId));
+            result.put("weight",menuDao.getDishWeights(dishId));
+        }
+
         return jsonUtil.transToJsonStrByGson(result);
     }
 
