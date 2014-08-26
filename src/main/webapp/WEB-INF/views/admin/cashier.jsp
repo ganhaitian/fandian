@@ -123,8 +123,8 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">桌单列表</div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><i class="fa fa-dollar fa-fw"></i>桌单列表</div>
                     <div class="panel-body table-list">
                         <table id="bill_table"
                                class="cell-border table table-striped dataTable no-footer">
@@ -400,11 +400,13 @@ $(document).ready(function () {
                 data: "status",
                 "render": function (data, type, full, meta) {
                     if (data == 0) {
-                        return '<span class="label label-success">未结</span>';
+                        return '<span class="label label-success">新单</span>';
                     } else if (data == 1) {
                         return '<span class="label label-danger">已结</span>';
-                    } else if (data = 2){
+                    } else if (data == 2){
                         return '<span class="label label-warning">挂账</span>';
+                    } else if(data == 3){
+                        return '<span class="label label-primary">已打印</span>';
                     }
                 }
             },
@@ -448,7 +450,8 @@ $(document).ready(function () {
             },
             {
                 className: "common-td",
-                data: "operator"
+                data: "operator",
+                visible:false
             },
             {
                 className: "center-td",
@@ -458,10 +461,10 @@ $(document).ready(function () {
                 className: "center-td",
                 data: "status",
                 "render": function (data, type, full, meta) {
-                    if (data == 0) {
+                    if (data == 3) {
                         return '<button name="confirmCheckout" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#confirmCheckModal">结账</button>   '+
                                 '<button name="confirmLosses" class="btn btn-xs btn-warning" data-toggle="modal" data-target="#confirmLossesModal">挂账</button>' ;
-                    } else if (data == 1 || data == 2) {
+                    } else if (data == 1 || data == 2 || data == 0) {
                         return '<button name="confirmCheckout" class="btn btn-xs btn-primary disabled" data-toggle="modal" data-target="#confirmCheckModal">结账</button>   '+
                                 '<button name="confirmLosses" class="btn btn-xs btn-warning disabled" data-toggle="modal" data-target="#confirmLossesModal">挂账</button>' ;
                     }
@@ -469,14 +472,14 @@ $(document).ready(function () {
             }
         ],
         "order": [
-            [4, 'desc'],[11,'desc'],[2,'asc']
+            [4, 'asc'],[11,'desc'],[2,'asc']
         ],
         "pageLength": 25,
         "dom": '<"toolbar">frtip'
     });
 
     $("div.toolbar").html(
-        '<i class="fa fa-filter" style="border-right: 2px solid #e4e4e4">筛选</i>'+
+        '<span class="label label-default"><i class="fa fa-filter" >筛选</i></span>'+
         '区号: ' +
             '<select name = "area" class="form-control" >' +
                 '<option value = "0">全部</option>' +
@@ -556,6 +559,9 @@ $(document).ready(function () {
             url: "<%=realPath %>/bill/losses",
             data: {"billId": currentBillId,"customerId":customerId},
             dataType: "json",
+            headers: {
+                Accept: "application/json; charset=utf-8"
+            },
             success: function (data) {
                 if (data.success) {
                     //$("td[name=status]",tr).html("<span class='label label-danger'>已结</span>");
@@ -581,6 +587,9 @@ $(document).ready(function () {
             url: "<%=realPath %>/bill/checkout",
             data: {"billId": currentBillId, "discount": discountValue, "paymentType": paymentType},
             dataType: "json",
+            headers: {
+                Accept: "application/json; charset=utf-8"
+            },
             success: function (data) {
                 if (data.success) {
                     //$("td[name=status]",tr).html("<span class='label label-danger'>已结</span>");

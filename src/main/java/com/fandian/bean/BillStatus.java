@@ -7,7 +7,8 @@ public enum BillStatus {
 
     COMMON(0),//普通
     SETTLED(1),//已结付
-    LOSSES(2);//已挂账
+    LOSSES(2),//已挂账
+    PRINTED(3);//已打印
 
     private int status;
 

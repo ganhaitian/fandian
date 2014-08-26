@@ -64,7 +64,7 @@ public class BillController {
         Map<String, Object> result = new HashMap<String, Object>();
 
         Bill bill = billDao.getBillById(billId);
-        if (bill == null || bill.getStatus() != BillStatus.COMMON.value()) {
+        if (bill == null || bill.getStatus() != BillStatus.PRINTED.value()) {
             result.put("success", false);
             result.put("errMsg", "账单不存在，或者账单状态错误!");
             return jsonUtil.transToJsonStrByGson(result);
