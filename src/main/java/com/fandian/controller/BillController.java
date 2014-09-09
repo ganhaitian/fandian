@@ -193,6 +193,9 @@ public class BillController {
 
             if(billDetail.getTaste() > 0)
                 billDetail.setTasteName(menuDao.getTaste(billDetail.getTaste()).getName());
+
+            //置入总价字段
+            billDetail.setSumPrice(billDetail.getAmount() * billDetail.getPrice());
         }
 
         newBill.setBillDetails(billDetails);

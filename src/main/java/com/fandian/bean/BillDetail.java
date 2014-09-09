@@ -1,7 +1,5 @@
 package com.fandian.bean;
 
-import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
-
 import java.io.Serializable;
 
 /**
@@ -23,6 +21,8 @@ public class BillDetail implements Serializable {
 
     private float price;
 
+    private float sumPrice;
+
     private int weight;
 
     private String weightName;
@@ -33,6 +33,14 @@ public class BillDetail implements Serializable {
 
     public BillDetail(){
 
+    }
+
+    public float getSumPrice() {
+        return sumPrice;
+    }
+
+    public void setSumPrice(float sumPrice) {
+        this.sumPrice = sumPrice;
     }
 
     public String getWeightName() {
