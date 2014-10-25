@@ -163,7 +163,7 @@ public class BillController {
 
     @RequestMapping(value = "/confirm", method = {RequestMethod.POST})
     @ResponseBody
-    public String confirmBill(@RequestParam String param, @RequestParam int tableNo) {
+    public String confirmBill(@RequestParam String param, @RequestParam String tableNo) {
         //关联上用户名
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -227,8 +227,8 @@ public class BillController {
             List<Schedule> schedules = scheduledDao.getBookRecords(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             for (Schedule schedule : schedules){
                 if (schedule.getPhoneNum().equals(request.getSession().getAttribute(MenuController.SESSION_USER_BOOK_PHONE_KEY))){
-                    model.addAttribute("tableNo", Integer.parseInt((schedule.getTableNo()+"").substring(1)));
-                    model.addAttribute("areaNo", (schedule.getTableNo()+"").substring(0,1));
+                    model.addAttribute("tableNo", Integer.parseInt(schedule.getTableNo().substring(1)));
+                    model.addAttribute("areaNo", schedule.getTableNo().substring(0,1));
                     break;
                 }
             }
@@ -236,8 +236,9 @@ public class BillController {
             List<BillDetail> savedBillDetails = null;
             //存在未结付的订单时
             if (existedBill != null) {
+
                 model.addAttribute("existedBill", true);
-                model.addAttribute("tableNo", existedBill.getTableNo());
+                model.addAttribute("tableNo", existedBill.getTableNo().substring(1));
                 model.addAttribute("areaNo", (existedBill.getTableNo() + "").substring(0, 1));
                 savedBillDetails = billDao.getBillDetails(existedBill.getId());
                 username = existedBill.getUserName();

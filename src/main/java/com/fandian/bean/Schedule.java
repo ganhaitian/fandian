@@ -1,5 +1,7 @@
 package com.fandian.bean;
 
+import org.springframework.util.StringUtils;
+
 /**
  * Created by gan on 14-8-20.
  */
@@ -11,15 +13,15 @@ public class Schedule {
 
     private String bookDate;
 
-    private int area;
+    private String area;
 
     private int tables;
 
-    public int getArea() {
+    public String getArea() {
         return area;
     }
 
-    public void setArea(int area) {
+    public void setArea(String area) {
         this.area = area;
     }
 
@@ -31,7 +33,7 @@ public class Schedule {
         this.tables = tables;
     }
 
-    private int tableNo;
+    private String tableNo;
 
     private String phoneNum;
 
@@ -61,14 +63,19 @@ public class Schedule {
         this.bookDate = bookDate;
     }
 
-    public int getTableNo() {
-        if(this.tableNo > 0)
+    public String getTableNo() {
+        if(!StringUtils.isEmpty(this.tableNo))
             return this.tableNo;
-        else
-            return area * 100 + tables;
+        else{
+            if(this.area.equals("V")){
+                return area + tables;
+            }else{
+                return String.valueOf(Integer.parseInt(this.area) * 100 + tables);
+            }
+        }
     }
 
-    public void setTableNo(int tableNo) {
+    public void setTableNo(String tableNo) {
         this.tableNo = tableNo;
     }
 

@@ -32,7 +32,7 @@ public class BillDao extends JdbcTemplate {
 
     public Bill getCommonBillByUsername(String userName) {
         try {
-            return queryForObject("select * from bill where user_name = ? and status = ?",
+            return queryForObject("select * from bill where user_name = ? and status = ? limit 1",
                 BeanPropertyRowMapper.newInstance(Bill.class), userName, BillStatus.COMMON.value());
         } catch (Exception e) {
             return null;
@@ -80,7 +80,7 @@ public class BillDao extends JdbcTemplate {
 
                 PreparedStatement ps = connection.prepareStatement(
                     "insert into bill (table_no,status,fee,user_name,create_time) values(?,?,?,?,?) ", Statement.RETURN_GENERATED_KEYS);
-                ps.setInt(1, bill.getTableNo());
+                ps.setString(1, bill.getTableNo());
                 ps.setInt(2, bill.getStatus());
                 ps.setFloat(3, bill.getFee());
                 ps.setString(4, bill.getUserName());
@@ -105,7 +105,7 @@ public class BillDao extends JdbcTemplate {
      * @param date
      * @return
      */
-    public List<Bill> getBills(String date,int status,int area){
+    public List<Bill> getBills(String date,int status,String area){
         return query("select * from bill where up_time >= ? and up_time <=? and status = ? and table_no like ?",
             BeanPropertyRowMapper.newInstance(Bill.class),
             date + " 00:00:00",date + " 23:59:59",status,area + "%"

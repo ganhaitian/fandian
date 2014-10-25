@@ -51,7 +51,8 @@ public class ScheduledController {
 
     @RequestMapping("/getScheduledTableList")
     @ResponseBody
-    public String getScheduledTableList(@RequestParam(required = false) String date,@RequestParam int area){
+    public String getScheduledTableList(@RequestParam(required = false) String date,@RequestParam String area){
+
         List<Object> result = new ArrayList<Object>();
 
         List<Schedule> schedules = scheduledDao.getBookRecords(date,area);
@@ -67,12 +68,14 @@ public class ScheduledController {
     @RequestMapping("/updateSchedule")
     @ResponseBody
     public String updateSchedule(@ModelAttribute Schedule schedule){
+
         int scheduleId = schedule.getId();
         if(scheduleId == 0){
             scheduledDao.insertSchedule(schedule);
         }else{
             scheduledDao.updateSchedule(schedule);
         }
+
         return "{\"success\":true}";
     }
 

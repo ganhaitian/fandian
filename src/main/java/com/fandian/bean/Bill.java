@@ -11,7 +11,7 @@ public class Bill {
 
     private int id;
 
-    private int tableNo;
+    private String tableNo;
 
     private int status;
 
@@ -137,11 +137,11 @@ public class Bill {
         this.status = status;
     }
 
-    public int getTableNo() {
+    public String getTableNo() {
         return tableNo;
     }
 
-    public void setTableNo(int tableNo) {
+    public void setTableNo(String tableNo) {
         this.tableNo = tableNo;
     }
 

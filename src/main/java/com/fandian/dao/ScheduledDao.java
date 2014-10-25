@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public class ScheduledDao extends JdbcTemplate{
 
-    public List<Schedule> getBookRecords(String date,int area){
+    public List<Schedule> getBookRecords(String date,String area){
         return query("select * from scheduled where book_date = ? and table_no like ? ",
             BeanPropertyRowMapper.newInstance(Schedule.class),date,area + "%");
     }

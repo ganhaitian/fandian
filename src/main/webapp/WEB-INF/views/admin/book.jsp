@@ -151,7 +151,7 @@
                         <select name="area" class="form-control">
                             <option value="3">3区</option>
                             <option value="5">5区</option>
-                            <option value="4">包厢</option>
+                            <option value="V">包厢</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -412,7 +412,7 @@
                         continue;
                     $("select[name=tables]").append("<option value = '"+i+"' >"+i+"桌</option>")
                 }
-            }else if(newAreaVal == 4){
+            }else if(newAreaVal == "V" ){
                 for(var i = 1 ; i <= 33 ; i++){
                     if( i % 10 == 4 || i % 10 == 7 || scheduledTable[i] == 1)
                         continue;
