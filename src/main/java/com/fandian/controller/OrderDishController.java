@@ -84,14 +84,17 @@ public class OrderDishController {
 
     @RequestMapping("/customer/delDish")
     @ResponseBody
-    public String delDish(Dish dish){
+    public String delDish(BillDetail billDetail){
         Map<String,Object> result = new HashMap<String, Object>();
         result.put("success",true);
         try {
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             if (DISH_ORDER_CACHE.containsKey(username)){
                 for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(username)){
-                    if (dishOrderInfo.getDish().getId() == dish.getId() && dishOrderInfo.getNumber()>0){
+                    if (dishOrderInfo.getDish().getId() == billDetail.getDishId() &&
+                            dishOrderInfo.getTaste().getId() == billDetail.getTaste() &&
+                            dishOrderInfo.getWeight().getId() == billDetail.getWeight() &&
+                            dishOrderInfo.getNumber()>0){
 
                         dishOrderInfo.setNumber(dishOrderInfo.getNumber()-1);
                         if (dishOrderInfo.getNumber() == 0){
@@ -102,7 +105,7 @@ public class OrderDishController {
 
                 }
                 for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(username)){
-                    if (dishOrderInfo.getDish().getId() == dish.getId()){
+                    if (dishOrderInfo.getDish().getId() == billDetail.getDishId()){
 
                         dishOrderInfo.setTotalNumber(dishOrderInfo.getTotalNumber()-1);
 

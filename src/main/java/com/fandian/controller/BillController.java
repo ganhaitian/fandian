@@ -170,9 +170,15 @@ public class BillController {
         List<BillDetail> billDetails = jsonUtil.transJsonToBeanListByGson(param, new TypeToken<List<BillDetail>>() {
         }.getType());
 
-        Bill newBill = new Bill();
+        Bill newBill = billDao.getBillByTableNo(tableNo, 0);
+
+        if (newBill == null){
+            newBill = new Bill();
+        }
+
         newBill.setTableNo(tableNo);
         newBill.setUserName(username);
+        newBill.setFee(0);
 
         for (BillDetail billDetail : billDetails) {
             if (billDetail.getWeight() > 0) {
@@ -188,10 +194,10 @@ public class BillController {
 
         //补充口味和份量的中文描述，方便以后显示和打印
         for(BillDetail billDetail:billDetails){
-            if(billDetail.getWeight() > 0)
+//            if(billDetail.getWeight() > 0)
                 billDetail.setWeightName(menuDao.getWeight(billDetail.getWeight()).getName());
 
-            if(billDetail.getTaste() > 0)
+//            if(billDetail.getTaste() > 0)
                 billDetail.setTasteName(menuDao.getTaste(billDetail.getTaste()).getName());
 
             //置入总价字段
@@ -216,7 +222,7 @@ public class BillController {
                 model.addAttribute("isCustomer", true);
 
             } else if (tableNo != null) {
-                existedBill = billDao.getBillByTableNo((Integer.parseInt(tableNo)), 0);
+                existedBill = billDao.getBillByTableNo(tableNo, 0);
                 model.addAttribute("isCustomer", false);
             } else {
                 username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -313,6 +319,16 @@ public class BillController {
                 dish.setName(billDetail.getDishName());
                 dish.setPrice(billDetail.getPrice());
                 tmp.setDish(dish);
+
+                Taste taste = new Taste();
+                taste.setId(billDetail.getWeight());
+                taste.setName(billDetail.getTasteName());
+                tmp.setTaste(taste);
+
+                Weight weight = new Weight();
+                weight.setId(billDetail.getWeight());
+                weight.setName(billDetail.getWeightName());
+                tmp.setWeight(weight);
                 cacheDishOrderInfos.add(tmp);
             }
         }

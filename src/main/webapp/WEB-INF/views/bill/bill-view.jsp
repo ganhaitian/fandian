@@ -49,8 +49,8 @@
                 <div class="col-xs-6 col-md-6">
                     <select name="area" class="form-control input-lg">
                         <c:choose>
-                            <c:when test="${areaNo == '4'}">
-                                <option value="4">包厢</option>
+                            <c:when test="${areaNo == 'V'}">
+                                <option value="V">包厢</option>
                             </c:when>
                             <c:otherwise>
                                 <option value="${areaNo}">${areaNo} 区</option>
@@ -200,7 +200,8 @@
                     data: {"dishId":dish_id,"taste":dish_taste,"weight":dish_weight},
                     success:function(data){
                         if(data.success){
-                            $('#dish_number_'+dish_id+'_'+dish_taste+'_'+dish_weight).text(dish_number-1);
+                            $('#dish_number_'+dish_id+'_'+dish_taste+'_'+dish_weight).data('count',(dish_number-1)).text(dish_number-1);
+                            $('#dish_'+dish_id+'_'+dish_taste+'_'+dish_weight).data('count',(dish_number-1));
                             $('#bill_sum_fee').text(sum_fee-dish_price);
                         }
                     }
@@ -213,7 +214,7 @@
                     data: {"dishId":dish_id,"taste":dish_taste,"weight":dish_weight},
                     success:function(data){
                         if(data.success){
-                            $('#dish_'+dish_id+'_'+dish_taste+'_'+dish_weight).fadeOut();
+                            $('#dish_'+dish_id+'_'+dish_taste+'_'+dish_weight).data('count',(dish_number-1)).fadeOut();
                             $('#bill_sum_fee').text(sum_fee-dish_price);
                         }
                     }
@@ -224,9 +225,9 @@
         //plus dish btn
         $('.btn-oper-plus').click(function(){
             var dish_id = $(this).data('id');
-            var dish_price = $(this).data('price');
+            var dish_price = parseFloat($(this).data('price'));
             var dish_taste = $(this).data('taste');
-            var dish_weight = $(this).data('weight');
+            var dish_weight = parseFloat($(this).data('weight'));
             var dish_number = parseFloat($('#dish_number_'+dish_id+'_'+dish_taste+'_'+dish_weight).text());
             var sum_fee = parseFloat($('#bill_sum_fee').text());
 
@@ -238,6 +239,7 @@
                 success:function(data){
                     if(data.success){
                         $('#dish_number_'+dish_id+'_'+dish_taste+'_'+dish_weight).text(dish_number+1);
+                        $('#dish_'+dish_id+'_'+dish_taste+'_'+dish_weight).data('count',(dish_number+1))
                         $('#bill_sum_fee').text(sum_fee+dish_price);
                     }
                 }
@@ -261,7 +263,7 @@
                 data: {"dishId":dish_id,"taste":dish_taste,"weight":dish_weight},
                 success:function(data){
                     if(data.success){
-                        $('#dish_'+dish_id+'_'+dish_taste+'_'+dish_weight).fadeOut();
+                        $('#dish_'+dish_id+'_'+dish_taste+'_'+dish_weight).data('count',0).fadeOut();
                         $('#bill_sum_fee').text(sum_fee-dish_price*dish_number);
                     }
                 }
@@ -280,6 +282,9 @@
 
             var billDetails = [];
             $("ul.list-group li.dish-entry").each(function(index,entry){
+                if ($(this).data('count') == 0){
+                    return;
+                }
                 billDetails.push(
                     {
                      "dishId":$(this).data("id"),
@@ -290,6 +295,11 @@
                      "weight":$(this).data("weight")
                     });
             });
+
+            if(billDetails.length == 0){
+                noty({"text":"请先点菜!","layout":"topCenter","type":"error"});
+                return;
+            }
 
             $.ajax({
                 url:"confirm",

@@ -47,7 +47,7 @@ public class BillDao extends JdbcTemplate {
         }
     }
 
-    public Bill getBillByTableNo(int tableNo,int status) {
+    public Bill getBillByTableNo(String tableNo,int status) {
         try {
             return queryForObject("select * from bill where table_no = ? and status=?", BeanPropertyRowMapper.newInstance(Bill.class),
                 tableNo,status);
@@ -73,25 +73,34 @@ public class BillDao extends JdbcTemplate {
     }
 
     public void saveNewBill(final Bill bill) {
+        int billId = 0;
+        //修改桌单
+        if (bill.getId()>0){
+            billId = bill.getId();
+            update("update bill set fee=? where id=?",bill.getFee(),billId);
+            deleteBillDetails(billId);
+        }else{
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            update(new PreparedStatementCreator() {
+                public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        update(new PreparedStatementCreator() {
-            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                    PreparedStatement ps = connection.prepareStatement(
+                            "insert into bill (table_no,status,fee,user_name,create_time) values(?,?,?,?,?) ", Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, bill.getTableNo());
+                    ps.setInt(2, bill.getStatus());
+                    ps.setFloat(3, bill.getFee());
+                    ps.setString(4, bill.getUserName());
+                    ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+                    //ps.setDate(5,new Date(System.currentTimeMillis()));
 
-                PreparedStatement ps = connection.prepareStatement(
-                    "insert into bill (table_no,status,fee,user_name,create_time) values(?,?,?,?,?) ", Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, bill.getTableNo());
-                ps.setInt(2, bill.getStatus());
-                ps.setFloat(3, bill.getFee());
-                ps.setString(4, bill.getUserName());
-                ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-                //ps.setDate(5,new Date(System.currentTimeMillis()));
+                    return ps;
+                }
+            }, keyHolder);
 
-                return ps;
-            }
-        }, keyHolder);
+            billId = keyHolder.getKey().intValue();
+        }
 
-        int billId = keyHolder.getKey().intValue();
+
         for (BillDetail billDetail : bill.getBillDetails()) {
             update("insert into bill_detail (bill_id,dish_id,dish_name,amount,price,taste,weight,taste_name,weight_name,sum_price) values(?,?,?,?,?,?,?,?,?,?)",
                 billId, billDetail.getDishId(), billDetail.getDishName(), billDetail.getAmount(),
@@ -138,6 +147,10 @@ public class BillDao extends JdbcTemplate {
             "select * from bill_detail where bill_id = ?",
             new BeanPropertyRowMapper<BillDetail>(BillDetail.class), billId
         );
+    }
+
+    public void deleteBillDetails(int billId){
+        update("delete from bill_detail where bill_id=?",billId);
     }
 
 
