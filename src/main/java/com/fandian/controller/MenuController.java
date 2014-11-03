@@ -9,6 +9,7 @@ import com.fandian.dao.MenuDao;
 import com.fandian.model.DishCustomerView;
 import com.fandian.model.DishListOfCustomerView;
 import com.fandian.util.JSONUtil;
+import com.fandian.util.UserTypeJudger;
 import org.apache.commons.io.FileUtils;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -204,9 +205,11 @@ public class MenuController {
         //查看是否为改单需求，跳转过来的
         String editing = request.getParameter("editing");
 
-        //存在订单的话，并且非改单需求，直接跳入到订单查看的页面
+        //存在订单的话，并且非改单需求，且不是服务员未扫描桌号，直接跳入到订单查看的页面
         if (existedBill != null && existedBill.getStatus() == BillStatus.COMMON.value() &&
-            (editing == null || editing.equals("0"))) {
+            (editing == null || editing.equals("0")) &&
+                !(UserTypeJudger.isCustomer(SecurityContextHolder.getContext().getAuthentication()) &&
+                request.getSession().getAttribute(DeskController.SESSION_SCAN_DESK_NUMBER_KEY)==null)) {
             return "redirect:/bill/view";
         }
 
@@ -233,7 +236,8 @@ public class MenuController {
     public String getDishMetaDetails(@PathVariable int dishId,HttpServletRequest request) {
 
         Map<String, Object> result = new HashMap<String, Object>();
-        if (request.getSession().getAttribute(SESSION_USER_BOOK_PHONE_KEY) == null){
+        if (request.getSession().getAttribute(SESSION_USER_BOOK_PHONE_KEY) == null
+                && UserTypeJudger.isCustomer(SecurityContextHolder.getContext().getAuthentication())){
             result.put("nobook",true);
         }else{
             result.put("nobook",false);

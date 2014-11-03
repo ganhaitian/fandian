@@ -239,6 +239,16 @@ public class BillController {
                 }
             }
 
+            if (UserTypeJudger.isWaitor(SecurityContextHolder.getContext().getAuthentication())){
+                if (request.getSession().getAttribute(DeskController.SESSION_SCAN_DESK_NUMBER_KEY) == null){
+                    return "redirect:/menu/customer/category";
+                }else{
+                    String deskNoInSession = (String) request.getSession().getAttribute(DeskController.SESSION_SCAN_DESK_NUMBER_KEY);
+                    model.addAttribute("tableNo", Integer.parseInt(deskNoInSession.substring(1)));
+                    model.addAttribute("areaNo", deskNoInSession.substring(0,1));
+                }
+            }
+
             List<BillDetail> savedBillDetails = null;
             //存在未结付的订单时
             if (existedBill != null) {
