@@ -5,6 +5,7 @@ import com.fandian.bean.Schedule;
 import com.fandian.dao.BillDao;
 import com.fandian.dao.ScheduledDao;
 import com.fandian.util.JSONUtil;
+import com.fandian.util.SessionUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,6 +33,9 @@ public class ScheduledController {
 
     @Inject
     private BillDao billDao;
+
+    @Inject
+    private SessionUtil sessionUtil;
 
     @RequestMapping("/list")
     @ResponseBody
@@ -101,7 +105,10 @@ public class ScheduledController {
                 for (Schedule schedule : schedules){
                     if (schedule.getPhoneNum().equals(mobile)){
                         result.put("success",true);
-                        request.getSession().setAttribute(MenuController.SESSION_USER_BOOK_PHONE_KEY,schedule.getPhoneNum());
+
+                        sessionUtil.addObjectToSession(SessionUtil.SESSION_USER_BOOK_PHONE_KEY,schedule.getPhoneNum(),request);
+                        sessionUtil.addObjectToSession(SessionUtil.SESSION_SCHEDULE_EXIST_KEY,true,request);
+
                         break;
                     }
                 }
@@ -118,7 +125,10 @@ public class ScheduledController {
 
     @RequestMapping("noSchedule")
     public String noSchedule(HttpServletRequest request){
-        request.getSession().setAttribute(MenuController.SESSION_USER_BOOK_PHONE_KEY,MenuController.SESSION_USER_BOOK_PHONE_VAL_NONE);
+
+        sessionUtil.removeObjectFromSession(SessionUtil.SESSION_SCAN_DESK_NUMBER_KEY,request);
         return "redirect:/menu/customer/category";
     }
+
+
 }

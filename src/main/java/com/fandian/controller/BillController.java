@@ -7,6 +7,7 @@ import com.fandian.dao.MenuDao;
 import com.fandian.dao.ScheduledDao;
 import com.fandian.model.DishOrderInfo;
 import com.fandian.util.JSONUtil;
+import com.fandian.util.SessionUtil;
 import com.fandian.util.UserTypeJudger;
 import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
@@ -50,6 +51,9 @@ public class BillController {
 
     @Inject
     private ScheduledDao scheduledDao;
+
+    @Inject
+    private SessionUtil sessionUtil;
 
     @RequestMapping("/new")
     public String toNewBillView() {
@@ -232,7 +236,7 @@ public class BillController {
             //获取预约桌号
             List<Schedule> schedules = scheduledDao.getBookRecords(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             for (Schedule schedule : schedules){
-                if (schedule.getPhoneNum().equals(request.getSession().getAttribute(MenuController.SESSION_USER_BOOK_PHONE_KEY))){
+                if (schedule.getPhoneNum().equals(sessionUtil.fetchObjectFromSession(SessionUtil.SESSION_USER_BOOK_PHONE_KEY,request,String.class))){
                     model.addAttribute("tableNo", Integer.parseInt(schedule.getTableNo().substring(1)));
                     model.addAttribute("areaNo", schedule.getTableNo().substring(0,1));
                     break;
@@ -240,10 +244,10 @@ public class BillController {
             }
 
             if (UserTypeJudger.isWaitor(SecurityContextHolder.getContext().getAuthentication())){
-                if (request.getSession().getAttribute(DeskController.SESSION_SCAN_DESK_NUMBER_KEY) == null){
+                if (sessionUtil.fetchObjectFromSession(SessionUtil.SESSION_SCAN_DESK_NUMBER_KEY,request,String.class) == null){
                     return "redirect:/menu/customer/category";
                 }else{
-                    String deskNoInSession = (String) request.getSession().getAttribute(DeskController.SESSION_SCAN_DESK_NUMBER_KEY);
+                    String deskNoInSession = sessionUtil.fetchObjectFromSession(SessionUtil.SESSION_SCAN_DESK_NUMBER_KEY,request,String.class);
                     model.addAttribute("tableNo", Integer.parseInt(deskNoInSession.substring(1)));
                     model.addAttribute("areaNo", deskNoInSession.substring(0,1));
                 }

@@ -5,18 +5,19 @@ import com.fandian.bean.Dish;
 import com.fandian.bean.Taste;
 import com.fandian.bean.Weight;
 import com.fandian.dao.MenuDao;
-import com.fandian.model.DishListOfCustomerView;
 import com.fandian.model.DishOrderInfo;
 import com.fandian.util.JSONUtil;
+import com.fandian.util.SessionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,12 +25,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by zhijieliu on 2014/7/25.
- * 点菜控制
+ * Created by zhijieliu on 2014/11/11.
  */
 @Controller
-@RequestMapping("/order")
-public class OrderDishController {
+@RequestMapping("/cart")
+public class CartController {
     //根据桌号，缓存菜单
     public static final Map<String,List<DishOrderInfo>> DISH_ORDER_CACHE = new ConcurrentHashMap<String, List<DishOrderInfo>>();
 
@@ -40,20 +40,27 @@ public class OrderDishController {
     @Resource
     private MenuDao menuDao;
 
-    @RequestMapping("/customer/addDish")
+    @Resource
+    private SessionUtil sessionUtil;
+    /**
+     * 加菜
+     * @return
+     */
+    @RequestMapping("/dishadd")
     @ResponseBody
-    public String addDish(BillDetail billDetail){
+    public String addDish(BillDetail billDetail, HttpServletRequest request){
         Map<String,Object> result = new HashMap<String, Object>();
         result.put("success",true);
         try {
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            if (!DISH_ORDER_CACHE.containsKey(username)){
-                DISH_ORDER_CACHE.put(username,new ArrayList<DishOrderInfo>());
+            String deskno = sessionUtil.fetchObjectFromSession(SessionUtil.SESSION_SCAN_DESK_NUMBER_KEY,request,String.class);
+
+            if (!DISH_ORDER_CACHE.containsKey(deskno)){
+                DISH_ORDER_CACHE.put(deskno,new ArrayList<DishOrderInfo>());
             }
             boolean hasDishInfo = false;
             //同dishid的已点数量
             float existNumber = 0;
-            for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(username)){
+            for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(deskno)){
                 if (dishOrderInfo.getDish().getId() == billDetail.getDishId() &&
                         dishOrderInfo.getTaste().getId() == billDetail.getTaste() &&
                         dishOrderInfo.getWeight().getId() == billDetail.getWeight()){
@@ -71,7 +78,7 @@ public class OrderDishController {
                 Weight weight = menuDao.getWeight(billDetail.getWeight());
                 DishOrderInfo tmpOrderInfo = new DishOrderInfo(dish,taste,weight,billDetail.getAmount());
                 tmpOrderInfo.setTotalNumber(tmpOrderInfo.getTotalNumber() + existNumber);
-                DISH_ORDER_CACHE.get(username).add(tmpOrderInfo);
+                DISH_ORDER_CACHE.get(deskno).add(tmpOrderInfo);
 
             }
 
@@ -81,17 +88,22 @@ public class OrderDishController {
         }
 
         return jsonUtil.transToJsonStrByGson(result);
+
     }
 
-    @RequestMapping("/customer/delDish")
+    /**
+     * 减少菜量
+     * @return
+     */
+    @RequestMapping("/dishreduce")
     @ResponseBody
-    public String delDish(BillDetail billDetail){
+    public String reduceDish(BillDetail billDetail, HttpServletRequest request){
         Map<String,Object> result = new HashMap<String, Object>();
         result.put("success",true);
         try {
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            if (DISH_ORDER_CACHE.containsKey(username)){
-                for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(username)){
+            String deskno = sessionUtil.fetchObjectFromSession(SessionUtil.SESSION_SCAN_DESK_NUMBER_KEY, request, String.class);
+            if (DISH_ORDER_CACHE.containsKey(deskno)){
+                for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(deskno)){
                     if (dishOrderInfo.getDish().getId() == billDetail.getDishId() &&
                             dishOrderInfo.getTaste().getId() == billDetail.getTaste() &&
                             dishOrderInfo.getWeight().getId() == billDetail.getWeight() &&
@@ -99,13 +111,13 @@ public class OrderDishController {
 
                         dishOrderInfo.setNumber(dishOrderInfo.getNumber()-1);
                         if (dishOrderInfo.getNumber() == 0){
-                            DISH_ORDER_CACHE.get(username).remove(dishOrderInfo);
+                            DISH_ORDER_CACHE.get(deskno).remove(dishOrderInfo);
                         }
                         break;
                     }
 
                 }
-                for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(username)){
+                for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(deskno)){
                     if (dishOrderInfo.getDish().getId() == billDetail.getDishId()){
 
                         dishOrderInfo.setTotalNumber(dishOrderInfo.getTotalNumber()-1);
@@ -124,26 +136,31 @@ public class OrderDishController {
         return jsonUtil.transToJsonStrByGson(result);
     }
 
-    @RequestMapping("/customer/removeDish")
+    /**
+     * 删除菜品
+     * @param billDetail
+     * @return
+     */
+    @RequestMapping("/dishremove")
     @ResponseBody
-    public String removeDish(BillDetail billDetail){
+    public String removeDish(BillDetail billDetail, HttpServletRequest request){
         Map<String,Object> result = new HashMap<String, Object>();
         result.put("success",true);
         try {
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            if (DISH_ORDER_CACHE.containsKey(username)){
+            String deskno = sessionUtil.fetchObjectFromSession(SessionUtil.SESSION_SCAN_DESK_NUMBER_KEY, request, String.class);
+            if (DISH_ORDER_CACHE.containsKey(deskno)){
                 //同dishid的已点数量
                 float existNumber = 0;
-                for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(username)){
+                for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(deskno)){
                     if (dishOrderInfo.getDish().getId() == billDetail.getDishId() &&
                             dishOrderInfo.getTaste().getId() == billDetail.getTaste() &&
                             dishOrderInfo.getWeight().getId() == billDetail.getWeight()){
                         existNumber = dishOrderInfo.getNumber();
-                        DISH_ORDER_CACHE.get(username).remove(dishOrderInfo);
+                        DISH_ORDER_CACHE.get(deskno).remove(dishOrderInfo);
                         break;
                     }
                 }
-                for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(username)){
+                for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(deskno)){
                     if (dishOrderInfo.getDish().getId() == billDetail.getDishId()){
                         dishOrderInfo.setTotalNumber(dishOrderInfo.getTotalNumber()-existNumber);
                     }
@@ -159,15 +176,15 @@ public class OrderDishController {
         return jsonUtil.transToJsonStrByGson(result);
     }
 
-    @RequestMapping("/customer/getDishes")
+    @RequestMapping("/details")
     @ResponseBody
-    public String getAllOrderDishes(){
+    public String getDetails(HttpServletRequest request){
         Map<String,Object> result = new HashMap<String, Object>();
         result.put("success",true);
         try {
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            if (DISH_ORDER_CACHE.containsKey(username)){
-                result.put("dishes",DISH_ORDER_CACHE.get(username));
+            String deskno = sessionUtil.fetchObjectFromSession(SessionUtil.SESSION_SCAN_DESK_NUMBER_KEY, request, String.class);
+            if (DISH_ORDER_CACHE.containsKey(deskno)){
+                result.put("dishes",DISH_ORDER_CACHE.get(deskno));
             }
 
         } catch (Exception e) {
@@ -176,5 +193,30 @@ public class OrderDishController {
         }
 
         return jsonUtil.transToJsonStrByGson(result);
+    }
+
+    @RequestMapping("/list")
+    public String toListPage(Model model, HttpServletRequest request){
+        String deskno = sessionUtil.fetchObjectFromSession(SessionUtil.SESSION_SCAN_DESK_NUMBER_KEY, request, String.class);
+
+        if (!DISH_ORDER_CACHE.containsKey(deskno)){
+            DISH_ORDER_CACHE.put(deskno,new ArrayList<DishOrderInfo>());
+        }
+
+        model.addAttribute("tableNo", Integer.parseInt(deskno.substring(1)));
+        model.addAttribute("areaNo", deskno.substring(0,1));
+        int sumfee = 0;
+        model.addAttribute("list", DISH_ORDER_CACHE.get(deskno));
+
+        for (DishOrderInfo dishOrderInfo : DISH_ORDER_CACHE.get(deskno)) {
+            if (dishOrderInfo.getWeight() != null && dishOrderInfo.getWeight().getPrice_relate()) {
+                sumfee += dishOrderInfo.getNumber() * dishOrderInfo.getDish().getPrice()
+                        * dishOrderInfo.getWeight().getPrice_ratio();
+            } else
+                sumfee += dishOrderInfo.getNumber() * dishOrderInfo.getDish().getPrice();
+        }
+
+        model.addAttribute("sumfee", sumfee);
+        return "cart/list";
     }
 }
