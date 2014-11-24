@@ -257,7 +257,7 @@
             }
 
             $.ajax({
-                url:"confirm",
+                url:"<c:url value="/bill/confirm"></c:url>",
                 type:"POST",
                 dataType:"JSON",
                 data: {"param":JSON.stringify(billDetails),"tableNo":areaNo+""+tableNo},
