@@ -44,14 +44,16 @@ public class UserDao extends JdbcTemplate {
     }
 
     public void insertUser(final User user) {
-        super.update("insert into users (username,usernamecn,password,open_id,enabled,internal) values(?,?,?,?,?,?) ",
-            user.getUsername(), user.getUsernamecn(), user.getPassword(), user.getOpenId(), user.getEnabled(), user.getInternal());
+        super.update("insert into users (username,usernamecn,password,open_id,enabled,internal,access_token,refresh_token,headimg_url) values(?,?,?,?,?,?,?,?,?) ",
+            user.getUsername(), user.getUsernamecn(), user.getPassword(), user.getOpenId(), user.getEnabled(), user.getInternal(),user.getAccess_token(),
+                user.getRefresh_token(),user.getHeadimg_url());
         super.update("insert into authorities (username,authority) values(?,?)", user.getUsername(), user.getAuthority());
     }
 
     public void updateUser(User user) {
-        update("update users set usernamecn=?,password=?,open_id=?,enabled=? where username = ?",
-            user.getUsernamecn(), user.getPassword(), user.getOpenId(), user.getEnabled(), user.getUsername());
+        update("update users set usernamecn=?,password=?,open_id=?,enabled=?,access_token=?,refresh_token=?,headimg_url=? where username = ?",
+            user.getUsernamecn(), user.getPassword(), user.getOpenId(), user.getEnabled(),user.getAccess_token(),
+                user.getRefresh_token(),user.getHeadimg_url(), user.getUsername());
         update("update authorities set authority = ? where username = ?", user.getUsername(), user.getAuthority());
     }
 

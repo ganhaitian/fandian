@@ -21,6 +21,11 @@ public class User {
 
     private int internal;
 
+    private String access_token;
+    private String refresh_token;
+    private String headimg_url;
+
+
     public int getInternal() {
         return internal;
     }
@@ -83,5 +88,29 @@ public class User {
 
     public void setEnabled(int enabled) {
         this.enabled = enabled;
+    }
+
+    public String getAccess_token() {
+        return access_token;
+    }
+
+    public void setAccess_token(String access_token) {
+        this.access_token = access_token;
+    }
+
+    public String getRefresh_token() {
+        return refresh_token;
+    }
+
+    public void setRefresh_token(String refresh_token) {
+        this.refresh_token = refresh_token;
+    }
+
+    public String getHeadimg_url() {
+        return headimg_url;
+    }
+
+    public void setHeadimg_url(String headimg_url) {
+        this.headimg_url = headimg_url;
     }
 }

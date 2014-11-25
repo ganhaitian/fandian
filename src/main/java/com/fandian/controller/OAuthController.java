@@ -3,6 +3,7 @@ package com.fandian.controller;
 import com.fandian.bean.User;
 import com.fandian.dao.UserDao;
 import com.fandian.model.OauthAccessTokenDetail;
+import com.fandian.model.OauthUserInfo;
 import com.fandian.util.ConfigurationFactory;
 import com.fandian.util.HttpConnectUtil;
 import com.fandian.util.JSONUtil;
@@ -28,6 +29,8 @@ import java.net.URLEncoder;
 public class OAuthController {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    private static final String DEFAULT_PASSWORD = "4be85f53b208246362dbc07372269eaef29600a1e7f17ace94d1530470193e5e";
 
     @Resource
     private HttpConnectUtil httpConnectUtil;
@@ -55,7 +58,7 @@ public class OAuthController {
             buffer.append("appid=" + ConfigurationFactory.getGlobalConfiguration().getString("weixin_appid"));
             buffer.append("&redirect_uri=" + URLEncoder.encode(ConfigurationFactory.getGlobalConfiguration().getString("oauth_redirect_uri"),"UTF-8"));
             buffer.append("&response_type=code");
-            buffer.append("&scope=snsapi_base");
+            buffer.append("&scope=snsapi_userinfo");
             buffer.append("&state=test");
             buffer.append("#wechat_redirect");
 
@@ -90,20 +93,54 @@ public class OAuthController {
             }else{
                 OauthAccessTokenDetail oauthAccessTokenDetail = jsonUtil.transJsonToBeanByGson(jsonRes, OauthAccessTokenDetail.class);
                 logger.info("user openid:" + oauthAccessTokenDetail.getOpenid());
-                if (!userDao.hasUser(oauthAccessTokenDetail.getOpenid())){
-                    User user = new User();
-                    user.setUsername(oauthAccessTokenDetail.getOpenid());
-                    user.setPassword("4be85f53b208246362dbc07372269eaef29600a1e7f17ace94d1530470193e5e");
-                    user.setEnabled(1);
-                    user.setInternal(0);
-                    user.setAuthority("ROLE_USER");
-                    userDao.insertUser(user);
+                if (fetchUserInfo(oauthAccessTokenDetail.getAccess_token(),oauthAccessTokenDetail.getOpenid(),oauthAccessTokenDetail.getRefresh_token())){
+                    model.addAttribute("openid",oauthAccessTokenDetail.getOpenid());
+                    return "admin/user/weixinlogin";
+                }else{
+                    logger.warn("oauth获取userinfo失败");
+                    return "oauth/fail";
                 }
-                model.addAttribute("openid",oauthAccessTokenDetail.getOpenid());
-                return "admin/user/weixinlogin";
+
             }
 
 
+        }
+    }
+
+    private String refreshAccessToken(){
+        return "";
+    }
+
+    private boolean fetchUserInfo(String access_token, String open_id, String refresh_token){
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(ConfigurationFactory.getGlobalConfiguration().getString("oauth_userinfo_uri") + "?");
+        buffer.append("access_token=" + access_token);
+        buffer.append("&openid=" + open_id);
+        buffer.append("&lang=zh_CN");
+
+        String jsonRes = httpConnectUtil.get(buffer.toString(),"UTF-8");
+        if (jsonRes.contains("errcode")){
+            logger.warn("oauth获取user_info失败");
+            return false;
+        }else{
+            OauthUserInfo oauthUserInfo = jsonUtil.transJsonToBeanByGson(jsonRes,OauthUserInfo.class);
+            User user = new User();
+            user.setUsername(open_id);
+            user.setPassword(DEFAULT_PASSWORD);
+            user.setEnabled(1);
+            user.setInternal(0);
+            user.setAuthority("ROLE_USER");
+            user.setAccess_token(access_token);
+            user.setRefresh_token(refresh_token);
+            user.setUsernamecn(oauthUserInfo.getNickname());
+            user.setHeadimg_url(oauthUserInfo.getHeadimgurl());
+            if (!userDao.hasUser(open_id)){
+
+                userDao.insertUser(user);
+            }else{
+                userDao.updateUser(user);
+            }
+            return true;
         }
     }
 
