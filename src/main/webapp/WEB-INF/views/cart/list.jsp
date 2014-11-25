@@ -263,7 +263,7 @@
                 data: {"param":JSON.stringify(billDetails),"tableNo":areaNo+""+tableNo},
                 success:function(data){
                     if(data.success){
-                        $("div.confirm-panel").html(ma
+                        $("div.confirm-panel").html(
                             "<div class='alert alert-success' style='text-align:center;'>您已成功下单，请耐心等待!</div>");
                     }
                 }
