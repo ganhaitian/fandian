@@ -203,7 +203,7 @@ public class CartController {
             DISH_ORDER_CACHE.put(deskno,new ArrayList<DishOrderInfo>());
         }
 
-        model.addAttribute("tableNo", Integer.parseInt(deskno.substring(1)));
+        model.addAttribute("tableNo", deskno.substring(1));
         model.addAttribute("areaNo", deskno.substring(0,1));
         int sumfee = 0;
         model.addAttribute("list", DISH_ORDER_CACHE.get(deskno));

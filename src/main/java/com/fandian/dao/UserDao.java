@@ -61,5 +61,7 @@ public class UserDao extends JdbcTemplate {
         update("delete from users where username = ?", userName);
     }
 
-
+    public String findUserAuthority(String username){
+        return super.queryForObject("select authority from authorities where username=?", new Object[]{username}, String.class);
+    }
 }

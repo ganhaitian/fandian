@@ -129,7 +129,16 @@ public class OAuthController {
             user.setPassword(DEFAULT_PASSWORD);
             user.setEnabled(1);
             user.setInternal(0);
-            user.setAuthority("ROLE_USER");
+            String authority = null;
+            try {
+                authority = userDao.findUserAuthority(open_id);
+            } catch (Exception e) {
+
+            }
+            if (StringUtils.isEmpty(authority)){
+                authority = "ROLE_USER";
+            }
+            user.setAuthority(authority);
             user.setAccess_token(access_token);
             user.setRefresh_token(refresh_token);
             user.setUsernamecn(oauthUserInfo.getNickname());
