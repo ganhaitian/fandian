@@ -231,7 +231,7 @@
 
                         <div class="row">
                             <div class="text-center">
-                                <button class="button btn-primary btn-sm" id="btn-dish-order-sure"><i class="fa fa-shopping-cart"></i> 确定</button>
+                                <button class="button btn-primary btn-sm" id="btn-dish-order-sure"><i id="btn-dish-order-sure-icon" class="fa fa-shopping-cart"></i> 确定</button>
                             </div>
                         </div>
                     </div>
@@ -481,7 +481,13 @@
 
         //确定按钮
         $('#btn-dish-order-sure').click(function(){
+
             var btn = $(this);
+            if (btn.hasClass("disabled")){
+                return;
+            }
+            btn.addClass("disabled");
+            $('#btn-dish-order-sure-icon').removeClass('fa-shopping-cart').addClass('fa-spin fa-spinner');
             $.ajax({
              url:"<c:url value="/cart/dishadd"></c:url>",
              method:'POST',
@@ -498,9 +504,13 @@
                  }else{
                     btn.siblings('button').addClass('hide');
                  }
+                 $('#btn-dish-order-sure-icon').addClass('fa-shopping-cart').removeClass('fa-spin fa-spinner');
+                 btn.removeClass('disabled')
              },
              error:function(){
-                alert('err');
+                alert('添加菜品失败');
+                $('#btn-dish-order-sure-icon').addClass('fa-shopping-cart').removeClass('fa-spin fa-spinner');
+                btn.removeClass('disabled');
              }
              });
         });

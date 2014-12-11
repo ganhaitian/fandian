@@ -103,7 +103,7 @@ public class ScheduledController {
             List<Schedule> schedules = scheduledDao.getBookRecords(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
             if (schedules != null && schedules.size() > 0){
                 for (Schedule schedule : schedules){
-                    if (schedule.getPhoneNum().equals(mobile)){
+                    if (schedule.getPhoneNum().equals(mobile) && (schedule.getArea()+schedule.getTableNo()).equals(sessionUtil.fetchObjectFromSession(SessionUtil.SESSION_SCAN_DESK_NUMBER_KEY,request,String.class))){
                         result.put("success",true);
 
                         sessionUtil.addObjectToSession(SessionUtil.SESSION_USER_BOOK_PHONE_KEY,schedule.getPhoneNum(),request);

@@ -51,12 +51,18 @@
 </div>
 <script type="text/javascript">
     $('#btn-sure').click(function() {
+        var btn = $(this);
+        if (btn.hasClass('disabled')){
+            return;
+        }
+
         var mobile = $('#phonenumber').val();
         if (!/^\d{11}$/.test(mobile)){
             $('#tip-invalid-phone').fadeIn();
             setTimeout(function(){$('#tip-invalid-phone').fadeOut();},2000);
             return;
         }else{
+            btn.addClass('disabled');
             $.ajax({
                 url:"<c:url value="/book/validSchedule"></c:url>",
                 dataType:"json",
@@ -74,10 +80,12 @@
                         $('#tip-no-schedule').fadeIn();
                         setTimeout(function(){$('#tip-no-schedule').fadeOut();},2000);
                     }
+                    btn.removeClass('disabled');
                 },
                 error:function(){
                     $('#tip-no-schedule').fadeIn();
                     setTimeout(function(){$('#tip-no-schedule').fadeOut();},2000);
+                    btn.removeClass('disabled');
                 }
             });
         }
